@@ -24,10 +24,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".view.signup.SignupActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".view.splash.SplashActivity"
             android:exported="true">
 

@@ -4,7 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.login.LoginFragment">
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    tools:context=".view.signup.SignupFragment">
+
+    <TextView
+        android:id="@+id/tvBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:foreground="?selectableItemBackground"
+        android:padding="5dp"
+        android:text="@string/back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +34,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
-            android:text="quangphuc2409@gmail.com" />
+            android:text="abc123@gmail.com" />
 
         <EditText
             android:id="@+id/etPassword"
@@ -31,19 +45,9 @@
             android:text="abcd24901" />
 
         <TextView
-            android:id="@+id/tvLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/purple_200"
-            android:foreground="?selectableItemBackground"
-            android:padding="5dp"
-            android:text="@string/login" />
-
-        <TextView
             android:id="@+id/tvSignup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:background="@color/purple_200"
             android:foreground="?selectableItemBackground"
             android:padding="5dp"

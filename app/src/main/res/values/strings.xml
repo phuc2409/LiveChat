@@ -5,5 +5,8 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="login_success">Login success</string>
+    <string name="signup_success">Signup success</string>
     <string name="sign_out">Sign out</string>
+    <string name="signup">Signup</string>
+    <string name="back">Back</string>
 </resources>

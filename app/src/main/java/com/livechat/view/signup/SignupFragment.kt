@@ -1,44 +1,45 @@
-package com.livechat.view.login
+package com.livechat.view.signup
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.livechat.R
 import com.livechat.base.BaseFragment
-import com.livechat.databinding.FragmentLoginBinding
+import com.livechat.databinding.FragmentSignupBinding
 import com.livechat.extension.gone
 import com.livechat.extension.showToast
 import com.livechat.extension.visible
-import com.livechat.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * User: Quang Phúc
- * Date: 2023-03-22
- * Time: 08:59 PM
+ * Date: 2023-02-16
+ * Time: 12:10 AM
  */
 @AndroidEntryPoint
-class LoginFragment : BaseFragment(R.id.fragmentLogin) {
+class SignupFragment : BaseFragment(R.layout.fragment_signup) {
 
     companion object {
-        fun newInstance(): LoginFragment {
-            return LoginFragment()
+        fun newInstance(): SignupFragment {
+            return SignupFragment()
         }
     }
 
-    private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var binding: FragmentSignupBinding
+    private lateinit var viewModel: SignupViewModel
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-        binding = FragmentLoginBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this)[SignupViewModel::class.java]
+        binding = FragmentSignupBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -52,12 +53,12 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
     }
 
     override fun handleListener() {
-        binding.tvLogin.setOnClickListener {
-            viewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+        binding.tvBack.setOnClickListener {
+            getLoginActivity()?.closeSignup()
         }
 
         binding.tvSignup.setOnClickListener {
-            getLoginActivity()?.openSignup()
+            viewModel.signup(binding.etEmail.text.toString(), binding.etPassword.text.toString())
         }
     }
 
@@ -65,24 +66,20 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it.status) {
 
-                LoginState.Status.LOADING -> {
+                SignupState.Status.LOADING -> {
                     showLoading()
                 }
 
-                LoginState.Status.LOGIN_SUCCESS -> {
+                SignupState.Status.SIGNUP_SUCCESS -> {
                     hideLoading()
 
                     if (context == null) {
                         return@observe
                     }
-                    requireContext().showToast(R.string.login_success)
-
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
+                    requireContext().showToast(R.string.signup_success)
                 }
 
-                LoginState.Status.LOGIN_ERROR -> {
+                SignupState.Status.SIGNUP_ERROR -> {
                     hideLoading()
 
                     if (context == null) {

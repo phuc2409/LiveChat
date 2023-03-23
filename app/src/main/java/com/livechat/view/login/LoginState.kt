@@ -14,14 +14,14 @@ class LoginState(
 
         fun loading() = LoginState(Status.LOADING)
 
-        fun loginSuccess() = LoginState(Status.SUCCESS)
+        fun loginSuccess() = LoginState(Status.LOGIN_SUCCESS)
 
-        fun loginError(e: Exception) = LoginState(Status.ERROR, e)
+        fun loginError(e: Exception) = LoginState(Status.LOGIN_ERROR, e)
     }
 
     enum class Status {
         LOADING,
-        SUCCESS,
-        ERROR
+        LOGIN_SUCCESS,
+        LOGIN_ERROR
     }
 }

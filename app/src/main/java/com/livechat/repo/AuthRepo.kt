@@ -21,7 +21,27 @@ class AuthRepo @Inject constructor(private val firebaseAuth: FirebaseAuth) {
                 if (task.isSuccessful) {
                     onSuccess()
                 } else {
-                    onError(task.exception as Exception)
+                    val e = task.exception as Exception
+                    e.printStackTrace()
+                    onError(e)
+                }
+            }
+    }
+
+    fun signup(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onSuccess()
+                } else {
+                    val e = task.exception as Exception
+                    e.printStackTrace()
+                    onError(e)
                 }
             }
     }
