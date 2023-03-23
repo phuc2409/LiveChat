@@ -1,9 +1,11 @@
 package com.livechat.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseActivity
 import com.livechat.databinding.ActivityMainBinding
+import com.livechat.view.splash.SplashActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,7 +35,11 @@ class MainActivity : BaseActivity() {
 
     override fun handleListener() {
         binding.tvSignOut.setOnClickListener {
+            firebaseAuth.signOut()
 
+            val intent = Intent(this, SplashActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
