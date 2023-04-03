@@ -55,6 +55,7 @@ class AuthRepo @Inject constructor(
     private fun createUser(onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
         val model = hashMapOf(
             "email" to firebaseAuth.currentUser?.email,
+            "userName" to firebaseAuth.currentUser?.email,
             "fullName" to "",
             "avatarUrl" to "",
             "birthday" to FieldValue.serverTimestamp(),

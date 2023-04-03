@@ -1,11 +1,13 @@
 package com.livechat.view.main
 
+import android.content.Intent
 import android.os.Bundle
 import com.livechat.R
 import com.livechat.base.BaseActivity
 import com.livechat.databinding.ActivityMainBinding
 import com.livechat.view.all_chats.AllChatsFragment
 import com.livechat.view.contacts.ContactsFragment
+import com.livechat.view.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -38,6 +40,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.tvSearch.setOnClickListener {
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
 

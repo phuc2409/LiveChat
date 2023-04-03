@@ -6,12 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".view.main.MainActivity">
 
+    <TextView
+        android:id="@+id/tvSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/purple_200"
+        android:foreground="?selectableItemBackground"
+        android:padding="5dp"
+        android:text="@string/search"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSearch"
         tools:layout="@layout/fragment_all_chats" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
