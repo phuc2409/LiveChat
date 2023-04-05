@@ -1,15 +1,19 @@
 package com.livechat.view.search
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.lifecycle.ViewModelProvider
 import com.livechat.base.BaseActivity
+import com.livechat.common.Constants
 import com.livechat.databinding.ActivitySearchBinding
 import com.livechat.extension.gone
 import com.livechat.extension.showToast
+import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.UserModel
+import com.livechat.view.chat.ChatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -117,7 +121,9 @@ class SearchActivity : BaseActivity() {
 
     private fun showResult(users: ArrayList<UserModel>) {
         adapter = SearchAdapter(this, users) { userModel, position ->
-
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra(Constants.USER_MODEL, userModel.toJson())
+            startActivity(intent)
         }
         binding.rvSearch.adapter = adapter
 

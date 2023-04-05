@@ -19,7 +19,7 @@ class UsersRepo @Inject constructor(private val firebaseFirestore: FirebaseFires
         onSuccess: (users: ArrayList<UserModel>) -> Unit,
         onError: (e: Exception) -> Unit
     ) {
-        firebaseFirestore.collection(Constants.Collections.users).get()
+        firebaseFirestore.collection(Constants.Collections.USERS).get()
             .addOnSuccessListener {
                 val users = ArrayList<UserModel>()
                 it.documents.forEach { document ->
@@ -27,6 +27,7 @@ class UsersRepo @Inject constructor(private val firebaseFirestore: FirebaseFires
                         || document.getString("userName")?.contains(keyword) == true
                     ) {
                         document.toObject(UserModel::class.java)?.let { user ->
+                            user.id = document.id
                             users.add(user)
                         }
                     }

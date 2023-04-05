@@ -8,6 +8,9 @@ package com.livechat.common
 object Constants {
 
     object Collections {
-        val users = "users"
+        const val USERS = "users"
+        const val CHATS = "chats"
     }
+
+    const val USER_MODEL = "user_model"
 }

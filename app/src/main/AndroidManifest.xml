@@ -16,6 +16,10 @@
         tools:targetApi="33">
 
         <activity
+            android:name=".view.chat.ChatActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.login.LoginActivity"
             android:exported="false" />
 

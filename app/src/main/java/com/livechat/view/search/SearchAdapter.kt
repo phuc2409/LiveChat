@@ -38,6 +38,10 @@ class SearchAdapter(
             is ItemHolder -> {
                 holder.binding.tvFullName.text = item.fullName
                 holder.binding.tvUserName.text = item.userName
+
+                holder.itemView.setOnClickListener {
+                    onClick(item, position)
+                }
             }
 
             is ErrorHolder -> {

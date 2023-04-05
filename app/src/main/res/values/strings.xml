@@ -13,4 +13,5 @@
     <string name="contacts">Contacts</string>
     <string name="search">Search</string>
     <string name="no_result">No result</string>
+    <string name="type_a_message">Type a message</string>
 </resources>
