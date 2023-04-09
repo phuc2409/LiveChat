@@ -14,6 +14,6 @@ data class MessageModel(
     var message: String = "",
     var attachmentType: String = "",
     var attachmentUrls: ArrayList<String> = ArrayList(),
-    var createdAt: Timestamp = Timestamp(0, 0),
+    var createdAt: Timestamp? = null,
     var isDeleted: Boolean = false
 )

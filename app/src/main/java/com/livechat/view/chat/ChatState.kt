@@ -1,6 +1,7 @@
 package com.livechat.view.chat
 
 import com.livechat.model.ChatModel
+import com.livechat.model.MessageModel
 
 /**
  * User: Quang Phúc
@@ -23,6 +24,9 @@ class ChatState(
         fun sendMessageSuccess() = ChatState(Status.SEND_MESSAGE_SUCCESS)
 
         fun sendMessageError(e: Exception) = ChatState(Status.SEND_MESSAGE_ERROR, e)
+
+        fun updateMessages(messages: ArrayList<MessageModel>) =
+            ChatState(Status.UPDATE_MESSAGES, messages)
     }
 
     enum class Status {
@@ -30,6 +34,7 @@ class ChatState(
         GET_CHAT_SUCCESS,
         GET_CHAT_ERROR,
         SEND_MESSAGE_SUCCESS,
-        SEND_MESSAGE_ERROR
+        SEND_MESSAGE_ERROR,
+        UPDATE_MESSAGES
     }
 }

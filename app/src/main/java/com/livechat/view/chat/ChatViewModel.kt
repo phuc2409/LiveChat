@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseViewModel
 import com.livechat.model.ChatModel
+import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import com.livechat.repo.ChatsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,8 @@ class ChatViewModel @Inject constructor(
     private lateinit var userModel: UserModel
     private var chatModel: ChatModel? = null
 
+    private var messages: ArrayList<MessageModel> = ArrayList()
+
     fun getChatBySearchUser(userModel: UserModel) {
         _state.value = ChatState.loading()
 
@@ -37,6 +40,7 @@ class ChatViewModel @Inject constructor(
         chatsRepo.getChatByParticipantIds(participantIds,
             onSuccess = {
                 chatModel = it
+                startMessagesListener()
                 _state.postValue(ChatState.getChatSuccess(chatModel))
             }, onError = {
                 _state.postValue(ChatState.getChatError(it))
@@ -50,6 +54,7 @@ class ChatViewModel @Inject constructor(
                 message = message,
                 onSuccess = {
                     chatModel = it
+                    startMessagesListener()
                     sendMessage(message)
                 }, onError = {
 
@@ -73,5 +78,22 @@ class ChatViewModel @Inject constructor(
                     _state.postValue(ChatState.sendMessageError(it))
                 })
         }
+    }
+
+    private fun startMessagesListener() {
+        if (chatModel == null) {
+            return
+        }
+
+        chatsRepo.startMessagesListener(
+            chatModel = chatModel!!,
+            onSuccess = {
+                _state.postValue(ChatState.updateMessages(it))
+            })
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        chatsRepo.removeMessagesListener()
     }
 }

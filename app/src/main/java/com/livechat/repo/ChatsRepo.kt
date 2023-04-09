@@ -4,9 +4,11 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.livechat.common.Constants
 import com.livechat.extension.getTag
 import com.livechat.model.ChatModel
+import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import javax.inject.Inject
 
@@ -19,6 +21,9 @@ class ChatsRepo @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth
 ) {
+
+    private var chatsListener: ListenerRegistration? = null
+    private var messagesListener: ListenerRegistration? = null
 
     fun getChatByParticipantIds(
         participantIds: ArrayList<String>,
@@ -162,5 +167,40 @@ class ChatsRepo @Inject constructor(
             }.addOnFailureListener {
                 onError(it)
             }
+    }
+
+    fun startMessagesListener(
+        chatModel: ChatModel,
+        onSuccess: (messages: ArrayList<MessageModel>) -> Unit
+    ) {
+        removeMessagesListener()
+
+        //todo: đang cập nhật toàn bộ tin nhắn, chỉ cập nhật tin nhắn mới
+        messagesListener =
+            firestore.collection(Constants.Collections.MESSAGES).whereEqualTo("chatId", chatModel.id)
+                .orderBy("createdAt")
+                .addSnapshotListener { value, e ->
+                    if (e != null || value == null) {
+                        Log.e("Message", "Listen failed.", e)
+                        return@addSnapshotListener
+                    }
+
+                    val messages = ArrayList<MessageModel>()
+
+                    for (i in value) {
+                        val message = i.toObject(MessageModel::class.java)
+                        if (message.createdAt == null) {
+                            // createdAt được khởi tạo sau khi insert message mới nên thành lắng nghe hai lần
+                            return@addSnapshotListener
+                        }
+                        messages.add(message)
+                    }
+                    Log.i(getTag(), messages.toString())
+                    onSuccess(messages)
+                }
+    }
+
+    fun removeMessagesListener() {
+        messagesListener?.remove()
     }
 }

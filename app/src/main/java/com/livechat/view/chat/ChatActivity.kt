@@ -8,6 +8,7 @@ import com.livechat.databinding.ActivityChatBinding
 import com.livechat.extension.fromJson
 import com.livechat.extension.showToast
 import com.livechat.model.ChatModel
+import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,11 +23,15 @@ class ChatActivity : BaseActivity() {
     private lateinit var binding: ActivityChatBinding
     private lateinit var viewModel: ChatViewModel
 
+    private var adapter: MessageAdapter? = null
+
     /**
      * Truyền userModel vào từ màn Search
      */
     private var userModel: UserModel? = null
     private var chatModel: ChatModel? = null
+
+    private var messages: ArrayList<MessageModel> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +53,11 @@ class ChatActivity : BaseActivity() {
 
     override fun initView() {
         binding.tvChatName.text = userModel?.fullName
+
+//        adapter = MessageAdapter(this, messages) { messageModel, position ->
+//
+//        }
+//        binding.rvChat.adapter = adapter
     }
 
     override fun handleListener() {
@@ -76,11 +86,21 @@ class ChatActivity : BaseActivity() {
                 }
 
                 ChatState.Status.SEND_MESSAGE_SUCCESS -> {
-
+                    binding.etChat.setText("")
                 }
 
                 ChatState.Status.SEND_MESSAGE_ERROR -> {
 
+                }
+
+                ChatState.Status.UPDATE_MESSAGES -> {
+                    messages = it.data as ArrayList<MessageModel>
+                    adapter = MessageAdapter(this, messages) { messageModel, position ->
+
+                    }
+                    binding.rvChat.adapter = adapter
+//                    adapter?.notifyDataSetChanged()
+                    binding.rvChat.scrollToPosition(messages.size - 1)
                 }
             }
         }
