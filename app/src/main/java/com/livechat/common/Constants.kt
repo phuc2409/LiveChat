@@ -10,6 +10,7 @@ object Constants {
     object Collections {
         const val USERS = "users"
         const val CHATS = "chats"
+        const val MESSAGES = "messages"
     }
 
     const val USER_MODEL = "user_model"

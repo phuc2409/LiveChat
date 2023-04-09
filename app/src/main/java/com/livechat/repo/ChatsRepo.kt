@@ -32,6 +32,7 @@ class ChatsRepo @Inject constructor(
                     onSuccess(null)
                 } else {
                     val chatModel = documents.first().toObject(ChatModel::class.java)
+                    chatModel.id = documents.first().id
                     Log.i(getTag(), chatModel.toString())
                     onSuccess(chatModel)
                 }
@@ -91,12 +92,73 @@ class ChatsRepo @Inject constructor(
             "updatedAt" to FieldValue.serverTimestamp()
         )
 
-
         firestore.collection(Constants.Collections.CHATS).add(hashMap)
             .addOnSuccessListener {
                 chatModel.id = it.id
                 Log.i(getTag(), chatModel.toString())
                 onSuccess(chatModel)
+            }.addOnFailureListener {
+                onError(it)
+            }
+    }
+
+    fun updateChat(
+        chatModel: ChatModel,
+        message: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        val uid = firebaseAuth.currentUser?.uid
+        if (uid == null) {
+            onError(Exception("Current user uid is null"))
+            return
+        }
+
+        val sendName = firebaseAuth.currentUser?.email ?: ""
+        val hashMap = hashMapOf(
+            "sendId" to uid,
+            "sendName" to sendName,
+            "latestMessage" to message,
+            "updatedAt" to FieldValue.serverTimestamp()
+        )
+
+        firestore.collection(Constants.Collections.CHATS).document(chatModel.id).update(hashMap)
+            .addOnSuccessListener {
+                chatModel.sendId = uid
+                chatModel.sendName = sendName
+                chatModel.latestMessage = message
+                Log.i(getTag(), chatModel.toString())
+                onSuccess()
+            }.addOnFailureListener {
+                onError(it)
+            }
+    }
+
+    fun sendMessage(
+        chatModel: ChatModel,
+        message: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        val uid = firebaseAuth.currentUser?.uid
+        if (uid == null) {
+            onError(Exception("Current user uid is null"))
+            return
+        }
+
+        val hashMap = hashMapOf(
+            "chatId" to chatModel.id,
+            "sendId" to uid,
+            "message" to message,
+            "attachmentType" to "",
+            "attachmentUrls" to ArrayList<String>(),
+            "createdAt" to FieldValue.serverTimestamp(),
+            "isDeleted" to false,
+        )
+
+        firestore.collection(Constants.Collections.MESSAGES).add(hashMap)
+            .addOnSuccessListener {
+                onSuccess()
             }.addOnFailureListener {
                 onError(it)
             }

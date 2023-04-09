@@ -74,6 +74,14 @@ class ChatActivity : BaseActivity() {
                     showToast("Get chat error")
                     finish()
                 }
+
+                ChatState.Status.SEND_MESSAGE_SUCCESS -> {
+
+                }
+
+                ChatState.Status.SEND_MESSAGE_ERROR -> {
+
+                }
             }
         }
     }

@@ -50,11 +50,28 @@ class ChatViewModel @Inject constructor(
                 message = message,
                 onSuccess = {
                     chatModel = it
-                    chatModel
+                    sendMessage(message)
                 }, onError = {
 
                 }
             )
+        } else {
+            chatsRepo.sendMessage(
+                chatModel = chatModel!!,
+                message = message,
+                onSuccess = {
+                    chatsRepo.updateChat(
+                        chatModel = chatModel!!,
+                        message = message,
+                        onSuccess = {
+
+                        }, onError = {
+
+                        })
+                    _state.postValue(ChatState.sendMessageSuccess())
+                }, onError = {
+                    _state.postValue(ChatState.sendMessageError(it))
+                })
         }
     }
 }

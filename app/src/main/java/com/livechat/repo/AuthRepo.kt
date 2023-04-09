@@ -64,7 +64,7 @@ class AuthRepo @Inject constructor(
             "createdAt" to FieldValue.serverTimestamp()
         )
 
-        firebaseFirestore.collection(Constants.Collections.users)
+        firebaseFirestore.collection(Constants.Collections.USERS)
             .document(firebaseAuth.currentUser?.uid.toString())
             .set(model)
             .addOnSuccessListener {

@@ -19,11 +19,17 @@ class ChatState(
         fun getChatSuccess(chatModel: ChatModel?) = ChatState(Status.GET_CHAT_SUCCESS, chatModel)
 
         fun getChatError(e: Exception) = ChatState(Status.GET_CHAT_ERROR, e)
+
+        fun sendMessageSuccess() = ChatState(Status.SEND_MESSAGE_SUCCESS)
+
+        fun sendMessageError(e: Exception) = ChatState(Status.SEND_MESSAGE_ERROR, e)
     }
 
     enum class Status {
         LOADING,
         GET_CHAT_SUCCESS,
-        GET_CHAT_ERROR
+        GET_CHAT_ERROR,
+        SEND_MESSAGE_SUCCESS,
+        SEND_MESSAGE_ERROR
     }
 }
