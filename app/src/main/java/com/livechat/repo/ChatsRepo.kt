@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.livechat.common.Constants
 import com.livechat.extension.getTag
 import com.livechat.model.ChatModel
@@ -177,7 +178,8 @@ class ChatsRepo @Inject constructor(
 
         //todo: đang cập nhật toàn bộ tin nhắn, chỉ cập nhật tin nhắn mới
         messagesListener =
-            firestore.collection(Constants.Collections.MESSAGES).whereEqualTo("chatId", chatModel.id)
+            firestore.collection(Constants.Collections.MESSAGES)
+                .whereEqualTo("chatId", chatModel.id)
                 .orderBy("createdAt")
                 .addSnapshotListener { value, e ->
                     if (e != null || value == null) {
@@ -190,7 +192,7 @@ class ChatsRepo @Inject constructor(
                     for (i in value) {
                         val message = i.toObject(MessageModel::class.java)
                         if (message.createdAt == null) {
-                            // createdAt được khởi tạo sau khi insert message mới nên thành lắng nghe hai lần
+                            // createdAt được khởi tạo sau khi update message mới nên thành lắng nghe hai lần
                             return@addSnapshotListener
                         }
                         messages.add(message)
@@ -202,5 +204,42 @@ class ChatsRepo @Inject constructor(
 
     fun removeMessagesListener() {
         messagesListener?.remove()
+    }
+
+    fun startChatsListener(onSuccess: (messages: ArrayList<ChatModel>) -> Unit) {
+        if (firebaseAuth.uid == null) {
+            return
+        }
+
+        removeChatsListener()
+
+        //todo: đang cập nhật toàn bộ tin nhắn, chỉ cập nhật tin nhắn mới
+        chatsListener = firestore.collection(Constants.Collections.CHATS)
+            .whereArrayContains("participantIds", firebaseAuth.uid.toString())
+            .orderBy("updatedAt", Query.Direction.DESCENDING)
+            .addSnapshotListener { value, e ->
+                if (e != null || value == null) {
+                    Log.e("Chats", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                val chats = ArrayList<ChatModel>()
+
+                for (i in value) {
+                    val chat = i.toObject(ChatModel::class.java)
+                    chat.id = i.id
+                    if (chat.updatedAt == null) {
+                        // updatedAt được khởi tạo sau khi update chat mới nên thành lắng nghe hai lần
+                        return@addSnapshotListener
+                    }
+                    chats.add(chat)
+                }
+                Log.i("startChatsListener", chats.toString())
+                onSuccess(chats)
+            }
+    }
+
+    fun removeChatsListener() {
+        chatsListener?.remove()
     }
 }

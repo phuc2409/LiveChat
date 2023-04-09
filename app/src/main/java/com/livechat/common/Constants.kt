@@ -14,4 +14,5 @@ object Constants {
     }
 
     const val USER_MODEL = "user_model"
+    const val CHAT_MODEL = "chat_model"
 }

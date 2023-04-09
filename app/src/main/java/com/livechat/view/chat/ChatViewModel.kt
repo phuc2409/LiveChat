@@ -80,7 +80,11 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun startMessagesListener() {
+    fun startMessagesListener(newChatModel: ChatModel? = null) {
+        if (newChatModel != null) {
+            chatModel = newChatModel
+        }
+
         if (chatModel == null) {
             return
         }
@@ -88,7 +92,8 @@ class ChatViewModel @Inject constructor(
         chatsRepo.startMessagesListener(
             chatModel = chatModel!!,
             onSuccess = {
-                _state.postValue(ChatState.updateMessages(it))
+                messages = it
+                _state.postValue(ChatState.updateMessages(messages))
             })
     }
 

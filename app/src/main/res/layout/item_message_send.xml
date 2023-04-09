@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:paddingVertical="5dp"
     android:paddingStart="50dp"
-    android:paddingEnd="0dp">
+    android:paddingEnd="0dp"
+    tools:context=".view.chat.MessageAdapter">
 
     <TextView
         android:id="@+id/tvMessage"

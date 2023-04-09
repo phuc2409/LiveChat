@@ -44,10 +44,18 @@ class ChatActivity : BaseActivity() {
             userModel = fromJson(it)
         }
 
+        val chatModelJson = intent.getStringExtra(Constants.CHAT_MODEL)
+        chatModelJson?.let {
+            chatModel = fromJson(it)
+        }
+
         setupView()
 
         userModel?.let {
             viewModel.getChatBySearchUser(it)
+        }
+        chatModel?.let {
+            viewModel.startMessagesListener(it)
         }
     }
 
