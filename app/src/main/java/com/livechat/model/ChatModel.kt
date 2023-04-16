@@ -14,6 +14,7 @@ data class ChatModel(
     var sendId: String = "",
     var sendName: String = "",
     var latestMessage: String = "",
+    var isGroupChat: Boolean = false,
     var updatedAt: Timestamp? = null
 ) {
     data class ParticipantModel(

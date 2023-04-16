@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Live Chat</string>
 
+    <string name="message">Message</string>
+    <string name="message_description">Message description</string>
+
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>

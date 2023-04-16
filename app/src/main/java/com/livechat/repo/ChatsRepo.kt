@@ -6,21 +6,30 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
+import com.livechat.api.fcm.FcmApi
+import com.livechat.api.fcm.FcmRequestModel
+import com.livechat.api.fcm.FcmResponseModel
 import com.livechat.common.Constants
 import com.livechat.extension.getTag
 import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * User: Quang Phúc
  * Date: 2023-04-05
  * Time: 09:44 PM
  */
+@Singleton
 class ChatsRepo @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val usersRepo: UsersRepo
 ) {
 
     private var chatsListener: ListenerRegistration? = null
@@ -95,6 +104,7 @@ class ChatsRepo @Inject constructor(
             "sendId" to uid,
             "sendName" to sendName,
             "latestMessage" to message,
+            "isGroupChat" to false,
             "updatedAt" to FieldValue.serverTimestamp()
         )
 
@@ -170,6 +180,44 @@ class ChatsRepo @Inject constructor(
             }
     }
 
+    fun sendNotification(
+        token: String,
+        chatId: String,
+        userId: String,
+        title: String,
+        message: String,
+        onSuccess: () -> Unit,
+        onError: (t: Throwable) -> Unit
+    ) {
+        val fcmRequestModel = FcmRequestModel(
+            to = token,
+            data = FcmRequestModel.Data(
+                chatId = chatId,
+                title = title,
+                message = message
+            )
+        )
+
+        FcmApi.apiInstance().send(body = fcmRequestModel)
+            .enqueue(object : Callback<FcmResponseModel> {
+
+                override fun onResponse(
+                    call: Call<FcmResponseModel>,
+                    response: Response<FcmResponseModel>
+                ) {
+                    val fcmResponseModel = response.body()
+                    if (fcmResponseModel != null && fcmResponseModel.failure > 0) {
+                        usersRepo.deleteToken(userId, token)
+                    }
+                    onSuccess()
+                }
+
+                override fun onFailure(call: Call<FcmResponseModel>, t: Throwable) {
+                    onError(t)
+                }
+            })
+    }
+
     fun startMessagesListener(
         chatModel: ChatModel,
         onSuccess: (messages: ArrayList<MessageModel>) -> Unit
@@ -177,29 +225,28 @@ class ChatsRepo @Inject constructor(
         removeMessagesListener()
 
         //todo: đang cập nhật toàn bộ tin nhắn, chỉ cập nhật tin nhắn mới
-        messagesListener =
-            firestore.collection(Constants.Collections.MESSAGES)
-                .whereEqualTo("chatId", chatModel.id)
-                .orderBy("createdAt")
-                .addSnapshotListener { value, e ->
-                    if (e != null || value == null) {
-                        Log.e("Message", "Listen failed.", e)
+        messagesListener = firestore.collection(Constants.Collections.MESSAGES)
+            .whereEqualTo("chatId", chatModel.id)
+            .orderBy("createdAt")
+            .addSnapshotListener { value, e ->
+                if (e != null || value == null) {
+                    Log.e("Message", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                val messages = ArrayList<MessageModel>()
+
+                for (i in value) {
+                    val message = i.toObject(MessageModel::class.java)
+                    if (message.createdAt == null) {
+                        // createdAt được khởi tạo sau khi update message mới nên thành lắng nghe hai lần
                         return@addSnapshotListener
                     }
-
-                    val messages = ArrayList<MessageModel>()
-
-                    for (i in value) {
-                        val message = i.toObject(MessageModel::class.java)
-                        if (message.createdAt == null) {
-                            // createdAt được khởi tạo sau khi update message mới nên thành lắng nghe hai lần
-                            return@addSnapshotListener
-                        }
-                        messages.add(message)
-                    }
-                    Log.i(getTag(), messages.toString())
-                    onSuccess(messages)
+                    messages.add(message)
                 }
+                Log.i(getTag(), messages.toString())
+                onSuccess(messages)
+            }
     }
 
     fun removeMessagesListener() {

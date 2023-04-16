@@ -14,7 +14,7 @@ data class UserModel(
     var fullName: String = "",
     var avatarUrl: String = "",
     var birthday: Timestamp? = null,
-    var tokens: ArrayList<Any> = ArrayList(),
+    var tokens: ArrayList<String> = ArrayList(),
     var friends: ArrayList<Any> = ArrayList(),
     var createdAt: Timestamp? = null
 )

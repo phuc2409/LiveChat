@@ -2,6 +2,7 @@ package com.livechat.view.chat
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.databinding.ActivityChatBinding
@@ -11,6 +12,7 @@ import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * User: Quang Phúc
@@ -20,6 +22,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ChatActivity : BaseActivity() {
 
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
     private lateinit var binding: ActivityChatBinding
     private lateinit var viewModel: ChatViewModel
 
@@ -28,7 +33,7 @@ class ChatActivity : BaseActivity() {
     /**
      * Truyền userModel vào từ màn Search
      */
-    private var userModel: UserModel? = null
+    private var userModels = ArrayList<UserModel>()
     private var chatModel: ChatModel? = null
 
     private var messages: ArrayList<MessageModel> = ArrayList()
@@ -41,7 +46,8 @@ class ChatActivity : BaseActivity() {
 
         val userModelJson = intent.getStringExtra(Constants.USER_MODEL)
         userModelJson?.let {
-            userModel = fromJson(it)
+            val userModel: UserModel = fromJson(it)
+            userModels.add(userModel)
         }
 
         val chatModelJson = intent.getStringExtra(Constants.CHAT_MODEL)
@@ -51,16 +57,17 @@ class ChatActivity : BaseActivity() {
 
         setupView()
 
-        userModel?.let {
-            viewModel.getChatBySearchUser(it)
+        if (userModels.isNotEmpty()) {
+            viewModel.getChatBySearchUser(userModels[0])
         }
         chatModel?.let {
             viewModel.startMessagesListener(it)
+            viewModel.startUsersInChatListener()
         }
     }
 
     override fun initView() {
-        binding.tvChatName.text = userModel?.fullName
+        setTitle()
 
 //        adapter = MessageAdapter(this, messages) { messageModel, position ->
 //
@@ -93,6 +100,15 @@ class ChatActivity : BaseActivity() {
                     finish()
                 }
 
+                ChatState.Status.GET_USERS_SUCCESS -> {
+                    userModels = it.data as ArrayList<UserModel>
+                    setTitle()
+                }
+
+                ChatState.Status.GET_USERS_ERROR -> {
+
+                }
+
                 ChatState.Status.SEND_MESSAGE_SUCCESS -> {
                     binding.etChat.setText("")
                 }
@@ -112,5 +128,22 @@ class ChatActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun setTitle() {
+        binding.tvChatName.text = getOppositeUser()?.fullName
+    }
+
+    private fun getOppositeUser(): UserModel? {
+        if (firebaseAuth.currentUser == null) {
+            return null
+        }
+
+        for (i in userModels) {
+            if (i.id != firebaseAuth.currentUser?.uid) {
+                return i
+            }
+        }
+        return null
     }
 }

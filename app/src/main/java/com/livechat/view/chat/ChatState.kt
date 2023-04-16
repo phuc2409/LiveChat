@@ -2,6 +2,7 @@ package com.livechat.view.chat
 
 import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
+import com.livechat.model.UserModel
 
 /**
  * User: Quang Phúc
@@ -21,6 +22,11 @@ class ChatState(
 
         fun getChatError(e: Exception) = ChatState(Status.GET_CHAT_ERROR, e)
 
+        fun getUsersSuccess(users: ArrayList<UserModel>) =
+            ChatState(Status.GET_USERS_SUCCESS, users)
+
+        fun getUsersError(e: Exception) = ChatState(Status.GET_USERS_ERROR, e)
+
         fun sendMessageSuccess() = ChatState(Status.SEND_MESSAGE_SUCCESS)
 
         fun sendMessageError(e: Exception) = ChatState(Status.SEND_MESSAGE_ERROR, e)
@@ -33,6 +39,8 @@ class ChatState(
         LOADING,
         GET_CHAT_SUCCESS,
         GET_CHAT_ERROR,
+        GET_USERS_SUCCESS,
+        GET_USERS_ERROR,
         SEND_MESSAGE_SUCCESS,
         SEND_MESSAGE_ERROR,
         UPDATE_MESSAGES

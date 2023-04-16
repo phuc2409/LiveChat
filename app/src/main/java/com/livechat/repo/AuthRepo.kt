@@ -5,12 +5,14 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.livechat.common.Constants
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * User: Quang Phúc
  * Date: 2023-03-22
  * Time: 09:54 PM
  */
+@Singleton
 class AuthRepo @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFirestore: FirebaseFirestore
