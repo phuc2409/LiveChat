@@ -9,6 +9,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('keystore.jks')
+            storePassword 'abcd24901'
+            keyAlias 'key0'
+            keyPassword 'abcd24901'
+        }
+    }
+
     namespace 'com.livechat'
     compileSdk 33
     buildToolsVersion '33.0.2'
@@ -22,6 +31,8 @@ android {
         versionName '1.0'
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        signingConfig signingConfigs.release
     }
 
     buildFeatures {

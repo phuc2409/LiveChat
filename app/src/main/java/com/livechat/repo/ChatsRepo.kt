@@ -7,8 +7,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.livechat.api.fcm.FcmApi
-import com.livechat.api.fcm.FcmRequestModel
-import com.livechat.api.fcm.FcmResponseModel
+import com.livechat.model.api.FcmRequestModel
+import com.livechat.model.api.FcmResponseModel
 import com.livechat.common.Constants
 import com.livechat.extension.getTag
 import com.livechat.model.ChatModel

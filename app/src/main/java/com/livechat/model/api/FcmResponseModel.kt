@@ -1,4 +1,4 @@
-package com.livechat.api.fcm
+package com.livechat.model.api
 
 import com.google.gson.annotations.SerializedName
 

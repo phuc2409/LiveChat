@@ -1,6 +1,8 @@
 package com.livechat.api.fcm
 
 import com.livechat.common.Constants
+import com.livechat.model.api.FcmRequestModel
+import com.livechat.model.api.FcmResponseModel
 import retrofit2.Call
 import retrofit2.http.*
 
