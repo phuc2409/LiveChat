@@ -1,6 +1,5 @@
-package com.livechat.view.login
+package com.livechat.view.forgot_password
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,37 +7,36 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.livechat.R
 import com.livechat.base.BaseFragment
-import com.livechat.databinding.FragmentLoginBinding
+import com.livechat.databinding.FragmentForgotPasswordBinding
 import com.livechat.extension.gone
 import com.livechat.extension.showToast
 import com.livechat.extension.visible
-import com.livechat.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * User: Quang Phúc
- * Date: 2023-03-22
- * Time: 08:59 PM
+ * Date: 2023-04-20
+ * Time: 11:47 PM
  */
 @AndroidEntryPoint
-class LoginFragment : BaseFragment(R.id.fragmentLogin) {
+class ForgotPasswordFragment : BaseFragment(R.layout.fragment_signup) {
 
     companion object {
-        fun newInstance(): LoginFragment {
-            return LoginFragment()
+        fun newInstance(): ForgotPasswordFragment {
+            return ForgotPasswordFragment()
         }
     }
 
-    private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: ForgotPasswordViewModel
+    private lateinit var binding: FragmentForgotPasswordBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
-        binding = FragmentLoginBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this)[ForgotPasswordViewModel::class.java]
+        binding = FragmentForgotPasswordBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -52,16 +50,12 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
     }
 
     override fun handleListener() {
-        binding.tvLogin.setOnClickListener {
-            viewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+        binding.tvBack.setOnClickListener {
+            getLoginActivity()?.pressBack()
         }
 
-        binding.tvSignup.setOnClickListener {
-            getLoginActivity()?.openSignup()
-        }
-
-        binding.tvForgotPassword.setOnClickListener {
-            getLoginActivity()?.openForgotPassword()
+        binding.tvReset.setOnClickListener {
+            viewModel.sendPasswordResetEmail(binding.etEmail.text.toString())
         }
     }
 
@@ -69,24 +63,20 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it.status) {
 
-                LoginState.Status.LOADING -> {
+                ForgotPasswordState.Status.LOADING -> {
                     showLoading()
                 }
 
-                LoginState.Status.LOGIN_SUCCESS -> {
+                ForgotPasswordState.Status.SEND_EMAIL_SUCCESS -> {
                     hideLoading()
 
                     if (context == null) {
                         return@observe
                     }
-                    requireContext().showToast(R.string.login_success)
-
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
+                    requireContext().showToast(R.string.send_email_success)
                 }
 
-                LoginState.Status.LOGIN_ERROR -> {
+                ForgotPasswordState.Status.SEND_EMAIL_ERROR -> {
                     hideLoading()
 
                     if (context == null) {

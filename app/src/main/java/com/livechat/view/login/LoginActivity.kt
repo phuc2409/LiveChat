@@ -5,6 +5,7 @@ import com.livechat.R
 import com.livechat.base.BaseActivity
 import com.livechat.databinding.ActivityLoginBinding
 import com.livechat.extension.getTag
+import com.livechat.view.forgot_password.ForgotPasswordFragment
 import com.livechat.view.signup.SignupFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +21,7 @@ class LoginActivity : BaseActivity() {
 
     private var loginFragment: LoginFragment? = null
     private var signupFragment: SignupFragment? = null
+    private var forgotPasswordFragment: ForgotPasswordFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +50,24 @@ class LoginActivity : BaseActivity() {
     fun openSignup() {
         signupFragment = SignupFragment.newInstance()
         signupFragment?.let {
-            supportFragmentManager.beginTransaction().add(R.id.fragmentLogin, it)
-                .addToBackStack(SignupFragment.getTag()).commit()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentLogin, it)
+                .addToBackStack(SignupFragment.getTag())
+                .commit()
         }
     }
 
-    fun closeSignup() {
+    fun openForgotPassword() {
+        forgotPasswordFragment = ForgotPasswordFragment.newInstance()
+        forgotPasswordFragment?.let {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentLogin, it)
+                .addToBackStack(ForgotPasswordFragment.getTag())
+                .commit()
+        }
+    }
+
+    fun pressBack() {
         onBackPressed()
     }
 }

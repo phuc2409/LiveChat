@@ -78,4 +78,18 @@ class AuthRepo @Inject constructor(
                 onError(it)
             }
     }
+
+    fun sendPasswordResetEmail(
+        email: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firebaseAuth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                onError(it)
+            }
+    }
 }

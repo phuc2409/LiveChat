@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentSignupBinding
@@ -31,8 +30,6 @@ class SignupFragment : BaseFragment(R.layout.fragment_signup) {
     private lateinit var binding: FragmentSignupBinding
     private lateinit var viewModel: SignupViewModel
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,7 +51,7 @@ class SignupFragment : BaseFragment(R.layout.fragment_signup) {
 
     override fun handleListener() {
         binding.tvBack.setOnClickListener {
-            getLoginActivity()?.closeSignup()
+            getLoginActivity()?.pressBack()
         }
 
         binding.tvSignup.setOnClickListener {
