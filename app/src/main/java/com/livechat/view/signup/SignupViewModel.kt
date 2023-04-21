@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.livechat.base.BaseViewModel
 import com.livechat.repo.AuthRepo
+import com.livechat.repo.UsersRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -13,7 +14,10 @@ import javax.inject.Inject
  * Time: 11:38 PM
  */
 @HiltViewModel
-class SignupViewModel @Inject constructor(private val authRepo: AuthRepo) : BaseViewModel() {
+class SignupViewModel @Inject constructor(
+    private val authRepo: AuthRepo,
+    private val usersRepo: UsersRepo
+) : BaseViewModel() {
 
     private val _state = MutableLiveData<SignupState>()
     val state: LiveData<SignupState> = _state
@@ -22,9 +26,16 @@ class SignupViewModel @Inject constructor(private val authRepo: AuthRepo) : Base
         _state.value = SignupState.loading()
         authRepo.signup(email, password,
             onSuccess = {
-                _state.postValue(SignupState.signupSuccess())
+                usersRepo.createUser(
+                    onSuccess = {
+                        _state.postValue(SignupState.signupSuccess())
+                    },
+                    onError = {
+                        _state.postValue(SignupState.signupError(it))
+                    })
+
             }, onError = {
-                _state.value = SignupState.signupError(it)
+                _state.postValue(SignupState.signupError(it))
             })
     }
 }

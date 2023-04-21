@@ -53,6 +53,7 @@ class ChatsRepo @Inject constructor(
                 }
             }
             .addOnFailureListener {
+                it.printStackTrace()
                 onError(it)
             }
     }
@@ -114,6 +115,7 @@ class ChatsRepo @Inject constructor(
                 Log.i(getTag(), chatModel.toString())
                 onSuccess(chatModel)
             }.addOnFailureListener {
+                it.printStackTrace()
                 onError(it)
             }
     }
@@ -146,6 +148,7 @@ class ChatsRepo @Inject constructor(
                 Log.i(getTag(), chatModel.toString())
                 onSuccess()
             }.addOnFailureListener {
+                it.printStackTrace()
                 onError(it)
             }
     }
@@ -176,6 +179,7 @@ class ChatsRepo @Inject constructor(
             .addOnSuccessListener {
                 onSuccess()
             }.addOnFailureListener {
+                it.printStackTrace()
                 onError(it)
             }
     }
@@ -213,6 +217,7 @@ class ChatsRepo @Inject constructor(
                 }
 
                 override fun onFailure(call: Call<FcmResponseModel>, t: Throwable) {
+                    t.printStackTrace()
                     onError(t)
                 }
             })

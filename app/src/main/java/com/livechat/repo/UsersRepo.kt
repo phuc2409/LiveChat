@@ -26,6 +26,32 @@ class UsersRepo @Inject constructor(
 
     private var usersInChatListener: ListenerRegistration? = null
 
+    fun createUser(onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
+        val model = hashMapOf(
+            "email" to firebaseAuth.currentUser?.email,
+            "userName" to firebaseAuth.currentUser?.email,
+            "fullName" to "",
+            "avatarUrl" to "",
+            "birthday" to FieldValue.serverTimestamp(),
+            "tokens" to ArrayList<String>(),
+            "friends" to ArrayList<String>(),
+            "createdAt" to FieldValue.serverTimestamp()
+        )
+
+        firestore.collection(Constants.Collections.USERS)
+            .document(firebaseAuth.currentUser?.uid.toString())
+            .set(model)
+            .addOnSuccessListener {
+                firebaseAuth.signOut()
+                onSuccess()
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                firebaseAuth.signOut()
+                onError(it)
+            }
+    }
+
     fun findUsers(
         keyword: String,
         onSuccess: (users: ArrayList<UserModel>) -> Unit,
@@ -48,6 +74,7 @@ class UsersRepo @Inject constructor(
                 onSuccess(users)
             }
             .addOnFailureListener {
+                it.printStackTrace()
                 onError(it)
             }
     }
