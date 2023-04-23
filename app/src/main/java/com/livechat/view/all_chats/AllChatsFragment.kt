@@ -6,17 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.common.Constants
+import com.livechat.common.CurrentUser
 import com.livechat.databinding.FragmentAllChatsBinding
+import com.livechat.extension.showToast
 import com.livechat.extension.toJson
 import com.livechat.model.ChatModel
 import com.livechat.view.chat.ChatActivity
 import com.livechat.view.splash.SplashActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * User: Quang Phúc
@@ -39,9 +39,6 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
 
     private var chats: ArrayList<ChatModel> = ArrayList()
 
-    @Inject
-    lateinit var firebaseAuth: FirebaseAuth
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,7 +57,7 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
     }
 
     override fun initView() {
-        binding.tvEmail.text = firebaseAuth.currentUser?.email
+        binding.tvEmail.text = CurrentUser.email
     }
 
     override fun handleListener() {
@@ -69,11 +66,7 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
                 return@setOnClickListener
             }
 
-            firebaseAuth.signOut()
-
-            val intent = Intent(context, SplashActivity::class.java)
-            startActivity(intent)
-            activity?.finish()
+            viewModel.signOut()
         }
     }
 
@@ -96,6 +89,16 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
                         startActivity(intent)
                     }
                     binding.rvAllChats.adapter = adapter
+                }
+
+                AllChatsState.Status.SIGN_OUT_SUCCESS -> {
+                    val intent = Intent(context, SplashActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                }
+
+                AllChatsState.Status.SIGN_OUT_ERROR -> {
+                    context?.showToast("Sign out error")
                 }
             }
         }

@@ -38,8 +38,7 @@ class UsersRepo @Inject constructor(
                 val user = it.toObject(UserModel::class.java)
                 if (user == null) {
                     onError(Exception("getUser == null"))
-                }
-                else {
+                } else {
                     user.id = it.id
                     onSuccess(user)
                 }
@@ -103,7 +102,7 @@ class UsersRepo @Inject constructor(
             }
     }
 
-    fun updateToken(token: String) {
+    fun updateToken(token: String, onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
         if (firebaseAuth.currentUser == null) {
             return
         }
@@ -112,14 +111,20 @@ class UsersRepo @Inject constructor(
             .document(firebaseAuth.currentUser!!.uid)
             .update("tokens", FieldValue.arrayUnion(token))
             .addOnSuccessListener {
-
+                onSuccess()
             }
             .addOnFailureListener {
                 it.printStackTrace()
+                onError(it)
             }
     }
 
-    fun deleteToken(userId: String, token: String) {
+    fun deleteToken(
+        userId: String,
+        token: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
         if (firebaseAuth.currentUser == null) {
             return
         }
@@ -128,10 +133,11 @@ class UsersRepo @Inject constructor(
             .document(userId)
             .update("tokens", FieldValue.arrayRemove(token))
             .addOnSuccessListener {
-
+                onSuccess()
             }
             .addOnFailureListener {
                 it.printStackTrace()
+                onError(it)
             }
     }
 

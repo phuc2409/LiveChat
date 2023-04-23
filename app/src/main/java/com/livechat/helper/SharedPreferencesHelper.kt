@@ -92,4 +92,8 @@ class SharedPreferencesHelper @Inject constructor(context: Context) {
     fun setCurrentUser(value: UserModel) {
         setString(Key.CURRENT_USER, value.toJson())
     }
+
+    fun deleteCurrentUser() {
+        setString(Key.CURRENT_USER, "")
+    }
 }

@@ -2,9 +2,13 @@ package com.livechat.view.all_chats
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseViewModel
+import com.livechat.common.CurrentUser
+import com.livechat.helper.SharedPreferencesHelper
 import com.livechat.model.ChatModel
 import com.livechat.repo.ChatsRepo
+import com.livechat.repo.UsersRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -14,7 +18,12 @@ import javax.inject.Inject
  * Time: 11:24 PM
  */
 @HiltViewModel
-class AllChatsViewModel @Inject constructor(private val chatsRepo: ChatsRepo) : BaseViewModel() {
+class AllChatsViewModel @Inject constructor(
+    private val chatsRepo: ChatsRepo,
+    private val usersRepo: UsersRepo,
+    private val auth: FirebaseAuth,
+    private val sharedPrefs: SharedPreferencesHelper
+) : BaseViewModel() {
 
     private val _state = MutableLiveData<AllChatsState>()
     val state: LiveData<AllChatsState> = _state
@@ -24,7 +33,21 @@ class AllChatsViewModel @Inject constructor(private val chatsRepo: ChatsRepo) : 
     fun startChatsListener() {
         chatsRepo.startChatsListener(
             onSuccess = {
-                _state.postValue(AllChatsState.updateChats(it))
+                chats = it
+                _state.postValue(AllChatsState.updateChats(chats))
+            })
+    }
+
+    fun signOut() {
+        usersRepo.deleteToken(CurrentUser.id, sharedPrefs.getToken(),
+            onSuccess = {
+                CurrentUser.clear()
+                sharedPrefs.deleteCurrentUser()
+                auth.signOut()
+                _state.postValue(AllChatsState.signOutSuccess())
+            },
+            onError = {
+                _state.postValue(AllChatsState.signOutError())
             })
     }
 

@@ -15,12 +15,18 @@ class AuthRepo @Inject constructor(private val firebaseAuth: FirebaseAuth) {
     fun login(
         email: String,
         password: String,
-        onSuccess: () -> Unit,
+        onSuccess: (userId: String) -> Unit,
         onError: (e: Exception) -> Unit
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                onSuccess()
+                if (it.user == null) {
+                    onError(Exception("Auth result user is null"))
+                    return@addOnSuccessListener
+                }
+
+                val id = it.user!!.uid
+                onSuccess(id)
             }
             .addOnFailureListener {
                 it.printStackTrace()

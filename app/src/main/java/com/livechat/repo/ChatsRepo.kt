@@ -212,7 +212,13 @@ class ChatsRepo @Inject constructor(
                 ) {
                     val fcmResponseModel = response.body()
                     if (fcmResponseModel != null && fcmResponseModel.failure > 0) {
-                        usersRepo.deleteToken(userId, token)
+                        usersRepo.deleteToken(userId, token,
+                            onSuccess = {
+
+                            },
+                            onError = {
+
+                            })
                     }
                     onSuccess()
                 }

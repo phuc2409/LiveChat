@@ -34,7 +34,13 @@ class MessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         Log.i("onNewToken", token)
         sharedPreferencesHelper.setToken(token)
-        usersRepo.updateToken(token)
+        usersRepo.updateToken(token,
+            onSuccess = {
+
+            },
+            onError = {
+
+            })
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
