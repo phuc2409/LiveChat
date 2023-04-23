@@ -127,24 +127,26 @@ class ChatsRepo @Inject constructor(
         onSuccess: () -> Unit,
         onError: (e: Exception) -> Unit
     ) {
-        val uid = firebaseAuth.currentUser?.uid
-        if (uid == null) {
-            onError(Exception("Current user uid is null"))
-            return
+        for (i in chatModel.participants) {
+            if (i.id == CurrentUser.id) {
+                i.name = CurrentUser.fullName
+                i.avatarUrl = CurrentUser.avatarUrl
+                break
+            }
         }
 
-        val sendName = firebaseAuth.currentUser?.email ?: ""
         val hashMap = hashMapOf(
-            "sendId" to uid,
-            "sendName" to sendName,
+            "participants" to chatModel.participants,
+            "sendId" to CurrentUser.id,
+            "sendName" to CurrentUser.fullName,
             "latestMessage" to message,
             "updatedAt" to FieldValue.serverTimestamp()
         )
 
         firestore.collection(Constants.Collections.CHATS).document(chatModel.id).update(hashMap)
             .addOnSuccessListener {
-                chatModel.sendId = uid
-                chatModel.sendName = sendName
+                chatModel.sendId = CurrentUser.id
+                chatModel.sendName = CurrentUser.fullName
                 chatModel.latestMessage = message
                 Log.i(getTag(), chatModel.toString())
                 onSuccess()
@@ -160,15 +162,9 @@ class ChatsRepo @Inject constructor(
         onSuccess: () -> Unit,
         onError: (e: Exception) -> Unit
     ) {
-        val uid = firebaseAuth.currentUser?.uid
-        if (uid == null) {
-            onError(Exception("Current user uid is null"))
-            return
-        }
-
         val hashMap = hashMapOf(
             "chatId" to chatModel.id,
-            "sendId" to uid,
+            "sendId" to CurrentUser.id,
             "message" to message,
             "attachmentType" to "",
             "attachmentUrls" to ArrayList<String>(),

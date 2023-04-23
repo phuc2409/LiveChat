@@ -13,6 +13,7 @@ import com.livechat.extension.showToast
 import com.livechat.view.all_chats.AllChatsFragment
 import com.livechat.view.contacts.ContactsFragment
 import com.livechat.view.search.SearchActivity
+import com.livechat.view.settings.SettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -59,6 +60,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.imgAvatar.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
         binding.tvSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)

@@ -21,5 +21,16 @@ data class ChatModel(
         var id: String = "",
         var name: String = "",
         var avatarUrl: String = ""
-    )
+    ) {
+        override fun equals(other: Any?): Boolean {
+            if (other !is ParticipantModel) {
+                return false
+            }
+            return this.id == other.id
+        }
+
+        override fun hashCode(): Int {
+            return super.hashCode()
+        }
+    }
 }

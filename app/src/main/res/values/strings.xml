@@ -21,4 +21,7 @@
     <string name="reset">Reset</string>
     <string name="send_email_success">Send email success</string>
     <string name="image">Image</string>
+    <string name="profile">Profile</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
 </resources>

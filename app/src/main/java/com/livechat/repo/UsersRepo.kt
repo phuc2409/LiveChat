@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.livechat.common.Constants
+import com.livechat.common.CurrentUser
 import com.livechat.extension.getTag
 import com.livechat.model.ChatModel
 import com.livechat.model.UserModel
@@ -132,6 +133,19 @@ class UsersRepo @Inject constructor(
         firestore.collection(Constants.Collections.USERS)
             .document(userId)
             .update("tokens", FieldValue.arrayRemove(token))
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun updateFullName(fullName: String, onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
+        firestore.collection(Constants.Collections.USERS)
+            .document(CurrentUser.id)
+            .update("fullName", fullName)
             .addOnSuccessListener {
                 onSuccess()
             }
