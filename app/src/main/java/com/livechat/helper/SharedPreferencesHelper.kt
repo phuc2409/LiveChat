@@ -1,6 +1,9 @@
 package com.livechat.helper
 
 import android.content.Context
+import com.livechat.extension.fromJson
+import com.livechat.extension.toJson
+import com.livechat.model.UserModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,6 +17,7 @@ class SharedPreferencesHelper @Inject constructor(context: Context) {
 
     private object Key {
         const val TOKEN = "TOKEN"
+        const val CURRENT_USER = "CURRENT_USER"
     }
 
     private val prefsName = "com_livechat_prefs"
@@ -74,5 +78,18 @@ class SharedPreferencesHelper @Inject constructor(context: Context) {
 
     fun setToken(value: String) {
         setString(Key.TOKEN, value)
+    }
+
+    fun getCurrentUser(): UserModel {
+        val json = getString(Key.CURRENT_USER, "")
+        return if (json.isBlank()) {
+            UserModel()
+        } else {
+            fromJson(json)
+        }
+    }
+
+    fun setCurrentUser(value: UserModel) {
+        setString(Key.CURRENT_USER, value.toJson())
     }
 }

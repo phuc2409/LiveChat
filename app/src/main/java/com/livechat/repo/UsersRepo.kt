@@ -26,6 +26,30 @@ class UsersRepo @Inject constructor(
 
     private var usersInChatListener: ListenerRegistration? = null
 
+    fun getUser(
+        id: String,
+        onSuccess: (userModel: UserModel) -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firestore.collection(Constants.Collections.USERS)
+            .document(id)
+            .get()
+            .addOnSuccessListener {
+                val user = it.toObject(UserModel::class.java)
+                if (user == null) {
+                    onError(Exception("getUser == null"))
+                }
+                else {
+                    user.id = it.id
+                    onSuccess(user)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
     fun createUser(onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
         val model = hashMapOf(
             "email" to firebaseAuth.currentUser?.email,

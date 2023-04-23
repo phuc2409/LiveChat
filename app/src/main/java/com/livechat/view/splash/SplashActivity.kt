@@ -2,13 +2,12 @@ package com.livechat.view.splash
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.ViewModelProvider
 import com.livechat.base.BaseActivity
 import com.livechat.databinding.ActivitySplashBinding
 import com.livechat.view.login.LoginActivity
 import com.livechat.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * User: Quang Phúc
@@ -18,17 +17,16 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SplashActivity : BaseActivity() {
 
-    @Inject
-    lateinit var firebaseAuth: FirebaseAuth
-
+    private lateinit var viewModel: SplashViewModel
     private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[SplashViewModel::class.java]
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupView()
-        goToNextActivity()
+        viewModel.getCurrentUserInfo()
     }
 
     override fun initView() {
@@ -40,18 +38,21 @@ class SplashActivity : BaseActivity() {
     }
 
     override fun observeViewModel() {
+        viewModel.state.observe(this) {
+            when (it.status) {
 
-    }
+                SplashState.Status.GO_TO_LOGIN -> {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
 
-    private fun goToNextActivity() {
-        if (firebaseAuth.currentUser == null) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        } else {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+                SplashState.Status.GO_TO_MAIN -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
         }
     }
 }

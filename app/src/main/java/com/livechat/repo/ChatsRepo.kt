@@ -7,13 +7,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.livechat.api.fcm.FcmApi
-import com.livechat.model.api.FcmRequestModel
-import com.livechat.model.api.FcmResponseModel
 import com.livechat.common.Constants
+import com.livechat.common.CurrentUser
 import com.livechat.extension.getTag
 import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
+import com.livechat.model.api.FcmRequestModel
+import com.livechat.model.api.FcmResponseModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -259,15 +260,11 @@ class ChatsRepo @Inject constructor(
     }
 
     fun startChatsListener(onSuccess: (messages: ArrayList<ChatModel>) -> Unit) {
-        if (firebaseAuth.uid == null) {
-            return
-        }
-
         removeChatsListener()
 
         //todo: đang cập nhật toàn bộ tin nhắn, chỉ cập nhật tin nhắn mới
         chatsListener = firestore.collection(Constants.Collections.CHATS)
-            .whereArrayContains("participantIds", firebaseAuth.uid.toString())
+            .whereArrayContains("participantIds", CurrentUser.id)
             .orderBy("updatedAt", Query.Direction.DESCENDING)
             .addSnapshotListener { value, e ->
                 if (e != null || value == null) {
