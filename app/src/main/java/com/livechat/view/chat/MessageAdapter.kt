@@ -45,12 +45,16 @@ class MessageAdapter(
 
             is SendHolder -> {
                 holder.binding.tvMessage.text = item.message
-                holder.binding.tvTime.text = item.createdAt?.toDate().toString()
+                item.createdAt?.let {
+                    holder.binding.tvTime.text = it.toDate().toString()
+                }
             }
 
             is ReceiveHolder -> {
                 holder.binding.tvMessage.text = item.message
-                holder.binding.tvTime.text = item.createdAt?.toDate().toString()
+                item.createdAt?.let {
+                    holder.binding.tvTime.text = it.toDate().toString()
+                }
             }
 
             is ErrorHolder -> {

@@ -246,10 +246,6 @@ class ChatsRepo @Inject constructor(
 
                 for (i in value) {
                     val message = i.toObject(MessageModel::class.java)
-                    if (message.createdAt == null) {
-                        // createdAt được khởi tạo sau khi update message mới nên thành lắng nghe hai lần
-                        return@addSnapshotListener
-                    }
                     messages.add(message)
                 }
                 Log.i(getTag(), messages.toString())
@@ -279,10 +275,6 @@ class ChatsRepo @Inject constructor(
                 for (i in value) {
                     val chat = i.toObject(ChatModel::class.java)
                     chat.id = i.id
-                    if (chat.updatedAt == null) {
-                        // updatedAt được khởi tạo sau khi update chat mới nên thành lắng nghe hai lần
-                        return@addSnapshotListener
-                    }
                     chats.add(chat)
                 }
                 Log.i("startChatsListener", chats.toString())

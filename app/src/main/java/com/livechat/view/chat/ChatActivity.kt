@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
+import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityChatBinding
 import com.livechat.extension.fromJson
 import com.livechat.extension.showToast
@@ -110,7 +111,7 @@ class ChatActivity : BaseActivity() {
                 }
 
                 ChatState.Status.SEND_MESSAGE_SUCCESS -> {
-                    binding.etChat.setText("")
+
                 }
 
                 ChatState.Status.SEND_MESSAGE_ERROR -> {
@@ -119,6 +120,9 @@ class ChatActivity : BaseActivity() {
 
                 ChatState.Status.UPDATE_MESSAGES -> {
                     messages = it.data as ArrayList<MessageModel>
+                    if (messages.last().sendId == CurrentUser.id) {
+                        binding.etChat.setText("")
+                    }
                     adapter = MessageAdapter(this, messages) { messageModel, position ->
 
                     }
