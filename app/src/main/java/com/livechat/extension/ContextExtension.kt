@@ -1,6 +1,7 @@
 package com.livechat.extension
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.widget.Toast
 
 /**
@@ -14,4 +15,13 @@ fun Context.showToast(text: String) {
 
 fun Context.showToast(resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+}
+
+fun Context.checkPermissions(permissions: Array<String>): Boolean {
+    for (i in permissions) {
+        if (checkSelfPermission(i) == PackageManager.PERMISSION_DENIED) {
+            return false
+        }
+    }
+    return true
 }

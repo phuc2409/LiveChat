@@ -24,4 +24,6 @@
     <string name="profile">Profile</string>
     <string name="success">Success</string>
     <string name="error">Error</string>
+    <string name="media">Media</string>
+    <string name="camera">Camera</string>
 </resources>

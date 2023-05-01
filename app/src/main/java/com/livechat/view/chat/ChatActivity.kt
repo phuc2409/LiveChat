@@ -1,17 +1,23 @@
 package com.livechat.view.chat
 
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityChatBinding
+import com.livechat.extension.checkPermissions
 import com.livechat.extension.fromJson
 import com.livechat.extension.showToast
 import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
+import com.livechat.util.PermissionsUtil
+import com.livechat.view.bottom_sheet.ChatBottomSheet
+import com.livechat.view.choose_media.ChooseMediaActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,6 +44,19 @@ class ChatActivity : BaseActivity() {
     private var chatModel: ChatModel? = null
 
     private var messages: ArrayList<MessageModel> = ArrayList()
+
+    private val requestPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isGranted = permissions.entries.all {
+            it.value
+        }
+        if (isGranted) {
+            showToast("Can post notifications")
+        } else {
+            showToast("Can't post notifications")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +96,24 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.imgMore.setOnClickListener {
+            ChatBottomSheet(this, object : ChatBottomSheet.Listener {
+
+                override fun onSelectMedia() {
+                    if (checkPermissions(PermissionsUtil.getStoragePermissions())) {
+                        val intent = Intent(this@ChatActivity, ChooseMediaActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        requestPermissionsLauncher.launch(PermissionsUtil.getStoragePermissions())
+                    }
+                }
+
+                override fun onSelectCamera() {
+
+                }
+            }).show()
+        }
+
         binding.tvSend.setOnClickListener {
             viewModel.sendMessage(binding.etChat.text.toString())
         }
