@@ -8,7 +8,7 @@ package com.livechat.model
 data class FileModel(
     val uriId: Long,
     val path: String,
-    val size: Int,
+    val size: Long,
     val duration: Int = 0,
     val dateTaken: Int,
     val dateModified: Int,

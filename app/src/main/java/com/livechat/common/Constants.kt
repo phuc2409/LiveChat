@@ -20,4 +20,6 @@ object Constants {
     const val CHAT_MODEL = "chat_model"
 
     const val MESSAGE_CHANNEL_ID = "message_channel"
+
+    const val MAX_FILE_SIZE = 300 * 1024 * 1024
 }

@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
-import com.livechat.extension.getTag
+import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
 import com.livechat.model.UserModel
 import javax.inject.Inject
@@ -94,7 +94,7 @@ class UsersRepo @Inject constructor(
                         }
                     }
                 }
-                Log.i(getTag(), users.toString())
+                Log.i(getSimpleName(), users.toString())
                 onSuccess(users)
             }
             .addOnFailureListener {
@@ -181,7 +181,7 @@ class UsersRepo @Inject constructor(
                     }
                     users.add(user)
                 }
-                Log.i(getTag(), users.toString())
+                Log.i(getSimpleName(), users.toString())
                 onSuccess(users)
             }
     }

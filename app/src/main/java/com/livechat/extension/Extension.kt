@@ -7,7 +7,7 @@ import com.google.gson.Gson
  * Date: 2023-02-16
  * Time: 12:15 AM
  */
-fun Any.getTag(): String {
+fun Any.getSimpleName(): String {
     return javaClass.simpleName
 }
 

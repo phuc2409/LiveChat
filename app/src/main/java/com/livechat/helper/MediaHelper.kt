@@ -67,7 +67,7 @@ class MediaHelper @Inject constructor(private val contentResolver: ContentResolv
                         // Get values of columns for a given image.
                         val id = cursor.getLong(idColumn)
                         val data = cursor.getString(dataColumn)
-                        val size = cursor.getInt(sizeColumn)
+                        val size = cursor.getLong(sizeColumn)
                         val dateTaken = cursor.getInt(dateTakenColumn)
                         val dateModified = cursor.getInt(dateModifiedColumn)
                         files.add(
@@ -108,7 +108,7 @@ class MediaHelper @Inject constructor(private val contentResolver: ContentResolv
                         // Get values of columns for a given image.
                         val id = cursor.getLong(idColumn)
                         val data = cursor.getString(dataColumn)
-                        val size = cursor.getInt(sizeColumn)
+                        val size = cursor.getLong(sizeColumn)
                         val duration = cursor.getInt(durationColumn)
                         val dateTaken = cursor.getInt(dateTakenColumn)
                         val dateModified = cursor.getInt(dateModifiedColumn)

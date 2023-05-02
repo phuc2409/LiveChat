@@ -7,7 +7,7 @@
     tools:context=".view.choose_media.ChooseMediaActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/llActionBar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
@@ -31,7 +31,7 @@
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/llActionBar"
         app:spanCount="3"
         tools:listitem="@layout/item_media" />
 
@@ -58,5 +58,12 @@
             tools:text="99" />
 
     </androidx.cardview.widget.CardView>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentResult"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_choose_media_result"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

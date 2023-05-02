@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.livechat.R
 import com.livechat.base.BaseActivity
 import com.livechat.databinding.ActivityLoginBinding
-import com.livechat.extension.getTag
+import com.livechat.extension.getSimpleName
 import com.livechat.view.forgot_password.ForgotPasswordFragment
 import com.livechat.view.signup.SignupFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +52,7 @@ class LoginActivity : BaseActivity() {
         signupFragment?.let {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentLogin, it)
-                .addToBackStack(SignupFragment.getTag())
+                .addToBackStack(SignupFragment.getSimpleName())
                 .commit()
         }
     }
@@ -62,7 +62,7 @@ class LoginActivity : BaseActivity() {
         forgotPasswordFragment?.let {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentLogin, it)
-                .addToBackStack(ForgotPasswordFragment.getTag())
+                .addToBackStack(ForgotPasswordFragment.getSimpleName())
                 .commit()
         }
     }

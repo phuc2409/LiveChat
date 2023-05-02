@@ -19,10 +19,16 @@ class ChooseMediaState(
 
         fun chooseMediaSuccess(position: Int) =
             ChooseMediaState(Status.CHOOSE_MEDIA_SUCCESS, position)
+
+        fun checkFileSizeSuccess() = ChooseMediaState(Status.CHECK_FILE_SIZE_SUCCESS)
+
+        fun checkFileSizeError() = ChooseMediaState(Status.CHECK_FILE_SIZE_ERROR)
     }
 
     enum class Status {
         GET_MEDIA_SUCCESS,
-        CHOOSE_MEDIA_SUCCESS
+        CHOOSE_MEDIA_SUCCESS,
+        CHECK_FILE_SIZE_SUCCESS,
+        CHECK_FILE_SIZE_ERROR
     }
 }

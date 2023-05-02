@@ -1,10 +1,13 @@
 package com.livechat.view.chat
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
@@ -13,6 +16,7 @@ import com.livechat.extension.checkPermissions
 import com.livechat.extension.fromJson
 import com.livechat.extension.showToast
 import com.livechat.model.ChatModel
+import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import com.livechat.util.PermissionsUtil
@@ -58,6 +62,17 @@ class ChatActivity : BaseActivity() {
         }
     }
 
+    private val chooseMediaLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.getStringExtra(ChooseMediaActivity.KEY_ITEMS)?.let {
+                    val type = object : TypeToken<ArrayList<FileModel>>() {}.type
+                    val items: ArrayList<FileModel> = Gson().fromJson(it, type)
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[ChatViewModel::class.java]
@@ -102,7 +117,7 @@ class ChatActivity : BaseActivity() {
                 override fun onSelectMedia() {
                     if (checkPermissions(PermissionsUtil.getStoragePermissions())) {
                         val intent = Intent(this@ChatActivity, ChooseMediaActivity::class.java)
-                        startActivity(intent)
+                        chooseMediaLauncher.launch(intent)
                     } else {
                         requestPermissionsLauncher.launch(PermissionsUtil.getStoragePermissions())
                     }

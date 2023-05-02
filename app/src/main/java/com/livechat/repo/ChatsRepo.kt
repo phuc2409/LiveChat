@@ -9,7 +9,7 @@ import com.google.firebase.firestore.Query
 import com.livechat.api.fcm.FcmApi
 import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
-import com.livechat.extension.getTag
+import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
@@ -49,7 +49,7 @@ class ChatsRepo @Inject constructor(
                 } else {
                     val chatModel = documents.first().toObject(ChatModel::class.java)
                     chatModel.id = documents.first().id
-                    Log.i(getTag(), chatModel.toString())
+                    Log.i(getSimpleName(), chatModel.toString())
                     onSuccess(chatModel)
                 }
             }
@@ -113,7 +113,7 @@ class ChatsRepo @Inject constructor(
         firestore.collection(Constants.Collections.CHATS).add(hashMap)
             .addOnSuccessListener {
                 chatModel.id = it.id
-                Log.i(getTag(), chatModel.toString())
+                Log.i(getSimpleName(), chatModel.toString())
                 onSuccess(chatModel)
             }.addOnFailureListener {
                 it.printStackTrace()
@@ -148,7 +148,7 @@ class ChatsRepo @Inject constructor(
                 chatModel.sendId = CurrentUser.id
                 chatModel.sendName = CurrentUser.fullName
                 chatModel.latestMessage = message
-                Log.i(getTag(), chatModel.toString())
+                Log.i(getSimpleName(), chatModel.toString())
                 onSuccess()
             }.addOnFailureListener {
                 it.printStackTrace()
@@ -248,7 +248,7 @@ class ChatsRepo @Inject constructor(
                     val message = i.toObject(MessageModel::class.java)
                     messages.add(message)
                 }
-                Log.i(getTag(), messages.toString())
+                Log.i(getSimpleName(), messages.toString())
                 onSuccess(messages)
             }
     }
