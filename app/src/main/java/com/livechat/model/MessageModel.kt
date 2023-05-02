@@ -12,8 +12,12 @@ data class MessageModel(
     var chatId: String = "",
     var sendId: String = "",
     var message: String = "",
-    var attachmentType: String = "",
-    var attachmentUrls: ArrayList<String> = ArrayList(),
+    var attachments: ArrayList<AttachmentModel> = ArrayList(),
     var createdAt: Timestamp? = null,
     var isDeleted: Boolean = false
-)
+) {
+    data class AttachmentModel(
+        var url: String = "",
+        var type: String = ""
+    )
+}

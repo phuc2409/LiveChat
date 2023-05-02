@@ -96,6 +96,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
     // retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'

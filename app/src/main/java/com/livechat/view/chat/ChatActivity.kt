@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.livechat.R
 import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
@@ -69,6 +70,7 @@ class ChatActivity : BaseActivity() {
                 data?.getStringExtra(ChooseMediaActivity.KEY_ITEMS)?.let {
                     val type = object : TypeToken<ArrayList<FileModel>>() {}.type
                     val items: ArrayList<FileModel> = Gson().fromJson(it, type)
+                    viewModel.sendMessage("[${getString(R.string.media)}]", items)
                 }
             }
         }

@@ -8,6 +8,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -46,4 +49,8 @@ class AppModule {
     @Provides
     @Singleton
     fun providerFirebaseAuth(): FirebaseAuth = Firebase.auth
+
+    @Provides
+    @Singleton
+    fun providerFirebaseStorageReference(): StorageReference = Firebase.storage.reference
 }

@@ -21,4 +21,8 @@ object TimeUtil {
             )
         }.${mMilliSec / 100}"
     }
+
+    fun getCurrentTimestamp(): Long {
+        return System.currentTimeMillis()
+    }
 }

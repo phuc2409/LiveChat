@@ -7,11 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseViewModel
 import com.livechat.model.ChatModel
+import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import com.livechat.repo.ChatsRepo
+import com.livechat.repo.FileRepo
 import com.livechat.repo.UsersRepo
+import com.livechat.util.FileUtil
+import com.livechat.util.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -22,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val chatsRepo: ChatsRepo,
+    private val fileRepo: FileRepo,
     private val usersRepo: UsersRepo,
     private val firebaseAuth: FirebaseAuth
 ) : BaseViewModel() {
@@ -53,7 +59,7 @@ class ChatViewModel @Inject constructor(
             })
     }
 
-    fun sendMessage(message: String) {
+    fun sendMessage(message: String, media: ArrayList<FileModel> = ArrayList()) {
         if (chatModel == null) {
             chatsRepo.createChat(
                 userModel = users[0],
@@ -62,29 +68,76 @@ class ChatViewModel @Inject constructor(
                     chatModel = it
                     startMessagesListener()
                     startUsersInChatListener()
-                    sendMessage(message)
+                    sendMessage(message, media)
                 }, onError = {
 
                 }
             )
         } else {
-            chatsRepo.sendMessage(
-                chatModel = chatModel!!,
-                message = message,
-                onSuccess = {
-                    chatsRepo.updateChat(
-                        chatModel = chatModel!!,
-                        message = message,
+            if (media.isEmpty()) {
+                chatsRepo.sendMessage(
+                    chatModel = chatModel!!,
+                    message = message,
+                    attachments = ArrayList(),
+                    onSuccess = {
+                        chatsRepo.updateChat(
+                            chatModel = chatModel!!,
+                            message = message,
+                            onSuccess = {
+
+                            }, onError = {
+
+                            })
+                        sendNotification(message)
+                        _state.postValue(ChatState.sendMessageSuccess())
+                    }, onError = {
+                        _state.postValue(ChatState.sendMessageError(it))
+                    })
+            } else {
+                var count = 0
+                val attachments = ArrayList<MessageModel.AttachmentModel>()
+
+                for (i in media) {
+                    val extension = File(i.path).extension
+                    val newFileName =
+                        "${chatModel?.id}/${TimeUtil.getCurrentTimestamp()}_${FileUtil.getRandomFileName()}.${extension}"
+                    fileRepo.uploadFile(
+                        i.path,
+                        newFileName,
                         onSuccess = {
+                            attachments.add(MessageModel.AttachmentModel(it, i.type.name))
+                            count++
+                            if (count == media.size) {
+                                if (attachments.size == media.size) {
+                                    chatsRepo.sendMessage(
+                                        chatModel = chatModel!!,
+                                        message = message,
+                                        attachments = attachments,
+                                        onSuccess = {
+                                            chatsRepo.updateChat(
+                                                chatModel = chatModel!!,
+                                                message = message,
+                                                onSuccess = {
 
-                        }, onError = {
+                                                }, onError = {
 
-                        })
-                    sendNotification(message)
-                    _state.postValue(ChatState.sendMessageSuccess())
-                }, onError = {
-                    _state.postValue(ChatState.sendMessageError(it))
-                })
+                                                })
+                                            sendNotification(message)
+                                            _state.postValue(ChatState.sendMessageSuccess())
+                                        }, onError = { exception ->
+                                            _state.postValue(ChatState.sendMessageError(exception))
+                                        })
+                                } else {
+                                    _state.postValue(ChatState.sendMessageError(Exception("Can not upload files")))
+                                }
+                            }
+                        },
+                        onError = {
+                            count++
+                        }
+                    )
+                }
+            }
         }
     }
 
