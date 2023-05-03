@@ -18,6 +18,7 @@ data class MessageModel(
 ) {
     data class AttachmentModel(
         var url: String = "",
-        var type: String = ""
+        var type: String = "",
+        var duration: Int = 0
     )
 }

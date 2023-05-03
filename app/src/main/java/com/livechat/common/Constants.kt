@@ -21,5 +21,5 @@ object Constants {
 
     const val MESSAGE_CHANNEL_ID = "message_channel"
 
-    const val MAX_FILE_SIZE = 300 * 1024 * 1024
+    const val MAX_FILE_SIZE = 20 * 1024 * 1024
 }

@@ -105,7 +105,13 @@ class ChatViewModel @Inject constructor(
                         i.path,
                         newFileName,
                         onSuccess = {
-                            attachments.add(MessageModel.AttachmentModel(it, i.type.name))
+                            attachments.add(
+                                MessageModel.AttachmentModel(
+                                    it,
+                                    i.type.name,
+                                    i.duration
+                                )
+                            )
                             count++
                             if (count == media.size) {
                                 if (attachments.size == media.size) {

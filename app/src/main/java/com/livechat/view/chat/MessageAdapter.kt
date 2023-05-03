@@ -3,6 +3,7 @@ package com.livechat.view.chat
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -44,14 +45,57 @@ class MessageAdapter(
         when (holder) {
 
             is SendHolder -> {
-                holder.binding.tvMessage.text = item.message
+                if (item.attachments.isEmpty()) {
+                    holder.binding.tvMessage.text = item.message
+                } else {
+                    val spanCount = when (item.attachments.size) {
+                        1 -> 1
+                        2 -> 2
+                        4 -> 2
+                        else -> 3
+                    }
+                    val layoutManager = object : GridLayoutManager(context, spanCount) {
+
+                        override fun isLayoutRTL(): Boolean {
+                            return true
+                        }
+                    }
+                    val adapter = AttachmentAdapter(
+                        context,
+                        item.attachments
+                    ) { attachmentModel, attachmentPosition ->
+
+                    }
+                    holder.binding.rvAttachments.layoutManager = layoutManager
+                    holder.binding.rvAttachments.adapter = adapter
+                }
                 item.createdAt?.let {
                     holder.binding.tvTime.text = it.toDate().toString()
                 }
             }
 
             is ReceiveHolder -> {
-                holder.binding.tvMessage.text = item.message
+                if (item.attachments.isEmpty()) {
+                    holder.binding.tvMessage.text = item.message
+                } else {
+                    val spanCount = when (item.attachments.size) {
+                        1 -> 1
+                        2 -> 2
+                        4 -> 2
+                        else -> 3
+                    }
+                    val layoutManager = object : GridLayoutManager(context, spanCount) {
+
+                    }
+                    val adapter = AttachmentAdapter(
+                        context,
+                        item.attachments
+                    ) { attachmentModel, attachmentPosition ->
+
+                    }
+                    holder.binding.rvAttachments.layoutManager = layoutManager
+                    holder.binding.rvAttachments.adapter = adapter
+                }
                 item.createdAt?.let {
                     holder.binding.tvTime.text = it.toDate().toString()
                 }

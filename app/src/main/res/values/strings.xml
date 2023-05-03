@@ -27,5 +27,5 @@
     <string name="media">Media</string>
     <string name="camera">Camera</string>
     <string name="done">Done</string>
-    <string name="maximum_total_file_size">Maximum total file size is 100MB.</string>
+    <string name="maximum_total_file_size">Maximum total file size is 20MB.</string>
 </resources>

@@ -26,8 +26,8 @@ class ChooseMediaViewModel @Inject constructor(private val media: MediaHelper) :
         val images = media.getAllImages()
         val videos = media.getAllVideos()
         images.addAll(videos)
-        images.sortBy {
-            it.path
+        images.sortByDescending {
+            it.dateTaken
         }
         files = images
         _state.postValue(ChooseMediaState.getMediaSuccess(files))
