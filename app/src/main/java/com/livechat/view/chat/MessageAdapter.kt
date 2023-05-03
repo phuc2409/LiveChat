@@ -22,8 +22,13 @@ import com.livechat.model.MessageModel
 class MessageAdapter(
     private val context: Context,
     list: ArrayList<MessageModel>,
-    private val onClick: (messageModel: MessageModel, position: Int) -> Unit
+    private val listener: Listener
 ) : BaseAdapter<MessageModel>(list) {
+
+    interface Listener {
+
+        fun onAttachmentClick(attachmentModel: MessageModel.AttachmentModel, position: Int)
+    }
 
     private class SendHolder(val binding: ItemMessageSendBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -64,7 +69,7 @@ class MessageAdapter(
                         context,
                         item.attachments
                     ) { attachmentModel, attachmentPosition ->
-
+                        listener.onAttachmentClick(attachmentModel, attachmentPosition)
                     }
                     holder.binding.rvAttachments.layoutManager = layoutManager
                     holder.binding.rvAttachments.adapter = adapter
@@ -91,7 +96,7 @@ class MessageAdapter(
                         context,
                         item.attachments
                     ) { attachmentModel, attachmentPosition ->
-
+                        listener.onAttachmentClick(attachmentModel, attachmentPosition)
                     }
                     holder.binding.rvAttachments.layoutManager = layoutManager
                     holder.binding.rvAttachments.adapter = adapter

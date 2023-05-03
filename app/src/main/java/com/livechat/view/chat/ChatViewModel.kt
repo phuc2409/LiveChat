@@ -100,16 +100,18 @@ class ChatViewModel @Inject constructor(
                 for (i in media) {
                     val extension = File(i.path).extension
                     val newFileName =
-                        "${chatModel?.id}/${TimeUtil.getCurrentTimestamp()}_${FileUtil.getRandomFileName()}.${extension}"
+                        "${TimeUtil.getCurrentTimestamp()}_${FileUtil.getRandomFileName()}.${extension}"
+                    val newFilePath = "${chatModel?.id}/$newFileName"
                     fileRepo.uploadFile(
                         i.path,
-                        newFileName,
+                        newFilePath,
                         onSuccess = {
                             attachments.add(
                                 MessageModel.AttachmentModel(
-                                    it,
-                                    i.type.name,
-                                    i.duration
+                                    url = it,
+                                    name = newFileName,
+                                    type = i.type.name,
+                                    duration = i.duration
                                 )
                             )
                             count++

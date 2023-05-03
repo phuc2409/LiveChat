@@ -1,8 +1,13 @@
 package com.livechat.extension
 
+import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.livechat.R
 
 /**
  * User: Quang Phúc
@@ -24,4 +29,14 @@ fun Context.checkPermissions(permissions: Array<String>): Boolean {
         }
     }
     return true
+}
+
+fun Context.downloadFile(url: String, fileName: String) {
+    val subPath = "${getString(R.string.app_name).replace(" ", "")}/$fileName"
+    val request: DownloadManager.Request = DownloadManager.Request(Uri.parse(url))
+    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, subPath)
+    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+    val downloadManager: DownloadManager =
+        getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
+    downloadManager.enqueue(request)
 }

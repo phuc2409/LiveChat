@@ -23,6 +23,7 @@ import com.livechat.model.UserModel
 import com.livechat.util.PermissionsUtil
 import com.livechat.view.bottom_sheet.ChatBottomSheet
 import com.livechat.view.choose_media.ChooseMediaActivity
+import com.livechat.view.media_viewer.MediaViewerActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -174,12 +175,22 @@ class ChatActivity : BaseActivity() {
 
                 ChatState.Status.UPDATE_MESSAGES -> {
                     messages = it.data as ArrayList<MessageModel>
-                    if (messages.last().sendId == CurrentUser.id) {
+                    if (messages.isNotEmpty() && messages.last().sendId == CurrentUser.id) {
                         binding.etChat.setText("")
                     }
-                    adapter = MessageAdapter(this, messages) { messageModel, position ->
+                    adapter = MessageAdapter(this, messages, object : MessageAdapter.Listener {
 
-                    }
+                        override fun onAttachmentClick(
+                            attachmentModel: MessageModel.AttachmentModel,
+                            position: Int
+                        ) {
+                            val intent = Intent(this@ChatActivity, MediaViewerActivity::class.java)
+                            intent.putExtra(MediaViewerActivity.KEY_URL, attachmentModel.url)
+                            intent.putExtra(MediaViewerActivity.KEY_FILE_NAME, attachmentModel.name)
+                            intent.putExtra(MediaViewerActivity.KEY_TYPE, attachmentModel.type)
+                            startActivity(intent)
+                        }
+                    })
                     binding.rvChat.adapter = adapter
 //                    adapter?.notifyDataSetChanged()
                     binding.rvChat.scrollToPosition(messages.size - 1)

@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.livechat.R
 import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
+import com.livechat.common.Constants
 import com.livechat.databinding.ItemAttachmentBinding
 import com.livechat.databinding.ItemListErrorBinding
 import com.livechat.extension.gone
@@ -48,7 +49,7 @@ class AttachmentAdapter(
                     .centerCrop()
                     .into(holder.binding.imgThumbnail)
 
-                if (item.type == "IMAGE") {
+                if (item.type == Constants.IMAGE) {
                     holder.binding.llDuration.gone()
                     holder.binding.imgPlay.gone()
                 } else {

@@ -16,20 +16,22 @@ class FileRepo @Inject constructor(private val storageReference: StorageReferenc
 
     fun uploadFile(
         path: String,
-        newFileName: String,
+        newFilePath: String,
         onSuccess: (url: String) -> Unit,
         onError: (e: Exception) -> Unit
     ) {
         val file = Uri.fromFile(File(path))
-        val storageReference = storageReference.child(newFileName)
+        val storageReference = storageReference.child(newFilePath)
         val uploadTask = storageReference.putFile(file)
-        uploadTask.addOnSuccessListener { taskSnapshot ->
+        uploadTask.addOnSuccessListener {
             storageReference.downloadUrl.addOnSuccessListener {
                 onSuccess(it.toString())
             }.addOnFailureListener {
+                it.printStackTrace()
                 onError(it)
             }
         }.addOnFailureListener {
+            it.printStackTrace()
             onError(it)
         }
     }

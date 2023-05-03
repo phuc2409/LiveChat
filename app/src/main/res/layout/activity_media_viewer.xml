@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.media_viewer.MediaViewerActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentMedia"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/llBottomBar"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_image" />
+
+    <LinearLayout
+        android:id="@+id/llActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@drawable/gradient_action_bar"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="?actionBarSize"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_back"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/black"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/imgSave"
+            android:layout_width="?actionBarSize"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_download"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/imgShare"
+            android:layout_width="?actionBarSize"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_share"
+            app:tint="@color/white" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
