@@ -20,5 +20,7 @@ class FcmRequestModel(
         val title: String,
         @SerializedName("message")
         val message: String,
+        @SerializedName("type")
+        val type: String
     )
 }

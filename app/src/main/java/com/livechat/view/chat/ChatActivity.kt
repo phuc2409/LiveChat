@@ -19,6 +19,7 @@ import com.livechat.extension.showToast
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
+import com.livechat.model.MessageType
 import com.livechat.model.UserModel
 import com.livechat.util.PermissionsUtil
 import com.livechat.view.bottom_sheet.ChatBottomSheet
@@ -114,6 +115,10 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.imgVideoCall.setOnClickListener {
+            viewModel.sendMessage("", type = MessageType.INCOMING_VIDEO_CALL)
+        }
+
         binding.imgMore.setOnClickListener {
             ChatBottomSheet(this, object : ChatBottomSheet.Listener {
 

@@ -9,6 +9,7 @@ import com.livechat.base.BaseViewModel
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
+import com.livechat.model.MessageType
 import com.livechat.model.UserModel
 import com.livechat.repo.ChatsRepo
 import com.livechat.repo.FileRepo
@@ -59,7 +60,11 @@ class ChatViewModel @Inject constructor(
             })
     }
 
-    fun sendMessage(message: String, media: ArrayList<FileModel> = ArrayList()) {
+    fun sendMessage(
+        message: String,
+        media: ArrayList<FileModel> = ArrayList(),
+        type: String = MessageType.TEXT
+    ) {
         if (chatModel == null) {
             chatsRepo.createChat(
                 userModel = users[0],
@@ -79,6 +84,7 @@ class ChatViewModel @Inject constructor(
                     chatModel = chatModel!!,
                     message = message,
                     attachments = ArrayList(),
+                    type = type,
                     onSuccess = {
                         chatsRepo.updateChat(
                             chatModel = chatModel!!,
@@ -88,7 +94,7 @@ class ChatViewModel @Inject constructor(
                             }, onError = {
 
                             })
-                        sendNotification(message)
+                        sendNotification(message, type)
                         _state.postValue(ChatState.sendMessageSuccess())
                     }, onError = {
                         _state.postValue(ChatState.sendMessageError(it))
@@ -121,6 +127,7 @@ class ChatViewModel @Inject constructor(
                                         chatModel = chatModel!!,
                                         message = message,
                                         attachments = attachments,
+                                        type = type,
                                         onSuccess = {
                                             chatsRepo.updateChat(
                                                 chatModel = chatModel!!,
@@ -130,7 +137,7 @@ class ChatViewModel @Inject constructor(
                                                 }, onError = {
 
                                                 })
-                                            sendNotification(message)
+                                            sendNotification(message, type)
                                             _state.postValue(ChatState.sendMessageSuccess())
                                         }, onError = { exception ->
                                             _state.postValue(ChatState.sendMessageError(exception))
@@ -149,7 +156,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun sendNotification(message: String) {
+    private fun sendNotification(message: String, type: String) {
         if (firebaseAuth.currentUser == null || chatModel == null) {
             return
         }
@@ -163,6 +170,7 @@ class ChatViewModel @Inject constructor(
                         userId = i.id,
                         title = chatModel!!.sendName,
                         message = message,
+                        type = type,
                         onSuccess = {
 
                         },

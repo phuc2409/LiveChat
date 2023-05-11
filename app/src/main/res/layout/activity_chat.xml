@@ -6,13 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".view.chat.ChatActivity">
 
-    <TextView
-        android:id="@+id/tvChatName"
+    <LinearLayout
+        android:id="@+id/llActionBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/purple_200"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Chat name" />
+        android:layout_height="?actionBarSize"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvChatName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Chat name" />
+
+        <ImageView
+            android:id="@+id/imgVideoCall"
+            android:layout_width="?actionBarSize"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="5dp"
+            android:src="@drawable/ic_video_call" />
+
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
@@ -21,7 +41,7 @@
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@+id/tvChatName"
+        app:layout_constraintTop_toBottomOf="@+id/llActionBar"
         tools:listitem="@layout/item_message_send" />
 
     <LinearLayout

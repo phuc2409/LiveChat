@@ -2,11 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />-->
+    <!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />-->
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />-->
+    <!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />-->
+    <!--    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />-->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -28,6 +34,17 @@
         <activity
             android:name=".view.choose_media.ChooseMediaActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".view.incoming_call.IncomingCallActivity"
+            android:alwaysRetainTaskState="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:showForAllUsers="true"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:taskAffinity="LiveChat.IncomingCall"
+            android:turnScreenOn="true" />
 
         <activity
             android:name=".view.login.LoginActivity"
@@ -63,6 +80,13 @@
             </intent-filter>
 
         </activity>
+
+        <receiver android:name=".receiver.IncomingCallReceiver" />
+
+        <service
+            android:name=".service.IncomingCallService"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall" />
 
         <service
             android:name=".service.MessagingService"

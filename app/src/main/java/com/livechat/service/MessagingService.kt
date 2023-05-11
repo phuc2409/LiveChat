@@ -1,6 +1,7 @@
 package com.livechat.service
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
@@ -12,6 +13,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.livechat.R
 import com.livechat.common.Constants
 import com.livechat.helper.SharedPreferencesHelper
+import com.livechat.model.MessageType
 import com.livechat.repo.UsersRepo
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -49,7 +51,18 @@ class MessagingService : FirebaseMessagingService() {
         val id = message.data["chatId"] ?: ""
         val title = message.data["title"] ?: ""
         val messageText = message.data["message"] ?: ""
-        showNotification(id, title, messageText)
+        val type = message.data["type"] ?: ""
+
+        if (type == MessageType.INCOMING_VIDEO_CALL) {
+            val intent = Intent(this, IncomingCallService::class.java)
+            intent.putExtra(Constants.KEY_CHAT_ID, id)
+            intent.putExtra(Constants.KEY_TITLE, title)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            }
+        } else {
+            showNotification(id, title, messageText)
+        }
     }
 
     private fun showNotification(id: String, title: String, message: String) {
@@ -63,14 +76,15 @@ class MessagingService : FirebaseMessagingService() {
         val notificationManager = NotificationManagerCompat.from(this)
 
         // notificationId is a unique int for each notification that you must define
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-//            && ActivityCompat.checkSelfPermission(
-//                this,
-//                Manifest.permission.POST_NOTIFICATIONS
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            return
-//        }
+        if (
+//            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
         notificationManager.notify(id.hashCode(), builder.build())
     }
 }

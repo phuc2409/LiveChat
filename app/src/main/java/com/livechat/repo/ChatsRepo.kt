@@ -11,8 +11,8 @@ import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
 import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
-import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
+import com.livechat.model.MessageType
 import com.livechat.model.UserModel
 import com.livechat.model.api.FcmRequestModel
 import com.livechat.model.api.FcmResponseModel
@@ -161,6 +161,7 @@ class ChatsRepo @Inject constructor(
         chatModel: ChatModel,
         message: String,
         attachments: ArrayList<MessageModel.AttachmentModel>,
+        type: String,
         onSuccess: () -> Unit,
         onError: (e: Exception) -> Unit
     ) {
@@ -169,6 +170,7 @@ class ChatsRepo @Inject constructor(
             "sendId" to CurrentUser.id,
             "message" to message,
             "attachments" to attachments,
+            "type" to type,
             "createdAt" to FieldValue.serverTimestamp(),
             "isDeleted" to false,
         )
@@ -188,6 +190,7 @@ class ChatsRepo @Inject constructor(
         userId: String,
         title: String,
         message: String,
+        type: String,
         onSuccess: () -> Unit,
         onError: (t: Throwable) -> Unit
     ) {
@@ -196,7 +199,8 @@ class ChatsRepo @Inject constructor(
             data = FcmRequestModel.Data(
                 chatId = chatId,
                 title = title,
-                message = message
+                message = message,
+                type = type
             )
         )
 

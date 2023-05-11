@@ -13,12 +13,13 @@ data class MessageModel(
     var sendId: String = "",
     var message: String = "",
     var attachments: ArrayList<AttachmentModel> = ArrayList(),
+    var type: String = "",
     var createdAt: Timestamp? = null,
     var isDeleted: Boolean = false
 ) {
     data class AttachmentModel(
         var url: String = "",
-        var name : String = "",
+        var name: String = "",
         var type: String = "",
         var duration: Int = 0
     )

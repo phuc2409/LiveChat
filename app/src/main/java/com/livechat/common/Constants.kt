@@ -20,9 +20,15 @@ object Constants {
     const val CHAT_MODEL = "chat_model"
 
     const val MESSAGE_CHANNEL_ID = "message_channel"
+    const val INCOMING_CALL_CHANNEL_ID = "incoming_call_channel"
 
     const val MAX_FILE_SIZE = 20 * 1024 * 1024
 
     const val IMAGE = "IMAGE"
     const val VIDEO = "VIDEO"
+
+    const val KEY_TITLE = "TITLE"
+    const val KEY_CHAT_ID = "CHAT_ID"
+
+    const val KEY_FINISH_INCOMING_CALL_ACTIVITY = "FINISH_INCOMING_CALL_ACTIVITY"
 }
