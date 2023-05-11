@@ -22,7 +22,8 @@ object PermissionsUtil {
 
     fun getStoragePermissions() : Array<String> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            storagePermissionsAndroid13
+//            storagePermissionsAndroid13
+            storagePermissions
         } else {
             storagePermissions
         }

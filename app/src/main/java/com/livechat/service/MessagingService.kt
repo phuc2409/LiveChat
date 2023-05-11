@@ -63,14 +63,14 @@ class MessagingService : FirebaseMessagingService() {
         val notificationManager = NotificationManagerCompat.from(this)
 
         // notificationId is a unique int for each notification that you must define
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-            && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+//            && ActivityCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.POST_NOTIFICATIONS
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            return
+//        }
         notificationManager.notify(id.hashCode(), builder.build())
     }
 }

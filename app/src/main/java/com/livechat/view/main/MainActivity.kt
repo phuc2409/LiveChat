@@ -47,7 +47,7 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
         setupView()
 
-        askNotificationPermission()
+//        askNotificationPermission()
     }
 
     override fun initView() {
