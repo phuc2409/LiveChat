@@ -3,6 +3,7 @@ package com.livechat.extension
 import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
@@ -39,4 +40,10 @@ fun Context.downloadFile(url: String, fileName: String) {
     val downloadManager: DownloadManager =
         getSystemService(AppCompatActivity.DOWNLOAD_SERVICE) as DownloadManager
     downloadManager.enqueue(request)
+}
+
+fun Context.isHavingInternet(): Boolean {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    return connectivityManager.activeNetworkInfo != null
+            && connectivityManager.activeNetworkInfo?.isConnected == true
 }

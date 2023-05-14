@@ -73,7 +73,7 @@ class ChatViewModel @Inject constructor(
                     chatModel = it
                     startMessagesListener()
                     startUsersInChatListener()
-                    sendMessage(message, media)
+                    sendMessage(message, media, type)
                 }, onError = {
 
                 }

@@ -15,6 +15,7 @@ object Constants {
 
     const val FCM_SERVER_KEY =
         "key=AAAAlay7Ju8:APA91bFlgI_CJaHZpEE2J8Eg7lwBJcLAwgFJovU-RjrFXR_cB_V3h5djJ14UqSBSKNBxTMMdHQOvfRdtZPwXL9vlhrb1fMum1Pa24lUUIgYq1Zkz3RRFGdUwEAM3hWhdeQucqIiCCODv"
+    const val AGORA_APP_ID = "2bbf7eaa3ade48d9bd70074e5a9c477d"
 
     const val USER_MODEL = "user_model"
     const val CHAT_MODEL = "chat_model"
@@ -30,5 +31,7 @@ object Constants {
     const val KEY_TITLE = "TITLE"
     const val KEY_CHAT_ID = "CHAT_ID"
 
+    const val KEY_ACCEPT_VIDEO_CALL = "ACCEPT_VIDEO_CALL"
+    const val KEY_DECLINE_VIDEO_CALL = "DECLINE_VIDEO_CALL"
     const val KEY_FINISH_INCOMING_CALL_ACTIVITY = "FINISH_INCOMING_CALL_ACTIVITY"
 }

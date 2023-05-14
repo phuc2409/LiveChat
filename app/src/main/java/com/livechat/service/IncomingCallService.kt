@@ -49,10 +49,24 @@ class IncomingCallService : Service() {
     }
 
     private fun buildNotification(): Notification {
-        val declineIntent = Intent(this, IncomingCallReceiver::class.java)
-        val declinePendingIntent = PendingIntent.getBroadcast(
+        val acceptIntent = Intent(this, IncomingCallReceiver::class.java)
+        acceptIntent.action = Constants.KEY_ACCEPT_VIDEO_CALL
+        acceptIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
+        acceptIntent.putExtra(Constants.KEY_TITLE, title)
+        val acceptPendingIntent = PendingIntent.getBroadcast(
             this,
             0,
+            acceptIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val declineIntent = Intent(this, IncomingCallReceiver::class.java)
+        declineIntent.action = Constants.KEY_DECLINE_VIDEO_CALL
+        declineIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
+        declineIntent.putExtra(Constants.KEY_TITLE, title)
+        val declinePendingIntent = PendingIntent.getBroadcast(
+            this,
+            1,
             declineIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -62,7 +76,7 @@ class IncomingCallService : Service() {
         fullScreenIntent.putExtra(Constants.KEY_TITLE, title)
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            2,
             fullScreenIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -73,6 +87,7 @@ class IncomingCallService : Service() {
             R.id.tvContent,
             "$title ${getString(R.string.is_calling)}"
         )
+        notificationLayout.setOnClickPendingIntent(R.id.tvAccept, acceptPendingIntent)
         notificationLayout.setOnClickPendingIntent(R.id.tvDecline, declinePendingIntent)
 
         val notificationBuilder: NotificationCompat.Builder =

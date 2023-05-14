@@ -20,7 +20,12 @@ object PermissionsUtil {
         Manifest.permission.READ_MEDIA_VIDEO
     )
 
-    fun getStoragePermissions() : Array<String> {
+    private val videoCallPermissions = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.RECORD_AUDIO
+    )
+
+    fun getStoragePermissions(): Array<String> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            storagePermissionsAndroid13
             storagePermissions
@@ -29,4 +34,7 @@ object PermissionsUtil {
         }
     }
 
+    fun getVideoCallPermissions(): Array<String> {
+        return videoCallPermissions
+    }
 }

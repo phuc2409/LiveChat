@@ -35,4 +35,6 @@
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
     <string name="is_calling">is calling</string>
+    <string name="do_not_have_camera_and_microphone_permission_to_join_the_call">Do not have camera and microphone permission to join the call</string>
+    <string name="open_permissions_settings">Open permissions settings</string>
 </resources>

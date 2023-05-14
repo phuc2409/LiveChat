@@ -15,6 +15,7 @@ import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityChatBinding
 import com.livechat.extension.checkPermissions
 import com.livechat.extension.fromJson
+import com.livechat.extension.isHavingInternet
 import com.livechat.extension.showToast
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
@@ -25,6 +26,7 @@ import com.livechat.util.PermissionsUtil
 import com.livechat.view.bottom_sheet.ChatBottomSheet
 import com.livechat.view.choose_media.ChooseMediaActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
+import com.livechat.view.video_call.VideoCallActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -52,16 +54,29 @@ class ChatActivity : BaseActivity() {
 
     private var messages: ArrayList<MessageModel> = ArrayList()
 
-    private val requestPermissionsLauncher = registerForActivityResult(
+    private val requestStoragePermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val isGranted = permissions.entries.all {
             it.value
         }
         if (isGranted) {
-            showToast("Can post notifications")
+            chooseMedia()
         } else {
-            showToast("Can't post notifications")
+            showToast("Can't choose media")
+        }
+    }
+
+    private val requestVideoCallPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isGranted = permissions.entries.all {
+            it.value
+        }
+        if (isGranted) {
+            sendVideoCallMessage()
+        } else {
+            showToast("Can't start video call")
         }
     }
 
@@ -116,7 +131,11 @@ class ChatActivity : BaseActivity() {
 
     override fun handleListener() {
         binding.imgVideoCall.setOnClickListener {
-            viewModel.sendMessage("", type = MessageType.INCOMING_VIDEO_CALL)
+            if (checkPermissions(PermissionsUtil.getVideoCallPermissions())) {
+                sendVideoCallMessage()
+            } else {
+                requestVideoCallPermissionsLauncher.launch(PermissionsUtil.getVideoCallPermissions())
+            }
         }
 
         binding.imgMore.setOnClickListener {
@@ -124,10 +143,9 @@ class ChatActivity : BaseActivity() {
 
                 override fun onSelectMedia() {
                     if (checkPermissions(PermissionsUtil.getStoragePermissions())) {
-                        val intent = Intent(this@ChatActivity, ChooseMediaActivity::class.java)
-                        chooseMediaLauncher.launch(intent)
+                        chooseMedia()
                     } else {
-                        requestPermissionsLauncher.launch(PermissionsUtil.getStoragePermissions())
+                        requestStoragePermissionsLauncher.launch(PermissionsUtil.getStoragePermissions())
                     }
                 }
 
@@ -202,6 +220,27 @@ class ChatActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun sendVideoCallMessage() {
+        if (isHavingInternet()) {
+            viewModel.sendMessage("", type = MessageType.INCOMING_VIDEO_CALL)
+            startVideoCall()
+        } else {
+            showToast("No internet")
+        }
+    }
+
+    private fun startVideoCall() {
+        val intent = Intent(this, VideoCallActivity::class.java)
+        intent.putExtra(Constants.KEY_CHAT_ID, chatModel?.id ?: "")
+        intent.putExtra(Constants.KEY_TITLE, getOppositeUser()?.fullName ?: "")
+        startActivity(intent)
+    }
+
+    private fun chooseMedia() {
+        val intent = Intent(this, ChooseMediaActivity::class.java)
+        chooseMediaLauncher.launch(intent)
     }
 
     private fun setTitle() {
