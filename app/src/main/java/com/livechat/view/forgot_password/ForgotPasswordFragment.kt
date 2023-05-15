@@ -9,8 +9,9 @@ import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentForgotPasswordBinding
 import com.livechat.extension.gone
-import com.livechat.extension.showToast
+import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
+import com.livechat.util.ValidateUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -22,6 +23,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class ForgotPasswordFragment : BaseFragment(R.layout.fragment_signup) {
 
     companion object {
+
+        private const val SEND_EMAIL_DELAY = 60 * 1000
+        private var lastTimeSendEmail = 0L
+
         fun newInstance(): ForgotPasswordFragment {
             return ForgotPasswordFragment()
         }
@@ -50,12 +55,19 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_signup) {
     }
 
     override fun handleListener() {
-        binding.tvBack.setOnClickListener {
+        binding.imgBack.setOnClickListener {
             getLoginActivity()?.pressBack()
         }
 
-        binding.tvReset.setOnClickListener {
-            viewModel.sendPasswordResetEmail(binding.etEmail.text.toString())
+        binding.cvReset.setOnClickListener {
+            val email = binding.etEmail.text.toString()
+            if (System.currentTimeMillis() - lastTimeSendEmail < SEND_EMAIL_DELAY) {
+                context?.showSnackBar(binding.root, R.string.wait_1_minute)
+            } else if (!ValidateUtil.isValidEmail(email)) {
+                context?.showSnackBar(binding.root, R.string.invalid_email_address)
+            } else {
+                viewModel.sendPasswordResetEmail(email)
+            }
         }
     }
 
@@ -69,22 +81,15 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_signup) {
 
                 ForgotPasswordState.Status.SEND_EMAIL_SUCCESS -> {
                     hideLoading()
-
-                    if (context == null) {
-                        return@observe
-                    }
-                    requireContext().showToast(R.string.send_email_success)
+                    lastTimeSendEmail = System.currentTimeMillis()
+                    context?.showSnackBar(binding.root, R.string.send_email_success)
                 }
 
                 ForgotPasswordState.Status.SEND_EMAIL_ERROR -> {
                     hideLoading()
-
-                    if (context == null) {
-                        return@observe
-                    }
                     val e = it.data as Exception
                     e.message?.let { message ->
-                        requireContext().showToast(message)
+                        context?.showSnackBar(binding.root, message)
                     }
                 }
             }

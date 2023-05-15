@@ -6,8 +6,10 @@ import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Environment
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import com.livechat.R
 
 /**
@@ -21,6 +23,14 @@ fun Context.showToast(text: String) {
 
 fun Context.showToast(resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
+}
+
+fun Context.showSnackBar(view: View, text: String) {
+    Snackbar.make(view, text, Snackbar.LENGTH_SHORT).show()
+}
+
+fun Context.showSnackBar(view: View, resId: Int) {
+    Snackbar.make(view, resId, Snackbar.LENGTH_SHORT).show()
 }
 
 fun Context.checkPermissions(permissions: Array<String>): Boolean {
