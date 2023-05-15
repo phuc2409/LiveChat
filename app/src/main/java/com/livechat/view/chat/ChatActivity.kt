@@ -248,12 +248,12 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun getOppositeUser(): UserModel? {
-        if (firebaseAuth.currentUser == null) {
+        if (CurrentUser.id.isBlank()) {
             return null
         }
 
         for (i in userModels) {
-            if (i.id != firebaseAuth.currentUser?.uid) {
+            if (i.id != CurrentUser.id) {
                 return i
             }
         }

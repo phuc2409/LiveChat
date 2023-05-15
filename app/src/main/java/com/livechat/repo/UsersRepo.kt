@@ -54,7 +54,7 @@ class UsersRepo @Inject constructor(
         val model = hashMapOf(
             "email" to firebaseAuth.currentUser?.email,
             "userName" to firebaseAuth.currentUser?.email,
-            "fullName" to "",
+            "fullName" to firebaseAuth.currentUser?.email,
             "avatarUrl" to "",
             "birthday" to FieldValue.serverTimestamp(),
             "tokens" to ArrayList<String>(),

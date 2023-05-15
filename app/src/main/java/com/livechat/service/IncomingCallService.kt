@@ -57,7 +57,7 @@ class IncomingCallService : Service() {
             this,
             0,
             acceptIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val declineIntent = Intent(this, IncomingCallReceiver::class.java)
@@ -68,7 +68,7 @@ class IncomingCallService : Service() {
             this,
             1,
             declineIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         val fullScreenIntent = Intent(this, IncomingCallActivity::class.java)

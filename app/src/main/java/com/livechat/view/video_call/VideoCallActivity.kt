@@ -2,8 +2,8 @@ package com.livechat.view.video_call
 
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.FrameLayout
 import com.livechat.base.BaseActivity
+import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityVideoCallBinding
 import com.livechat.extension.checkPermissions
 import com.livechat.util.PermissionsUtil
@@ -41,6 +41,8 @@ class VideoCallActivity : BaseActivity() {
         chatId = intent.getStringExtra(com.livechat.common.Constants.KEY_CHAT_ID) ?: ""
         title = intent.getStringExtra(com.livechat.common.Constants.KEY_TITLE) ?: ""
 
+        binding.tvTitle.text = title
+
         // Check that the camera and mic permissions are accepted before attempting to join
         if (checkPermissions(PermissionsUtil.getVideoCallPermissions())) {
             try {
@@ -52,11 +54,7 @@ class VideoCallActivity : BaseActivity() {
                 e.printStackTrace()
                 return
             }
-            val set = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-            this.addContentView(agView, set)
+            this.addContentView(agView, binding.clVideoCall.layoutParams)
             joinVideoCall()
         }
     }
@@ -98,6 +96,10 @@ class VideoCallActivity : BaseActivity() {
     }
 
     private fun joinVideoCall() {
-        agView?.join(chatId, role = Constants.CLIENT_ROLE_BROADCASTER)
+        agView?.join(
+            chatId,
+            role = Constants.CLIENT_ROLE_BROADCASTER,
+            uid = CurrentUser.id.hashCode()
+        )
     }
 }
