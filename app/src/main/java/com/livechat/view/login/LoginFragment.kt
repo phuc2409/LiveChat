@@ -10,7 +10,7 @@ import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentLoginBinding
 import com.livechat.extension.gone
-import com.livechat.extension.showToast
+import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,8 +52,17 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
     }
 
     override fun handleListener() {
-        binding.tvLogin.setOnClickListener {
-            viewModel.login(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+        binding.cvLogin.setOnClickListener {
+            val email = binding.etEmail.text
+            val password = binding.etPassword.text
+
+            if (email == null || email.isBlank()) {
+                context?.showSnackBar(binding.root, R.string.email_is_empty)
+            } else if (password == null || password.isBlank()) {
+                context?.showSnackBar(binding.root, R.string.password_is_empty)
+            } else {
+                viewModel.login(email.toString(), password.toString())
+            }
         }
 
         binding.tvSignup.setOnClickListener {
@@ -76,25 +85,19 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
                 LoginState.Status.LOGIN_SUCCESS -> {
                     hideLoading()
 
-                    if (context == null) {
-                        return@observe
-                    }
-                    requireContext().showToast(R.string.login_success)
+                    context?.showSnackBar(binding.root, R.string.login_success)
 
                     val intent = Intent(requireContext(), MainActivity::class.java)
                     startActivity(intent)
-                    requireActivity().finish()
+                    activity?.finish()
                 }
 
                 LoginState.Status.LOGIN_ERROR -> {
                     hideLoading()
 
-                    if (context == null) {
-                        return@observe
-                    }
                     val e = it.data as Exception
                     e.message?.let { message ->
-                        requireContext().showToast(message)
+                        context?.showSnackBar(binding.root, message)
                     }
                 }
             }
