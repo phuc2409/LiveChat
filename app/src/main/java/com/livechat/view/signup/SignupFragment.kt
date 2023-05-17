@@ -9,8 +9,9 @@ import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentSignupBinding
 import com.livechat.extension.gone
-import com.livechat.extension.showToast
+import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
+import com.livechat.util.ValidateUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -50,12 +51,53 @@ class SignupFragment : BaseFragment(R.layout.fragment_signup) {
     }
 
     override fun handleListener() {
-        binding.tvBack.setOnClickListener {
+        binding.imgBack.setOnClickListener {
             getLoginActivity()?.pressBack()
         }
 
-        binding.tvSignup.setOnClickListener {
-            viewModel.signup(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+        binding.cvSignUp.setOnClickListener {
+            val fullName = binding.etFullName.text
+            val email = binding.etEmail.text
+            val password = binding.etPassword.text
+            val passwordConfirm = binding.etPasswordConfirm.text
+            var hasError = false
+
+            // full name
+            if (fullName == null || fullName.isBlank()) {
+                binding.etFullName.error = getString(R.string.name_is_empty)
+                hasError = true
+            }
+            // email
+            if (email == null || email.isBlank()) {
+                binding.etEmail.error = getString(R.string.email_is_empty)
+                hasError = true
+            } else if (!ValidateUtil.isValidEmail(email.toString())) {
+                binding.etEmail.error = getString(R.string.invalid_email_address)
+                hasError = true
+            }
+            // password
+            if (password == null || password.isBlank()) {
+                binding.etPassword.error = getString(R.string.password_is_empty)
+                hasError = true
+            } else if (!ValidateUtil.isValidPassword(password.toString())) {
+                binding.etPassword.error = getString(R.string.password_validate)
+                hasError = true
+            }
+            // password confirm
+            if (passwordConfirm == null || passwordConfirm.isBlank()) {
+                binding.etPasswordConfirm.error = getString(R.string.password_is_empty)
+                hasError = true
+            } else if (!ValidateUtil.isValidPassword(passwordConfirm.toString())) {
+                binding.etPasswordConfirm.error = getString(R.string.password_validate)
+                hasError = true
+            } else if (password.toString() != passwordConfirm.toString()) {
+                binding.etPasswordConfirm.error = getString(R.string.passwords_do_not_match)
+                hasError = true
+            }
+
+            if (!hasError) {
+                viewModel.signup(fullName.toString(), email.toString(), password.toString())
+            }
         }
     }
 
@@ -70,21 +112,16 @@ class SignupFragment : BaseFragment(R.layout.fragment_signup) {
                 SignupState.Status.SIGNUP_SUCCESS -> {
                     hideLoading()
 
-                    if (context == null) {
-                        return@observe
-                    }
-                    requireContext().showToast(R.string.signup_success)
+                    binding.tvEmail.text = binding.etEmail.text.toString()
+                    binding.clEmailVerify.visible()
                 }
 
                 SignupState.Status.SIGNUP_ERROR -> {
                     hideLoading()
 
-                    if (context == null) {
-                        return@observe
-                    }
                     val e = it.data as Exception
                     e.message?.let { message ->
-                        requireContext().showToast(message)
+                        context?.showSnackBar(binding.root, message)
                     }
                 }
             }

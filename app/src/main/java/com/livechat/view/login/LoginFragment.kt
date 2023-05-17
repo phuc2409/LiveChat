@@ -55,12 +55,17 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
         binding.cvLogin.setOnClickListener {
             val email = binding.etEmail.text
             val password = binding.etPassword.text
+            var hasError = false
 
             if (email == null || email.isBlank()) {
-                context?.showSnackBar(binding.root, R.string.email_is_empty)
-            } else if (password == null || password.isBlank()) {
-                context?.showSnackBar(binding.root, R.string.password_is_empty)
-            } else {
+                binding.etEmail.error = getString(R.string.email_is_empty)
+                hasError = true
+            }
+            if (password == null || password.isBlank()) {
+                binding.etPassword.error = getString(R.string.password_is_empty)
+                hasError = true
+            }
+            if (!hasError) {
                 viewModel.login(email.toString(), password.toString())
             }
         }

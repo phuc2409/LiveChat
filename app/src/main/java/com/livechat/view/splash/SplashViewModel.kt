@@ -26,7 +26,10 @@ class SplashViewModel @Inject constructor(
     val state: LiveData<SplashState> = _state
 
     fun getCurrentUserInfo() {
-        if (auth.currentUser == null) {
+        if (auth.currentUser == null
+            || auth.currentUser?.isEmailVerified == null
+            || auth.currentUser?.isEmailVerified == false
+        ) {
             CurrentUser.clear()
             _state.postValue(SplashState.goToLogin())
             return

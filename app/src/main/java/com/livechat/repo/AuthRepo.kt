@@ -21,7 +21,11 @@ class AuthRepo @Inject constructor(private val firebaseAuth: FirebaseAuth) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 if (it.user == null) {
-                    onError(Exception("Auth result user is null"))
+                    onError(Exception("Wrong email or password"))
+                    return@addOnSuccessListener
+                }
+                if (it.user?.isEmailVerified == null || it.user?.isEmailVerified == false) {
+                    onError(Exception("You have to verify your email first"))
                     return@addOnSuccessListener
                 }
 

@@ -64,7 +64,7 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_signup) {
             if (System.currentTimeMillis() - lastTimeSendEmail < SEND_EMAIL_DELAY) {
                 context?.showSnackBar(binding.root, R.string.wait_1_minute)
             } else if (!ValidateUtil.isValidEmail(email)) {
-                context?.showSnackBar(binding.root, R.string.invalid_email_address)
+                binding.etEmail.error = getString(R.string.invalid_email_address)
             } else {
                 viewModel.sendPasswordResetEmail(email)
             }

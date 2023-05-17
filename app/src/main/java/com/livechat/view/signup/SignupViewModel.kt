@@ -22,12 +22,15 @@ class SignupViewModel @Inject constructor(
     private val _state = MutableLiveData<SignupState>()
     val state: LiveData<SignupState> = _state
 
-    fun signup(email: String, password: String) {
+    fun signup(fullName: String, email: String, password: String) {
         _state.value = SignupState.loading()
         authRepo.signup(email, password,
             onSuccess = {
                 usersRepo.createUser(
+                    email = email,
+                    fullName = fullName,
                     onSuccess = {
+                        sendEmailVerification()
                         _state.postValue(SignupState.signupSuccess())
                     },
                     onError = {
@@ -37,5 +40,9 @@ class SignupViewModel @Inject constructor(
             }, onError = {
                 _state.postValue(SignupState.signupError(it))
             })
+    }
+
+    private fun sendEmailVerification() {
+        usersRepo.sendEmailVerification()
     }
 }

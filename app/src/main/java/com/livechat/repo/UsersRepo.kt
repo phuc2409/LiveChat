@@ -50,11 +50,23 @@ class UsersRepo @Inject constructor(
             }
     }
 
-    fun createUser(onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
+    fun createUser(
+        email: String,
+        fullName: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        val emailHashCode = email.hashCode()
+        val userName = if (emailHashCode < 0) {
+            "0${-emailHashCode}"
+        } else {
+            emailHashCode.toString()
+        }
+
         val model = hashMapOf(
-            "email" to firebaseAuth.currentUser?.email,
-            "userName" to firebaseAuth.currentUser?.email,
-            "fullName" to firebaseAuth.currentUser?.email,
+            "email" to email,
+            "userName" to userName,
+            "fullName" to fullName,
             "avatarUrl" to "",
             "birthday" to FieldValue.serverTimestamp(),
             "tokens" to ArrayList<String>(),
@@ -66,13 +78,21 @@ class UsersRepo @Inject constructor(
             .document(firebaseAuth.currentUser?.uid.toString())
             .set(model)
             .addOnSuccessListener {
-                firebaseAuth.signOut()
                 onSuccess()
             }
             .addOnFailureListener {
                 it.printStackTrace()
-                firebaseAuth.signOut()
                 onError(it)
+            }
+    }
+
+    fun sendEmailVerification() {
+        firebaseAuth.currentUser?.sendEmailVerification()
+            ?.addOnSuccessListener {
+                val a = 3
+                a.toString()
+            }?.addOnFailureListener {
+                it.printStackTrace()
             }
     }
 
@@ -86,7 +106,8 @@ class UsersRepo @Inject constructor(
                 val users = ArrayList<UserModel>()
                 it.documents.forEach { document ->
                     if (document.getString("fullName")?.contains(keyword) == true
-                        || document.getString("userName")?.contains(keyword) == true
+                        || document.getString("userName") == keyword
+                        || document.getString("email") == keyword
                     ) {
                         document.toObject(UserModel::class.java)?.let { user ->
                             user.id = document.id
