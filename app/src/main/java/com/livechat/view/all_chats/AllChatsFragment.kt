@@ -11,11 +11,9 @@ import com.livechat.base.BaseFragment
 import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.FragmentAllChatsBinding
-import com.livechat.extension.showToast
 import com.livechat.extension.toJson
 import com.livechat.model.ChatModel
 import com.livechat.view.chat.ChatActivity
-import com.livechat.view.splash.SplashActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -61,13 +59,7 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
     }
 
     override fun handleListener() {
-        binding.tvSignOut.setOnClickListener {
-            if (context == null) {
-                return@setOnClickListener
-            }
 
-            viewModel.signOut()
-        }
     }
 
     override fun observeViewModel() {
@@ -78,10 +70,6 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
                 }
 
                 AllChatsState.Status.UPDATE_CHATS -> {
-                    if (context == null) {
-                        return@observe
-                    }
-
                     chats = it.data as ArrayList<ChatModel>
                     adapter = AllChatsAdapter(requireContext(), chats) { chatModel, position ->
                         val intent = Intent(context, ChatActivity::class.java)
@@ -89,16 +77,6 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
                         startActivity(intent)
                     }
                     binding.rvAllChats.adapter = adapter
-                }
-
-                AllChatsState.Status.SIGN_OUT_SUCCESS -> {
-                    val intent = Intent(context, SplashActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
-                }
-
-                AllChatsState.Status.SIGN_OUT_ERROR -> {
-                    context?.showToast("Sign out error")
                 }
             }
         }

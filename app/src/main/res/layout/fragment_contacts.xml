@@ -31,7 +31,8 @@
         android:contentDescription="@string/image"
         android:src="@drawable/ic_add_contact"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white" />
 
     <ProgressBar
         android:id="@+id/progressBar"

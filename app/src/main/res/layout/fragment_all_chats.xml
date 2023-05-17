@@ -21,15 +21,6 @@
             android:layout_height="wrap_content"
             tools:text="Email" />
 
-        <TextView
-            android:id="@+id/tvSignOut"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/purple_200"
-            android:foreground="?selectableItemBackground"
-            android:padding="5dp"
-            android:text="@string/sign_out" />
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

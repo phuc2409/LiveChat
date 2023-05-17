@@ -7,10 +7,7 @@ import com.livechat.model.ChatModel
  * Date: 2023-04-09
  * Time: 11:23 PM
  */
-class AllChatsState(
-    val status: Status,
-    val data: Any? = null
-) {
+class AllChatsState(val status: Status, val data: Any? = null) {
 
     companion object {
 
@@ -18,16 +15,10 @@ class AllChatsState(
 
         fun updateChats(messages: ArrayList<ChatModel>) =
             AllChatsState(Status.UPDATE_CHATS, messages)
-
-        fun signOutSuccess() = AllChatsState(Status.SIGN_OUT_SUCCESS)
-
-        fun signOutError() = AllChatsState(Status.SIGN_OUT_ERROR)
     }
 
     enum class Status {
         LOADING,
-        UPDATE_CHATS,
-        SIGN_OUT_SUCCESS,
-        SIGN_OUT_ERROR
+        UPDATE_CHATS
     }
 }

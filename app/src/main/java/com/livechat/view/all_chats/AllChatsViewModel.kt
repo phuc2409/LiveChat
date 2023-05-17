@@ -38,19 +38,6 @@ class AllChatsViewModel @Inject constructor(
             })
     }
 
-    fun signOut() {
-        usersRepo.deleteToken(CurrentUser.id, sharedPrefs.getToken(),
-            onSuccess = {
-                CurrentUser.clear()
-                sharedPrefs.deleteCurrentUser()
-                auth.signOut()
-                _state.postValue(AllChatsState.signOutSuccess())
-            },
-            onError = {
-                _state.postValue(AllChatsState.signOutError())
-            })
-    }
-
     override fun onCleared() {
         super.onCleared()
         chatsRepo.removeChatsListener()
