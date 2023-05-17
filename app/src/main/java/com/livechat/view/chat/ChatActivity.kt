@@ -3,9 +3,10 @@ package com.livechat.view.chat
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.livechat.R
@@ -15,8 +16,10 @@ import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityChatBinding
 import com.livechat.extension.checkPermissions
 import com.livechat.extension.fromJson
+import com.livechat.extension.gone
 import com.livechat.extension.isHavingInternet
 import com.livechat.extension.showToast
+import com.livechat.extension.visible
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
@@ -28,7 +31,6 @@ import com.livechat.view.choose_media.ChooseMediaActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
 import com.livechat.view.video_call.VideoCallActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 /**
  * User: Quang Phúc
@@ -37,9 +39,6 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class ChatActivity : BaseActivity() {
-
-    @Inject
-    lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var viewModel: ChatViewModel
@@ -130,6 +129,10 @@ class ChatActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.imgBack.setOnClickListener {
+            finish()
+        }
+
         binding.imgVideoCall.setOnClickListener {
             if (checkPermissions(PermissionsUtil.getVideoCallPermissions())) {
                 sendVideoCallMessage()
@@ -155,8 +158,33 @@ class ChatActivity : BaseActivity() {
             }).show()
         }
 
-        binding.tvSend.setOnClickListener {
-            viewModel.sendMessage(binding.etChat.text.toString())
+        binding.etChat.addTextChangedListener(object : TextWatcher {
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val text = s.toString()
+                if (text.isBlank()) {
+                    binding.imgSend.gone()
+                    binding.imgSendDisable.visible()
+                } else {
+                    binding.imgSendDisable.gone()
+                    binding.imgSend.visible()
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+
+        binding.imgSend.setOnClickListener {
+            val text = binding.etChat.text.toString()
+            if (text.isNotBlank()) {
+                viewModel.sendMessage(text)
+            }
         }
     }
 

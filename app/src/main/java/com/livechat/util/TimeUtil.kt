@@ -47,4 +47,22 @@ object TimeUtil {
         val date = Date(timestamp * 1000)
         return format.format(date)
     }
+
+    fun formatTimestampToFullString(timestamp: Long): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timestamp * 1000
+        val now = Calendar.getInstance()
+        now.timeInMillis = getCurrentTimestamp()
+        val format = if (calendar.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH)
+            && calendar.get(Calendar.MONTH) == now.get(Calendar.MONTH)
+            && calendar.get(Calendar.YEAR) == now.get(Calendar.YEAR)
+        ) {
+            SimpleDateFormat("HH:mm")
+        } else {
+            SimpleDateFormat("dd/MM/yyyy HH:mm")
+        }
+
+        val date = Date(timestamp * 1000)
+        return format.format(date)
+    }
 }

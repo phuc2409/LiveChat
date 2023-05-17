@@ -13,6 +13,7 @@ import com.livechat.databinding.ItemListErrorBinding
 import com.livechat.databinding.ItemMessageReceiveBinding
 import com.livechat.databinding.ItemMessageSendBinding
 import com.livechat.model.MessageModel
+import com.livechat.util.TimeUtil
 
 /**
  * User: Quang Phúc
@@ -75,7 +76,7 @@ class MessageAdapter(
                     holder.binding.rvAttachments.adapter = adapter
                 }
                 item.createdAt?.let {
-                    holder.binding.tvTime.text = it.toDate().toString()
+                    holder.binding.tvTime.text = TimeUtil.formatTimestampToFullString(it.seconds)
                 }
             }
 
@@ -102,7 +103,7 @@ class MessageAdapter(
                     holder.binding.rvAttachments.adapter = adapter
                 }
                 item.createdAt?.let {
-                    holder.binding.tvTime.text = it.toDate().toString()
+                    holder.binding.tvTime.text = TimeUtil.formatTimestampToFullString(it.seconds)
                 }
             }
 

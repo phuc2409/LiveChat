@@ -14,12 +14,23 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="?actionBarSize"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_back" />
+
         <TextView
             android:id="@+id/tvChatName"
+            style="@style/tv_title"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Chat name" />
 
@@ -29,7 +40,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="5dp"
+            android:padding="10dp"
             android:src="@drawable/ic_video_call" />
 
     </LinearLayout>
@@ -57,7 +68,10 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="@string/image"
-            android:src="@drawable/ic_add" />
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_add"
+            android:padding="5dp"
+            app:tint="@color/cl_main" />
 
         <EditText
             android:id="@+id/etChat"
@@ -65,16 +79,29 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/type_a_message"
-            android:inputType="text" />
+            android:maxLines="5" />
 
-        <TextView
-            android:id="@+id/tvSend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/purple_200"
-            android:foreground="?selectableItemBackground"
+        <ImageView
+            android:id="@+id/imgSend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
             android:padding="5dp"
-            android:text="Send" />
+            android:src="@drawable/ic_send"
+            android:visibility="gone"
+            app:tint="@color/cl_main"
+            tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/imgSendDisable"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="5dp"
+            android:src="@drawable/ic_send"
+            app:tint="@color/gray" />
 
     </LinearLayout>
 
