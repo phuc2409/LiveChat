@@ -4,14 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.bumptech.glide.Glide
 import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ItemAllChatsBinding
 import com.livechat.databinding.ItemListErrorBinding
 import com.livechat.model.ChatModel
+import com.livechat.util.TimeUtil
 
 /**
  * User: Quang Phúc
@@ -43,11 +43,16 @@ class AllChatsAdapter(
                 for (i in item.participants) {
                     if (i.id != CurrentUser.id) {
                         holder.binding.tvName.text = i.name
+                        if (i.avatarUrl.isNotBlank()) {
+                            Glide.with(context).load(i.avatarUrl).into(holder.binding.imgAvatar)
+                        }
                         break
                     }
                 }
                 holder.binding.tvMessage.text = item.latestMessage
-                holder.binding.tvTime.text = item.updatedAt?.toDate().toString()
+                item.updatedAt?.let {
+                    holder.binding.tvTime.text = TimeUtil.formatTimestampToString(it.seconds)
+                }
 
                 holder.itemView.setOnClickListener {
                     onClick(item, position)

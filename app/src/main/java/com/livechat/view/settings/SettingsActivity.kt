@@ -41,6 +41,10 @@ class SettingsActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.imgBack.setOnClickListener {
+            finish()
+        }
+
         binding.tvProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)

@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.common.Constants
-import com.livechat.common.CurrentUser
 import com.livechat.databinding.FragmentAllChatsBinding
 import com.livechat.extension.toJson
 import com.livechat.model.ChatModel
@@ -55,7 +54,7 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
     }
 
     override fun initView() {
-        binding.tvEmail.text = CurrentUser.email
+
     }
 
     override fun handleListener() {

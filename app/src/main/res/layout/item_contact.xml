@@ -4,18 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:foreground="?selectableItemBackground"
     android:gravity="center"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="10dp"
+    tools:context=".view.contacts.ContactsAdapter">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgAvatar"
-        app:shapeAppearanceOverlay="@style/img_circle"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:padding="1dp"
         android:src="@drawable/ic_person"
+        app:shapeAppearanceOverlay="@style/img_circle"
         app:strokeColor="@color/gray"
         app:strokeWidth="1dp" />
 

@@ -6,8 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 import com.livechat.R
 import com.livechat.base.BaseActivity
+import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityMainBinding
 import com.livechat.extension.showToast
 import com.livechat.view.all_chats.AllChatsFragment
@@ -69,6 +71,11 @@ class MainActivity : BaseActivity() {
         contactsFragment?.let {
             supportFragmentManager.beginTransaction().add(R.id.fragment, it).hide(it).commit()
         }
+
+        if (CurrentUser.avatarUrl.isNotBlank()) {
+            Glide.with(this).load(CurrentUser.avatarUrl).into(binding.imgAvatar)
+        }
+        binding.tvName.text = CurrentUser.fullName
     }
 
     override fun handleListener() {
@@ -77,7 +84,7 @@ class MainActivity : BaseActivity() {
             startActivity(intent)
         }
 
-        binding.tvSearch.setOnClickListener {
+        binding.cvSearch.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
