@@ -15,6 +15,7 @@ import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.ChatModel
 import com.livechat.view.chat.ChatActivity
+import com.livechat.view.search.SearchActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -59,6 +60,11 @@ class ContactsFragment : BaseFragment(R.layout.fragment_contacts) {
     override fun handleListener() {
         binding.refresh.setOnRefreshListener {
             getContacts()
+        }
+
+        binding.btnAddContact.setOnClickListener {
+            val intent = Intent(context, SearchActivity::class.java)
+            startActivity(intent)
         }
     }
 
