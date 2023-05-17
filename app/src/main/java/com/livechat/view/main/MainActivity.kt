@@ -29,6 +29,11 @@ class MainActivity : BaseActivity() {
     private var allChatsFragment: AllChatsFragment? = null
     private var contactsFragment: ContactsFragment? = null
 
+    /**
+     * Fragment đang hiển thị
+     */
+    private var currentFragment = 0
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -54,8 +59,15 @@ class MainActivity : BaseActivity() {
         if (allChatsFragment == null) {
             allChatsFragment = AllChatsFragment.newInstance()
         }
+        if (contactsFragment == null) {
+            contactsFragment = ContactsFragment.newInstance()
+        }
+
         allChatsFragment?.let {
             supportFragmentManager.beginTransaction().replace(R.id.fragment, it).commit()
+        }
+        contactsFragment?.let {
+            supportFragmentManager.beginTransaction().add(R.id.fragment, it).hide(it).commit()
         }
     }
 
@@ -74,24 +86,13 @@ class MainActivity : BaseActivity() {
             when (menuItem.itemId) {
 
                 R.id.item_all_chats -> {
-                    if (allChatsFragment == null) {
-                        allChatsFragment = AllChatsFragment.newInstance()
-                    }
-                    allChatsFragment?.let {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment, it)
-                            .commit()
-                    }
+                    showAllChats()
                 }
 
                 R.id.item_contacts -> {
-                    if (contactsFragment == null) {
-                        contactsFragment = ContactsFragment.newInstance()
-                    }
                     contactsFragment?.let {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment, it)
-                            .commit()
+                        supportFragmentManager.beginTransaction().show(it).commit()
+                        currentFragment = 1
                     }
                 }
             }
@@ -102,6 +103,22 @@ class MainActivity : BaseActivity() {
 
     override fun observeViewModel() {
 
+    }
+
+    private fun showAllChats() {
+        contactsFragment?.let {
+            supportFragmentManager.beginTransaction().hide(it).commit()
+            currentFragment = 0
+        }
+    }
+
+    override fun onBackPressed() {
+        if (currentFragment != 0) {
+            showAllChats()
+            binding.bottomNavigationView.selectedItemId = R.id.item_all_chats
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun askNotificationPermission() {

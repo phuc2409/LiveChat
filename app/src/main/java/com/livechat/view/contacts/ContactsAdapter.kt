@@ -1,36 +1,40 @@
-package com.livechat.view.all_chats
+package com.livechat.view.contacts
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.bumptech.glide.Glide
 import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.common.CurrentUser
-import com.livechat.databinding.ItemAllChatsBinding
+import com.livechat.databinding.ItemContactBinding
 import com.livechat.databinding.ItemListErrorBinding
 import com.livechat.model.ChatModel
 
 /**
  * User: Quang Phúc
- * Date: 2023-04-09
- * Time: 11:00 PM
+ * Date: 2023-05-17
+ * Time: 09:12 PM
  */
-class AllChatsAdapter(
+class ContactsAdapter(
     private val context: Context,
     list: ArrayList<ChatModel>,
-    private val onClick: (chatModel: ChatModel, position: Int) -> Unit
+    private val listener: Listener
 ) : BaseAdapter<ChatModel>(list) {
 
-    private class ItemHolder(val binding: ItemAllChatsBinding) :
+    interface Listener {
+
+        fun onClick(chatModel: ChatModel, position: Int)
+    }
+
+    private class ItemHolder(val binding: ItemContactBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val li = LayoutInflater.from(context)
         return when (viewType) {
-            0 -> ItemHolder(ItemAllChatsBinding.inflate(li, parent, false))
+            0 -> ItemHolder(ItemContactBinding.inflate(li, parent, false))
             else -> ErrorHolder(ItemListErrorBinding.inflate(li, parent, false))
         }
     }
@@ -43,14 +47,15 @@ class AllChatsAdapter(
                 for (i in item.participants) {
                     if (i.id != CurrentUser.id) {
                         holder.binding.tvName.text = i.name
+                        if (i.avatarUrl.isNotBlank()) {
+                            Glide.with(context).load(i.avatarUrl).into(holder.binding.imgAvatar)
+                        }
                         break
                     }
                 }
-                holder.binding.tvMessage.text = item.latestMessage
-                holder.binding.tvTime.text = item.updatedAt?.toDate().toString()
 
                 holder.itemView.setOnClickListener {
-                    onClick(item, position)
+                    listener.onClick(item, position)
                 }
             }
 

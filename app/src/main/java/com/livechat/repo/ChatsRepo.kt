@@ -12,7 +12,6 @@ import com.livechat.common.CurrentUser
 import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
 import com.livechat.model.MessageModel
-import com.livechat.model.MessageType
 import com.livechat.model.UserModel
 import com.livechat.model.api.FcmRequestModel
 import com.livechat.model.api.FcmResponseModel
@@ -289,5 +288,40 @@ class ChatsRepo @Inject constructor(
 
     fun removeChatsListener() {
         chatsListener?.remove()
+    }
+
+    /**
+     * Trả về các chats của người dùng. Dùng trong màn Contacts
+     */
+    fun getContacts(
+        onSuccess: (ArrayList<ChatModel>) -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firestore.collection(Constants.Collections.CHATS)
+            .whereArrayContains("participantIds", CurrentUser.id)
+            .get()
+            .addOnSuccessListener { documents ->
+                val chatModels = ArrayList<ChatModel>()
+                for (i in documents) {
+                    val chatModel = i.toObject(ChatModel::class.java)
+                    chatModel.id = i.id
+                    chatModels.add(chatModel)
+                }
+                chatModels.sortBy {
+                    var name = ""
+                    for (i in it.participants) {
+                        if (i.id != CurrentUser.id) {
+                            name = i.name
+                            break
+                        }
+                    }
+                    name
+                }
+                onSuccess(chatModels)
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
     }
 }
