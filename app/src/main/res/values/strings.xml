@@ -59,4 +59,9 @@
     <string name="settings">Settings</string>
     <string name="sign_out_error">Sign out error</string>
     <string name="content_and_tools">Content and tools</string>
+    <string name="call">Call</string>
+    <string name="called_from">Called from</string>
+    <string name="no_internet">No internet</string>
+    <string name="can_not_choose_media">Can not choose media</string>
+    <string name="can_not_start_video_call">Can not start video call</string>
 </resources>

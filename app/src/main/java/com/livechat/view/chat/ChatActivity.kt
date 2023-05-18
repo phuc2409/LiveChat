@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.livechat.R
@@ -18,6 +19,7 @@ import com.livechat.extension.checkPermissions
 import com.livechat.extension.fromJson
 import com.livechat.extension.gone
 import com.livechat.extension.isHavingInternet
+import com.livechat.extension.showSnackBar
 import com.livechat.extension.showToast
 import com.livechat.extension.visible
 import com.livechat.model.ChatModel
@@ -62,7 +64,7 @@ class ChatActivity : BaseActivity() {
         if (isGranted) {
             chooseMedia()
         } else {
-            showToast("Can't choose media")
+            showSnackBar(binding.root, R.string.can_not_choose_media)
         }
     }
 
@@ -75,7 +77,7 @@ class ChatActivity : BaseActivity() {
         if (isGranted) {
             sendVideoCallMessage()
         } else {
-            showToast("Can't start video call")
+            showSnackBar(binding.root, R.string.can_not_start_video_call)
         }
     }
 
@@ -229,19 +231,31 @@ class ChatActivity : BaseActivity() {
                     if (messages.isNotEmpty() && messages.last().sendId == CurrentUser.id) {
                         binding.etChat.setText("")
                     }
-                    adapter = MessageAdapter(this, messages, object : MessageAdapter.Listener {
+                    adapter = MessageAdapter(
+                        this,
+                        messages,
+//                        fullName = getOppositeUser()?.fullName ?: "",
+//                        avatarUrl = getOppositeUser()?.avatarUrl ?: "",
+                        object : MessageAdapter.Listener {
 
-                        override fun onAttachmentClick(
-                            attachmentModel: MessageModel.AttachmentModel,
-                            position: Int
-                        ) {
-                            val intent = Intent(this@ChatActivity, MediaViewerActivity::class.java)
-                            intent.putExtra(MediaViewerActivity.KEY_URL, attachmentModel.url)
-                            intent.putExtra(MediaViewerActivity.KEY_FILE_NAME, attachmentModel.name)
-                            intent.putExtra(MediaViewerActivity.KEY_TYPE, attachmentModel.type)
-                            startActivity(intent)
-                        }
-                    })
+                            override fun onAttachmentClick(
+                                attachmentModel: MessageModel.AttachmentModel,
+                                position: Int
+                            ) {
+                                val intent =
+                                    Intent(this@ChatActivity, MediaViewerActivity::class.java)
+                                intent.putExtra(MediaViewerActivity.KEY_URL, attachmentModel.url)
+                                intent.putExtra(
+                                    MediaViewerActivity.KEY_FILE_NAME,
+                                    attachmentModel.name
+                                )
+                                intent.putExtra(MediaViewerActivity.KEY_TYPE, attachmentModel.type)
+                                startActivity(intent)
+                            }
+                        })
+                    //todo Hiện tên người đối diện
+                    adapter?.fullName = getOppositeUser()?.fullName ?: ""
+                    adapter?.avatarUrl = getOppositeUser()?.avatarUrl ?: ""
                     binding.rvChat.adapter = adapter
 //                    adapter?.notifyDataSetChanged()
                     binding.rvChat.scrollToPosition(messages.size - 1)
@@ -255,7 +269,7 @@ class ChatActivity : BaseActivity() {
             viewModel.sendMessage("", type = MessageType.INCOMING_VIDEO_CALL)
             startVideoCall()
         } else {
-            showToast("No internet")
+            showSnackBar(binding.root, R.string.no_internet)
         }
     }
 
@@ -273,6 +287,11 @@ class ChatActivity : BaseActivity() {
 
     private fun setTitle() {
         binding.tvChatName.text = getOppositeUser()?.fullName
+        getOppositeUser()?.avatarUrl?.let {
+            if (it.isNotBlank()) {
+                Glide.with(this).load(it).into(binding.imgAvatar)
+            }
+        }
     }
 
     private fun getOppositeUser(): UserModel? {
