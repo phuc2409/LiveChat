@@ -18,6 +18,8 @@ class FcmRequestModel(
         val chatId: String,
         @SerializedName("title")
         val title: String,
+        @SerializedName("avatarUrl")
+        val avatarUrl: String,
         @SerializedName("message")
         val message: String,
         @SerializedName("type")

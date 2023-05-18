@@ -30,6 +30,7 @@ class IncomingCallService : Service() {
 
     private var chatId = ""
     private var title = ""
+    private var avatarUrl = ""
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -38,6 +39,7 @@ class IncomingCallService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         chatId = intent?.getStringExtra(Constants.KEY_CHAT_ID) ?: ""
         title = intent?.getStringExtra(Constants.KEY_TITLE) ?: ""
+        avatarUrl = intent?.getStringExtra(Constants.KEY_AVATAR_URL) ?: ""
 
         val notification: Notification = buildNotification()
 
@@ -53,6 +55,7 @@ class IncomingCallService : Service() {
         acceptIntent.action = Constants.KEY_ACCEPT_VIDEO_CALL
         acceptIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
         acceptIntent.putExtra(Constants.KEY_TITLE, title)
+        acceptIntent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
         val acceptPendingIntent = PendingIntent.getBroadcast(
             this,
             0,
@@ -64,6 +67,7 @@ class IncomingCallService : Service() {
         declineIntent.action = Constants.KEY_DECLINE_VIDEO_CALL
         declineIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
         declineIntent.putExtra(Constants.KEY_TITLE, title)
+        acceptIntent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
         val declinePendingIntent = PendingIntent.getBroadcast(
             this,
             1,
@@ -74,6 +78,7 @@ class IncomingCallService : Service() {
         val fullScreenIntent = Intent(this, IncomingCallActivity::class.java)
         fullScreenIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
         fullScreenIntent.putExtra(Constants.KEY_TITLE, title)
+        fullScreenIntent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
         val fullScreenPendingIntent = PendingIntent.getActivity(
             this,
             2,

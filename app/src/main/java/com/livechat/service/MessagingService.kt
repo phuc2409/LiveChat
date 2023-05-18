@@ -1,6 +1,7 @@
 package com.livechat.service
 
 import android.Manifest
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -15,6 +16,7 @@ import com.livechat.common.Constants
 import com.livechat.helper.SharedPreferencesHelper
 import com.livechat.model.MessageType
 import com.livechat.repo.UsersRepo
+import com.livechat.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -50,13 +52,16 @@ class MessagingService : FirebaseMessagingService() {
         Log.i("onMessageReceived", message.data.toString())
         val id = message.data["chatId"] ?: ""
         val title = message.data["title"] ?: ""
+        val avatarUrl = message.data["avatarUrl"] ?: ""
         val messageText = message.data["message"] ?: ""
         val type = message.data["type"] ?: ""
 
         if (type == MessageType.INCOMING_VIDEO_CALL) {
+            //todo Check thời gian cuộc gọi đến so với thời gian hiện tại
             val intent = Intent(this, IncomingCallService::class.java)
             intent.putExtra(Constants.KEY_CHAT_ID, id)
             intent.putExtra(Constants.KEY_TITLE, title)
+            intent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             }
@@ -66,12 +71,23 @@ class MessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(id: String, title: String, message: String) {
+        val mainActivityIntent = Intent(this, MainActivity::class.java)
+        mainActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val mainActivityPendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            mainActivityIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val builder = NotificationCompat.Builder(this, Constants.MESSAGE_CHANNEL_ID)
+            .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_chat)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setContentIntent(mainActivityPendingIntent)
 
         val notificationManager = NotificationManagerCompat.from(this)
 

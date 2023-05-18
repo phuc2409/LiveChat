@@ -266,7 +266,10 @@ class ChatActivity : BaseActivity() {
 
     private fun sendVideoCallMessage() {
         if (isHavingInternet()) {
-            viewModel.sendMessage("", type = MessageType.INCOMING_VIDEO_CALL)
+            viewModel.sendMessage(
+                "[${getString(R.string.call)}]",
+                type = MessageType.INCOMING_VIDEO_CALL
+            )
             startVideoCall()
         } else {
             showSnackBar(binding.root, R.string.no_internet)
@@ -277,6 +280,7 @@ class ChatActivity : BaseActivity() {
         val intent = Intent(this, VideoCallActivity::class.java)
         intent.putExtra(Constants.KEY_CHAT_ID, chatModel?.id ?: "")
         intent.putExtra(Constants.KEY_TITLE, getOppositeUser()?.fullName ?: "")
+        intent.putExtra(Constants.KEY_AVATAR_URL, getOppositeUser()?.avatarUrl ?: "")
         startActivity(intent)
     }
 

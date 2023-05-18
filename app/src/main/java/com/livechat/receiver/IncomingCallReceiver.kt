@@ -21,6 +21,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
 
     private var chatId = ""
     private var title = ""
+    private var avatarUrl = ""
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null) {
@@ -28,6 +29,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
         }
         chatId = intent?.getStringExtra(Constants.KEY_CHAT_ID) ?: ""
         title = intent?.getStringExtra(Constants.KEY_TITLE) ?: ""
+        avatarUrl = intent?.getStringExtra(Constants.KEY_AVATAR_URL) ?: ""
         val action = intent?.action ?: ""
         if (action == Constants.KEY_ACCEPT_VIDEO_CALL) {
             // Đủ quyền sẽ bắt đầu cuộc gọi, không đủ sẽ mở màn cuộc gọi đến
@@ -46,6 +48,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
         videoCallIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         videoCallIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
         videoCallIntent.putExtra(Constants.KEY_TITLE, title)
+        videoCallIntent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
         context.startActivity(videoCallIntent)
         stopIncomingCallService(context)
     }
@@ -55,6 +58,7 @@ class IncomingCallReceiver : BroadcastReceiver() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtra(Constants.KEY_CHAT_ID, chatId)
         intent.putExtra(Constants.KEY_TITLE, title)
+        intent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
         context.startActivity(intent)
     }
 

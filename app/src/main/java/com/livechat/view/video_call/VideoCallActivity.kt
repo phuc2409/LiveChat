@@ -29,6 +29,7 @@ class VideoCallActivity : BaseActivity() {
 
     private var chatId = ""
     private var title = ""
+    private var avatarUrl = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class VideoCallActivity : BaseActivity() {
     override fun initView() {
         chatId = intent.getStringExtra(com.livechat.common.Constants.KEY_CHAT_ID) ?: ""
         title = intent.getStringExtra(com.livechat.common.Constants.KEY_TITLE) ?: ""
+        avatarUrl = intent.getStringExtra(com.livechat.common.Constants.KEY_AVATAR_URL) ?: ""
 
         binding.tvTitle.text = title
 

@@ -3,6 +3,7 @@ package com.livechat.view.incoming_call
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
+import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.livechat.R
 import com.livechat.base.BaseActivity
@@ -29,6 +30,7 @@ class IncomingCallActivity : BaseActivity() {
 
     private var chatId = ""
     private var title = ""
+    private var avatarUrl = ""
 
     private val requestPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -71,8 +73,12 @@ class IncomingCallActivity : BaseActivity() {
     override fun initView() {
         chatId = intent.getStringExtra(Constants.KEY_CHAT_ID) ?: ""
         title = intent.getStringExtra(Constants.KEY_TITLE) ?: ""
+        avatarUrl = intent.getStringExtra(Constants.KEY_AVATAR_URL) ?: ""
 
         binding.tvTitle.text = title
+        if (avatarUrl.isNotBlank()) {
+            Glide.with(this).load(avatarUrl).into(binding.imgAvatar)
+        }
     }
 
     override fun handleListener() {
@@ -97,6 +103,7 @@ class IncomingCallActivity : BaseActivity() {
         val videoCallIntent = Intent(this, VideoCallActivity::class.java)
         videoCallIntent.putExtra(Constants.KEY_CHAT_ID, chatId)
         videoCallIntent.putExtra(Constants.KEY_TITLE, title)
+        videoCallIntent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
         startActivity(videoCallIntent)
 
         val incomingCallServiceIntent = Intent(this, IncomingCallService::class.java)

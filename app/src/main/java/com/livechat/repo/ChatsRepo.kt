@@ -188,6 +188,7 @@ class ChatsRepo @Inject constructor(
         chatId: String,
         userId: String,
         title: String,
+        avatarUrl: String,
         message: String,
         type: String,
         onSuccess: () -> Unit,
@@ -198,6 +199,7 @@ class ChatsRepo @Inject constructor(
             data = FcmRequestModel.Data(
                 chatId = chatId,
                 title = title,
+                avatarUrl = avatarUrl,
                 message = message,
                 type = type
             )

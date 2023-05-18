@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.livechat.base.BaseViewModel
+import com.livechat.common.CurrentUser
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
 import com.livechat.model.MessageModel
@@ -169,6 +170,7 @@ class ChatViewModel @Inject constructor(
                         chatId = chatModel!!.id,
                         userId = i.id,
                         title = chatModel!!.sendName,
+                        avatarUrl = CurrentUser.avatarUrl,
                         message = message,
                         type = type,
                         onSuccess = {

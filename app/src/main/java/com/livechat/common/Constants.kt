@@ -30,6 +30,7 @@ object Constants {
 
     const val KEY_TITLE = "TITLE"
     const val KEY_CHAT_ID = "CHAT_ID"
+    const val KEY_AVATAR_URL = "AVATAR_URL"
 
     const val KEY_ACCEPT_VIDEO_CALL = "ACCEPT_VIDEO_CALL"
     const val KEY_DECLINE_VIDEO_CALL = "DECLINE_VIDEO_CALL"
