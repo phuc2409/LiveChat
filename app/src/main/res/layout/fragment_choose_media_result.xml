@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="5dp"
+            android:padding="10dp"
             android:src="@drawable/ic_back"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -48,22 +48,31 @@
     <LinearLayout
         android:id="@+id/llBottomBar"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
         android:gravity="end"
         android:orientation="horizontal"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/tvDone"
-            android:layout_width="?actionBarSize"
-            android:layout_height="match_parent"
-            android:background="@color/purple_200"
-            android:contentDescription="@string/image"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_200"
             android:foreground="?selectableItemBackground"
-            android:gravity="center"
-            android:padding="5dp"
-            android:src="@drawable/ic_back"
-            android:text="@string/done" />
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/cl_main"
+                android:contentDescription="@string/image"
+                android:padding="10dp"
+                android:text="@string/done"
+                android:textColor="@color/white" />
+
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 

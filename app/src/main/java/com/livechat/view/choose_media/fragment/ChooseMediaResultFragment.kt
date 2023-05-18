@@ -95,7 +95,7 @@ class ChooseMediaResultFragment : BaseFragment(R.layout.fragment_choose_media_re
             activity?.onBackPressed()
         }
 
-        binding.tvDone.setOnClickListener {
+        binding.cvDone.setOnClickListener {
             if (activity == null) {
                 return@setOnClickListener
             }

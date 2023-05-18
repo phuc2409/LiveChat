@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="5dp"
+            android:padding="10dp"
             android:src="@drawable/ic_back" />
 
     </LinearLayout>
