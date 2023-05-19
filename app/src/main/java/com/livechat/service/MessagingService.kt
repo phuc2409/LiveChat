@@ -15,8 +15,8 @@ import com.livechat.R
 import com.livechat.common.Constants
 import com.livechat.helper.SharedPreferencesHelper
 import com.livechat.model.MessageType
+import com.livechat.receiver.MessageReceiver
 import com.livechat.repo.UsersRepo
-import com.livechat.view.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -71,12 +71,11 @@ class MessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(id: String, title: String, message: String) {
-        val mainActivityIntent = Intent(this, MainActivity::class.java)
-        mainActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val mainActivityPendingIntent = PendingIntent.getActivity(
+        val messageIntent = Intent(this, MessageReceiver::class.java)
+        val messagePendingIntent = PendingIntent.getBroadcast(
             this,
             0,
-            mainActivityIntent,
+            messageIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -87,7 +86,7 @@ class MessagingService : FirebaseMessagingService() {
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .setContentIntent(mainActivityPendingIntent)
+            .setContentIntent(messagePendingIntent)
 
         val notificationManager = NotificationManagerCompat.from(this)
 

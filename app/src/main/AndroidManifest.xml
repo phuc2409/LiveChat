@@ -97,6 +97,8 @@
 
         <receiver android:name=".receiver.IncomingCallReceiver" />
 
+        <receiver android:name=".receiver.MessageReceiver" />
+
         <service
             android:name=".service.IncomingCallService"
             android:exported="false"

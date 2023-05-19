@@ -26,6 +26,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
+    companion object {
+        var hasInstance = false
+    }
+
     private lateinit var binding: ActivityMainBinding
 
     private var allChatsFragment: AllChatsFragment? = null
@@ -52,6 +56,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        hasInstance = true
         setupView()
 
 //        askNotificationPermission()
@@ -143,5 +148,10 @@ class MainActivity : BaseActivity() {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        hasInstance = false
     }
 }
