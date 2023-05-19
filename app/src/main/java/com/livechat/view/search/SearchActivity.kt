@@ -15,7 +15,8 @@ import com.livechat.extension.visible
 import com.livechat.model.UserModel
 import com.livechat.view.chat.ChatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
 
 /**
  * User: Quang Phúc
@@ -50,6 +51,10 @@ class SearchActivity : BaseActivity() {
     }
 
     override fun handleListener() {
+        binding.imgBack.setOnClickListener {
+            finish()
+        }
+
         binding.etSearch.addTextChangedListener(object : TextWatcher {
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

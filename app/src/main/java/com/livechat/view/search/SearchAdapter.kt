@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.databinding.ItemListErrorBinding
@@ -36,6 +37,10 @@ class SearchAdapter(
         when (holder) {
 
             is ItemHolder -> {
+                if (item.avatarUrl.isNotBlank()) {
+                    Glide.with(context).load(item.avatarUrl).into(holder.binding.imgAvatar)
+                }
+
                 holder.binding.tvFullName.text = item.fullName
                 holder.binding.tvUserName.text = item.userName
 

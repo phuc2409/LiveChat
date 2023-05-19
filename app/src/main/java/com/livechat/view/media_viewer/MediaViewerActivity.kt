@@ -95,9 +95,9 @@ class MediaViewerActivity : BaseActivity() {
             }
         }
 
-        binding.imgShare.setOnClickListener {
-
-        }
+//        binding.imgShare.setOnClickListener {
+//
+//        }
     }
 
     override fun observeViewModel() {

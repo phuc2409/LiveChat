@@ -105,9 +105,10 @@ class UsersRepo @Inject constructor(
             .addOnSuccessListener {
                 val users = ArrayList<UserModel>()
                 it.documents.forEach { document ->
-                    if (document.getString("fullName")?.contains(keyword) == true
-                        || document.getString("userName") == keyword
-                        || document.getString("email") == keyword
+                    if ((document.getString("fullName")?.contains(keyword) == true
+                                || document.getString("userName") == keyword
+                                || document.getString("email") == keyword)
+                        && document.id != CurrentUser.id
                     ) {
                         document.toObject(UserModel::class.java)?.let { user ->
                             user.id = document.id
