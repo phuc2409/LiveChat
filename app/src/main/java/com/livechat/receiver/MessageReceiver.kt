@@ -18,11 +18,13 @@ class MessageReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (MainActivity.hasInstance) {
             val mainActivityIntent = Intent(context, MainActivity::class.java)
-            mainActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            mainActivityIntent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context?.startActivity(mainActivityIntent)
         } else {
             val splashActivityIntent = Intent(context, SplashActivity::class.java)
-            splashActivityIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            splashActivityIntent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             context?.startActivity(splashActivityIntent)
         }
     }

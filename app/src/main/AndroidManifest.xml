@@ -58,8 +58,7 @@
 
         <activity
             android:name=".view.main.MainActivity"
-            android:exported="false"
-            android:launchMode="singleTask" />
+            android:exported="false" />
 
         <activity
             android:name=".view.media_viewer.MediaViewerActivity"

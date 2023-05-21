@@ -90,8 +90,6 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
                 LoginState.Status.LOGIN_SUCCESS -> {
                     hideLoading()
 
-                    context?.showSnackBar(binding.root, R.string.login_success)
-
                     val intent = Intent(requireContext(), MainActivity::class.java)
                     startActivity(intent)
                     activity?.finish()
