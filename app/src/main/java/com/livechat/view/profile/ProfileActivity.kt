@@ -6,8 +6,13 @@ import com.livechat.R
 import com.livechat.base.BaseActivity
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityProfileBinding
-import com.livechat.extension.showToast
+import com.livechat.extension.gone
+import com.livechat.extension.hideKeyboard
+import com.livechat.extension.showKeyboard
+import com.livechat.extension.showSnackBar
+import com.livechat.extension.visible
 import dagger.hilt.android.AndroidEntryPoint
+
 
 /**
  * User: Quang Phúc
@@ -34,14 +39,25 @@ class ProfileActivity : BaseActivity() {
     }
 
     override fun initView() {
-        binding.etFullName.setText(CurrentUser.fullName)
+        binding.tvFullName.text = CurrentUser.fullName
     }
 
     override fun handleListener() {
+        binding.imgBack.setOnClickListener {
+            finish()
+        }
+
+        binding.imgEdit.setOnClickListener {
+            showEditFullName()
+        }
+
         binding.imgCheck.setOnClickListener {
+            binding.etFullName.hideKeyboard()
             val fullName = binding.etFullName.text.toString()
             if (fullName != oldFullName) {
                 viewModel.updateFullName(fullName)
+            } else {
+                hideEditFullName()
             }
         }
     }
@@ -57,14 +73,33 @@ class ProfileActivity : BaseActivity() {
                 ProfileState.Status.UPDATE_FULL_NAME_SUCCESS -> {
                     val newFullName = it.data as String
                     oldFullName = newFullName
-                    showToast(R.string.success)
+                    binding.tvFullName.text = newFullName
+                    hideEditFullName()
+                    showSnackBar(binding.root, R.string.success)
                 }
 
                 ProfileState.Status.UPDATE_FULL_NAME_ERROR -> {
+                    hideEditFullName()
                     binding.etFullName.setText(oldFullName)
-                    showToast(R.string.error)
+                    showSnackBar(binding.root, R.string.error)
                 }
             }
         }
+    }
+
+    private fun showEditFullName() {
+        binding.imgEdit.gone()
+        binding.tvFullName.gone()
+        binding.imgCheck.visible()
+        binding.etFullName.setText(CurrentUser.fullName)
+        binding.etFullName.visible()
+        binding.etFullName.showKeyboard()
+    }
+
+    private fun hideEditFullName() {
+        binding.imgCheck.gone()
+        binding.etFullName.gone()
+        binding.imgEdit.visible()
+        binding.tvFullName.visible()
     }
 }

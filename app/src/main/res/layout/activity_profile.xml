@@ -6,25 +6,101 @@
     android:layout_height="match_parent"
     tools:context=".view.profile.ProfileActivity">
 
-    <EditText
-        android:id="@+id/etFullName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:padding="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/imgCheck"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Full name" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/imgCheck"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:contentDescription="@string/image"
-        android:foreground="?selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_check"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/gradient_profile"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="?actionBarSize"
+            android:layout_height="?actionBarSize"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="40dp"
+            android:background="@color/white"
+            android:padding="1dp"
+            android:src="@drawable/ic_person"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearanceOverlay="@style/img_circle"
+            app:strokeColor="@color/gray"
+            app:strokeWidth="1dp" />
+
+        <TextView
+            android:id="@+id/tvFullName"
+            style="@style/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgAvatar"
+            tools:text="Full name" />
+
+        <EditText
+            android:id="@+id/etFullName"
+            style="@style/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgAvatar"
+            tools:text="Full name" />
+
+        <ImageView
+            android:id="@+id/imgEdit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgAvatar"
+            app:tint="@color/gray" />
+
+        <ImageView
+            android:id="@+id/imgCheck"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/image"
+            android:foreground="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_check"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgAvatar"
+            app:tint="@color/gray" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,10 +33,6 @@ class SettingsActivity : BaseActivity() {
     }
 
     override fun initView() {
-        if (CurrentUser.avatarUrl.isNotBlank()) {
-            Glide.with(this).load(CurrentUser.avatarUrl).into(binding.imgAvatar)
-        }
-        binding.tvName.text = CurrentUser.fullName
         binding.tvEmail.text = CurrentUser.email
     }
 
@@ -71,5 +67,13 @@ class SettingsActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (CurrentUser.avatarUrl.isNotBlank()) {
+            Glide.with(this).load(CurrentUser.avatarUrl).into(binding.imgAvatar)
+        }
+        binding.tvName.text = CurrentUser.fullName
     }
 }

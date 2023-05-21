@@ -10,6 +10,7 @@ import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentLoginBinding
 import com.livechat.extension.gone
+import com.livechat.extension.hideKeyboard
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.view.main.MainActivity
@@ -53,6 +54,8 @@ class LoginFragment : BaseFragment(R.id.fragmentLogin) {
 
     override fun handleListener() {
         binding.cvLogin.setOnClickListener {
+            binding.etEmail.hideKeyboard()
+
             val email = binding.etEmail.text
             val password = binding.etPassword.text
             var hasError = false

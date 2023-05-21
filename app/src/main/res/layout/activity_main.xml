@@ -26,6 +26,7 @@
                 android:id="@+id/imgAvatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@color/white"
                 android:foreground="?selectableItemBackgroundBorderless"
                 android:padding="1dp"
                 android:src="@drawable/ic_person"

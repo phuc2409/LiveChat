@@ -76,11 +76,6 @@ class MainActivity : BaseActivity() {
         contactsFragment?.let {
             supportFragmentManager.beginTransaction().add(R.id.fragment, it).hide(it).commit()
         }
-
-        if (CurrentUser.avatarUrl.isNotBlank()) {
-            Glide.with(this).load(CurrentUser.avatarUrl).into(binding.imgAvatar)
-        }
-        binding.tvName.text = CurrentUser.fullName
     }
 
     override fun handleListener() {
@@ -115,6 +110,14 @@ class MainActivity : BaseActivity() {
 
     override fun observeViewModel() {
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (CurrentUser.avatarUrl.isNotBlank()) {
+            Glide.with(this).load(CurrentUser.avatarUrl).into(binding.imgAvatar)
+        }
+        binding.tvName.text = CurrentUser.fullName
     }
 
     private fun showAllChats() {
