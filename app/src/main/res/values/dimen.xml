@@ -3,5 +3,6 @@
 
     <dimen name="text_size_title">18sp</dimen>
     <dimen name="text_size_content">14sp</dimen>
+    <dimen name="text_size_description">12sp</dimen>
 
 </resources>

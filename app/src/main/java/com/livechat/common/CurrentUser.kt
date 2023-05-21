@@ -11,12 +11,14 @@ object CurrentUser {
 
     var id = ""
     var email = ""
+    var userName = ""
     var fullName = ""
     var avatarUrl = ""
 
     fun clear() {
         id = ""
         email = ""
+        userName = ""
         fullName = ""
         avatarUrl = ""
     }
@@ -27,6 +29,9 @@ object CurrentUser {
         }
         if (userModel.email.isNotBlank()) {
             email = userModel.email
+        }
+        if (userModel.userName.isNotBlank()) {
+            userName = userModel.userName
         }
         if (userModel.fullName.isNotBlank()) {
             fullName = userModel.fullName

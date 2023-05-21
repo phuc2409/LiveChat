@@ -80,6 +80,8 @@ class ProfileActivity : BaseActivity() {
         if (CurrentUser.avatarUrl.isNotBlank()) {
             Glide.with(this).load(CurrentUser.avatarUrl).centerCrop().into(binding.imgAvatar)
         }
+        binding.tvUserName.text = CurrentUser.userName
+        binding.tvEmail.text = CurrentUser.email
     }
 
     override fun handleListener() {
@@ -107,6 +109,18 @@ class ProfileActivity : BaseActivity() {
             } else {
                 hideEditFullName()
             }
+        }
+
+        binding.llUserName.setOnClickListener {
+
+        }
+
+        binding.llEmail.setOnClickListener {
+
+        }
+
+        binding.tvPassword.setOnClickListener {
+
         }
     }
 

@@ -66,4 +66,6 @@
     <string name="can_not_start_video_call">Can not start video call</string>
     <string name="choose_only">Choose only</string>
     <string name="file">file</string>
+    <string name="user_name">User name</string>
+    <string name="privacy">Privacy</string>
 </resources>
