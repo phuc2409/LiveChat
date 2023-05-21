@@ -20,11 +20,17 @@ class ProfileState(
         )
 
         fun updateFullNameError(e: Exception) = ProfileState(Status.UPDATE_FULL_NAME_ERROR, e)
+
+        fun updateAvatarSuccess() = ProfileState(Status.UPDATE_AVATAR_SUCCESS)
+
+        fun updateAvatarError(e: Exception) = ProfileState(Status.UPDATE_AVATAR_ERROR, e)
     }
 
     enum class Status {
         LOADING,
         UPDATE_FULL_NAME_SUCCESS,
-        UPDATE_FULL_NAME_ERROR
+        UPDATE_FULL_NAME_ERROR,
+        UPDATE_AVATAR_SUCCESS,
+        UPDATE_AVATAR_ERROR
     }
 }

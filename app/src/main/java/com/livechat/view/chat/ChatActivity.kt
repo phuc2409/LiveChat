@@ -293,7 +293,7 @@ class ChatActivity : BaseActivity() {
         binding.tvChatName.text = getOppositeUser()?.fullName
         getOppositeUser()?.avatarUrl?.let {
             if (it.isNotBlank()) {
-                Glide.with(this).load(it).into(binding.imgAvatar)
+                Glide.with(this).load(it).centerCrop().into(binding.imgAvatar)
             }
         }
     }

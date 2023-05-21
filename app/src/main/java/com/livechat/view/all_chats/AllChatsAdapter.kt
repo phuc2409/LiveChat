@@ -44,7 +44,10 @@ class AllChatsAdapter(
                     if (i.id != CurrentUser.id) {
                         holder.binding.tvName.text = i.name
                         if (i.avatarUrl.isNotBlank()) {
-                            Glide.with(context).load(i.avatarUrl).into(holder.binding.imgAvatar)
+                            Glide.with(context)
+                                .load(i.avatarUrl)
+                                .centerCrop()
+                                .into(holder.binding.imgAvatar)
                         }
                         break
                     }

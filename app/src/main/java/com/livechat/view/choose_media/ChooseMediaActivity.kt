@@ -9,7 +9,7 @@ import com.livechat.base.BaseActivity
 import com.livechat.databinding.ActivityChooseMediaBinding
 import com.livechat.extension.getSimpleName
 import com.livechat.extension.gone
-import com.livechat.extension.showToast
+import com.livechat.extension.showSnackBar
 import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.FileModel
@@ -24,12 +24,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ChooseMediaActivity : BaseActivity() {
 
-    companion object{
+    companion object {
+        const val KEY_MODE = "MODE"
+        const val KEY_AVATAR = "AVATAR"
         const val KEY_ITEMS = "ITEMS"
     }
 
     private lateinit var viewModel: ChooseMediaViewModel
     private lateinit var binding: ActivityChooseMediaBinding
+
+    private var mode = ""
 
     private var adapter: ChooseMediaAdapter? = null
 
@@ -44,7 +48,13 @@ class ChooseMediaActivity : BaseActivity() {
         setContentView(binding.root)
 
         setupView()
-        viewModel.getAllMedia()
+
+        mode = intent.getStringExtra(KEY_MODE) ?: ""
+        if (mode == KEY_AVATAR) {
+            viewModel.getAllAvatar()
+        } else {
+            viewModel.getAllMedia()
+        }
     }
 
     override fun initView() {
@@ -73,6 +83,14 @@ class ChooseMediaActivity : BaseActivity() {
                     binding.rcMedia.adapter = adapter
                 }
 
+                ChooseMediaState.Status.MAX_FILE_COUNT_REACH -> {
+                    val maxFileCount = it.data as Int
+                    showSnackBar(
+                        binding.root,
+                        "${getString(R.string.choose_only)} $maxFileCount ${getString(R.string.file)}"
+                    )
+                }
+
                 ChooseMediaState.Status.CHOOSE_MEDIA_SUCCESS -> {
                     val position = it.data as Int
                     adapter?.notifyItemChanged(position)
@@ -97,7 +115,7 @@ class ChooseMediaActivity : BaseActivity() {
                 }
 
                 ChooseMediaState.Status.CHECK_FILE_SIZE_ERROR -> {
-                    showToast(R.string.maximum_total_file_size)
+                    showSnackBar(binding.root, R.string.maximum_total_file_size)
                 }
             }
         }

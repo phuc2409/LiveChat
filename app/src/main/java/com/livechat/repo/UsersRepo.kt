@@ -177,6 +177,19 @@ class UsersRepo @Inject constructor(
             }
     }
 
+    fun updateAvatarUrl(avatarUrl: String, onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
+        firestore.collection(Constants.Collections.USERS)
+            .document(CurrentUser.id)
+            .update("avatarUrl", avatarUrl)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
     fun startUsersInChatListener(
         chatModel: ChatModel,
         onSuccess: (users: ArrayList<UserModel>) -> Unit

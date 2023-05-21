@@ -115,7 +115,7 @@ class MainActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         if (CurrentUser.avatarUrl.isNotBlank()) {
-            Glide.with(this).load(CurrentUser.avatarUrl).into(binding.imgAvatar)
+            Glide.with(this).load(CurrentUser.avatarUrl).centerCrop().into(binding.imgAvatar)
         }
         binding.tvName.text = CurrentUser.fullName
     }

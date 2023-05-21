@@ -77,7 +77,7 @@ class IncomingCallActivity : BaseActivity() {
 
         binding.tvTitle.text = title
         if (avatarUrl.isNotBlank()) {
-            Glide.with(this).load(avatarUrl).into(binding.imgAvatar)
+            Glide.with(this).load(avatarUrl).centerCrop().into(binding.imgAvatar)
         }
     }
 

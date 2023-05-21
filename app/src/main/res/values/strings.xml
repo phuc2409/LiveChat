@@ -64,4 +64,6 @@
     <string name="no_internet">No internet</string>
     <string name="can_not_choose_media">Can not choose media</string>
     <string name="can_not_start_video_call">Can not start video call</string>
+    <string name="choose_only">Choose only</string>
+    <string name="file">file</string>
 </resources>

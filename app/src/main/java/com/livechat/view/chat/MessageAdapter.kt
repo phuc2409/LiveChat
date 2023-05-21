@@ -130,7 +130,10 @@ class MessageAdapter(
                     holder.binding.rvAttachments.gone()
                 } else if (item.attachments.isEmpty()) {
                     if (avatarUrl.isNotBlank()) {
-                        Glide.with(context).load(avatarUrl).into(holder.binding.imgAvatar)
+                        Glide.with(context)
+                            .load(avatarUrl)
+                            .centerCrop()
+                            .into(holder.binding.imgAvatar)
                     }
                     item.createdAt?.let {
                         holder.binding.tvTime.text =
@@ -145,7 +148,10 @@ class MessageAdapter(
                     holder.binding.rvAttachments.gone()
                 } else {
                     if (avatarUrl.isNotBlank()) {
-                        Glide.with(context).load(avatarUrl).into(holder.binding.imgAvatar)
+                        Glide.with(context)
+                            .load(avatarUrl)
+                            .centerCrop()
+                            .into(holder.binding.imgAvatar)
                     }
                     item.createdAt?.let {
                         holder.binding.tvTime.text =

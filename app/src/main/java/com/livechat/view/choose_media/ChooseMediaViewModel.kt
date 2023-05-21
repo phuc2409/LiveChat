@@ -21,6 +21,8 @@ class ChooseMediaViewModel @Inject constructor(private val media: MediaHelper) :
     val state: LiveData<ChooseMediaState> = _state
 
     private var files = ArrayList<FileModel>()
+    private var maxFileCount = Int.MAX_VALUE
+    private var fileCount = 0
 
     fun getAllMedia() {
         val images = media.getAllImages()
@@ -33,8 +35,28 @@ class ChooseMediaViewModel @Inject constructor(private val media: MediaHelper) :
         _state.postValue(ChooseMediaState.getMediaSuccess(files))
     }
 
+    fun getAllAvatar() {
+        maxFileCount = 1
+        val images = media.getAllImages()
+        images.sortByDescending {
+            it.dateTaken
+        }
+        files = images
+        _state.postValue(ChooseMediaState.getMediaSuccess(files))
+    }
+
     fun chooseMedia(position: Int) {
+        if (!files[position].isSelected && fileCount >= maxFileCount) {
+            _state.postValue(ChooseMediaState.maxFileCountReach(maxFileCount))
+            return
+        }
+
         files[position].isSelected = !files[position].isSelected
+        fileCount += if (files[position].isSelected) {
+            1
+        } else {
+            -1
+        }
         _state.postValue(ChooseMediaState.chooseMediaSuccess(position))
     }
 

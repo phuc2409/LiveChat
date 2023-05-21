@@ -20,6 +20,9 @@ class ChooseMediaState(
         fun chooseMediaSuccess(position: Int) =
             ChooseMediaState(Status.CHOOSE_MEDIA_SUCCESS, position)
 
+        fun maxFileCountReach(maxFileCount: Int) =
+            ChooseMediaState(Status.MAX_FILE_COUNT_REACH, maxFileCount)
+
         fun checkFileSizeSuccess() = ChooseMediaState(Status.CHECK_FILE_SIZE_SUCCESS)
 
         fun checkFileSizeError() = ChooseMediaState(Status.CHECK_FILE_SIZE_ERROR)
@@ -28,6 +31,7 @@ class ChooseMediaState(
     enum class Status {
         GET_MEDIA_SUCCESS,
         CHOOSE_MEDIA_SUCCESS,
+        MAX_FILE_COUNT_REACH,
         CHECK_FILE_SIZE_SUCCESS,
         CHECK_FILE_SIZE_ERROR
     }

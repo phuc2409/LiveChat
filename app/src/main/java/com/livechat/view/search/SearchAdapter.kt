@@ -38,7 +38,10 @@ class SearchAdapter(
 
             is ItemHolder -> {
                 if (item.avatarUrl.isNotBlank()) {
-                    Glide.with(context).load(item.avatarUrl).into(holder.binding.imgAvatar)
+                    Glide.with(context)
+                        .load(item.avatarUrl)
+                        .centerCrop()
+                        .into(holder.binding.imgAvatar)
                 }
 
                 holder.binding.tvFullName.text = item.fullName
