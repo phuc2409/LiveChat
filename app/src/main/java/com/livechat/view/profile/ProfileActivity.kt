@@ -119,7 +119,7 @@ class ProfileActivity : BaseActivity() {
 
         }
 
-        binding.tvPassword.setOnClickListener {
+        binding.llPassword.setOnClickListener {
 
         }
     }

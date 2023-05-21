@@ -84,34 +84,98 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llUser">
 
-        <TextView
-            android:id="@+id/tvProfile"
+        <LinearLayout
+            android:id="@+id/llProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="?selectableItemBackground"
-            android:paddingVertical="10dp"
-            android:text="@string/profile"
-            app:layout_constraintTop_toBottomOf="@id/llUser" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/image"
+                android:padding="5dp"
+                android:src="@drawable/ic_person" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/profile"
+                app:layout_constraintTop_toBottomOf="@id/llUser" />
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginHorizontal="10dp"
             android:background="@color/gray" />
 
-        <TextView
-            android:id="@+id/tvSignOut"
+        <LinearLayout
+            android:id="@+id/llNotifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="?selectableItemBackground"
-            android:paddingVertical="10dp"
-            android:text="@string/sign_out"
-            android:textColor="@color/red"
-            app:layout_constraintTop_toBottomOf="@id/llUser" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/image"
+                android:padding="5dp"
+                android:src="@drawable/ic_notifications" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications"
+                app:layout_constraintTop_toBottomOf="@id/llUser" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@color/gray" />
+
+        <LinearLayout
+            android:id="@+id/llSignOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?selectableItemBackground"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="15dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/image"
+                android:padding="9dp"
+                android:src="@drawable/ic_log_out"
+                app:tint="@color/red" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_out"
+                android:textColor="@color/red"
+                app:layout_constraintTop_toBottomOf="@id/llUser" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -41,12 +41,23 @@ class SettingsActivity : BaseActivity() {
             finish()
         }
 
-        binding.tvProfile.setOnClickListener {
+        binding.llProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
 
-        binding.tvSignOut.setOnClickListener {
+        binding.llNotifications.setOnClickListener {
+            val intent = Intent()
+            intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            // for Android 8 and above
+            intent.putExtra("android.provider.extra.APP_PACKAGE", packageName)
+
+            startActivity(intent)
+        }
+
+        binding.llSignOut.setOnClickListener {
             viewModel.signOut()
         }
     }
