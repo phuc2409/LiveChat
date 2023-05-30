@@ -9,6 +9,10 @@
 
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_new_password">Confirm new password</string>
     <string name="login">Login</string>
     <string name="login_success">Login success</string>
     <string name="signup_success">Signup success</string>
@@ -67,6 +71,7 @@
     <string name="choose_only">Choose only</string>
     <string name="file">file</string>
     <string name="user_name">User name</string>
+    <string name="update_user_name">Update user name</string>
     <string name="privacy">Privacy</string>
     <string name="notifications">Notifications</string>
     <string name="copy">Copy</string>

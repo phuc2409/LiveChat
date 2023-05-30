@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:hint="@string/password"
+            android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:text="abcd24901" />
 
@@ -126,8 +126,7 @@
         android:paddingHorizontal="10dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llActionBar"
-        tools:visibility="visible">
+        app:layout_constraintTop_toBottomOf="@+id/llActionBar">
 
         <ImageView
             android:id="@+id/imgEmailVerify"

@@ -21,6 +21,7 @@ import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.model.FileModel
 import com.livechat.util.PermissionsUtil
+import com.livechat.view.alert_dialog.UpdatePasswordAlertDialog
 import com.livechat.view.alert_dialog.UpdateUserNameAlertDialog
 import com.livechat.view.alert_dialog.UserNameAlertDialog
 import com.livechat.view.choose_media.ChooseMediaActivity
@@ -124,7 +125,7 @@ class ProfileActivity : BaseActivity() {
         }
 
         binding.llPassword.setOnClickListener {
-
+            showUpdatePasswordAlertDialog()
         }
     }
 
@@ -184,6 +185,19 @@ class ProfileActivity : BaseActivity() {
                     binding.clLoading.gone()
                     showSnackBar(binding.root, R.string.this_user_name_has_already_been_taken)
                 }
+
+                ProfileState.Status.UPDATE_PASSWORD_SUCCESS -> {
+                    binding.clLoading.gone()
+                    showSnackBar(binding.root, R.string.success)
+                }
+
+                ProfileState.Status.UPDATE_PASSWORD_ERROR -> {
+                    val e = it.data as Exception
+                    binding.clLoading.gone()
+                    e.message?.let { message ->
+                        showSnackBar(binding.root, message)
+                    }
+                }
             }
         }
     }
@@ -235,5 +249,15 @@ class ProfileActivity : BaseActivity() {
                     viewModel.updateUserName(newUserName)
                 }
             }).show()
+    }
+
+    private fun showUpdatePasswordAlertDialog() {
+        UpdatePasswordAlertDialog(this, object : UpdatePasswordAlertDialog.Listener {
+
+            override fun onUpdate(oldPassword: String, newPassword: String) {
+                binding.clLoading.visible()
+                viewModel.updatePassword(oldPassword, newPassword)
+            }
+        }).show()
     }
 }

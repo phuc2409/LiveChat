@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.livechat.base.BaseViewModel
 import com.livechat.common.CurrentUser
 import com.livechat.helper.SharedPreferencesHelper
+import com.livechat.repo.AuthRepo
 import com.livechat.repo.FileRepo
 import com.livechat.repo.UsersRepo
 import com.livechat.util.FileUtil
@@ -20,6 +21,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
+    private val authRepo: AuthRepo,
     private val fileRepo: FileRepo,
     private val usersRepo: UsersRepo,
     private val sharedPrefs: SharedPreferencesHelper
@@ -90,6 +92,22 @@ class ProfileViewModel @Inject constructor(
             },
             onError = {
                 _state.postValue(ProfileState.updateUserNameError(it))
+            })
+    }
+
+    fun updatePassword(oldPassword: String, newPassword: String) {
+        authRepo.login(CurrentUser.email, oldPassword,
+            onSuccess = {
+                authRepo.updatePassword(newPassword,
+                    onSuccess = {
+                        _state.postValue(ProfileState.updatePasswordSuccess())
+                    },
+                    onError = {
+                        _state.postValue(ProfileState.updatePasswordError(it))
+                    })
+            },
+            onError = {
+                _state.postValue(ProfileState.updatePasswordError(it))
             })
     }
 }
