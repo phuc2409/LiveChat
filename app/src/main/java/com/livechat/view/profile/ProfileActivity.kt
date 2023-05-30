@@ -13,6 +13,7 @@ import com.livechat.base.BaseActivity
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityProfileBinding
 import com.livechat.extension.checkPermissions
+import com.livechat.extension.copyToClipboard
 import com.livechat.extension.gone
 import com.livechat.extension.hideKeyboard
 import com.livechat.extension.showKeyboard
@@ -20,9 +21,10 @@ import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.model.FileModel
 import com.livechat.util.PermissionsUtil
+import com.livechat.view.alert_dialog.UpdateUserNameAlertDialog
+import com.livechat.view.alert_dialog.UserNameAlertDialog
 import com.livechat.view.choose_media.ChooseMediaActivity
 import dagger.hilt.android.AndroidEntryPoint
-
 
 /**
  * User: Quang Phúc
@@ -58,6 +60,7 @@ class ProfileActivity : BaseActivity() {
                     val type = object : TypeToken<ArrayList<FileModel>>() {}.type
                     val items: ArrayList<FileModel> = Gson().fromJson(it, type)
                     if (items.isNotEmpty()) {
+                        binding.clLoading.visible()
                         viewModel.updateAvatarUrl(items.first().path)
                     }
                 }
@@ -105,6 +108,7 @@ class ProfileActivity : BaseActivity() {
             binding.etFullName.hideKeyboard()
             val fullName = binding.etFullName.text.toString()
             if (fullName != oldFullName) {
+                binding.clLoading.visible()
                 viewModel.updateFullName(fullName)
             } else {
                 hideEditFullName()
@@ -112,7 +116,7 @@ class ProfileActivity : BaseActivity() {
         }
 
         binding.llUserName.setOnClickListener {
-
+            showUserNameAlertDialog()
         }
 
         binding.llEmail.setOnClickListener {
@@ -136,17 +140,20 @@ class ProfileActivity : BaseActivity() {
                     val newFullName = it.data as String
                     oldFullName = newFullName
                     binding.tvFullName.text = newFullName
+                    binding.clLoading.gone()
                     hideEditFullName()
                     showSnackBar(binding.root, R.string.success)
                 }
 
                 ProfileState.Status.UPDATE_FULL_NAME_ERROR -> {
+                    binding.clLoading.gone()
                     hideEditFullName()
                     binding.etFullName.setText(oldFullName)
                     showSnackBar(binding.root, R.string.error)
                 }
 
                 ProfileState.Status.UPDATE_AVATAR_SUCCESS -> {
+                    binding.clLoading.gone()
                     if (CurrentUser.avatarUrl.isNotBlank()) {
                         Glide.with(this)
                             .load(CurrentUser.avatarUrl)
@@ -156,7 +163,26 @@ class ProfileActivity : BaseActivity() {
                 }
 
                 ProfileState.Status.UPDATE_AVATAR_ERROR -> {
+                    binding.clLoading.gone()
                     showSnackBar(binding.root, R.string.error)
+                }
+
+                ProfileState.Status.UPDATE_USER_NAME_SUCCESS -> {
+                    binding.clLoading.gone()
+                    showSnackBar(binding.root, R.string.success)
+                    if (CurrentUser.userName.isNotBlank()) {
+                        binding.tvUserName.text = CurrentUser.userName
+                    }
+                }
+
+                ProfileState.Status.UPDATE_USER_NAME_ERROR -> {
+                    binding.clLoading.gone()
+                    showSnackBar(binding.root, R.string.error)
+                }
+
+                ProfileState.Status.USER_NAME_EXISTS -> {
+                    binding.clLoading.gone()
+                    showSnackBar(binding.root, R.string.this_user_name_has_already_been_taken)
                 }
             }
         }
@@ -182,5 +208,32 @@ class ProfileActivity : BaseActivity() {
         binding.etFullName.gone()
         binding.imgEdit.visible()
         binding.tvFullName.visible()
+    }
+
+    private fun showUserNameAlertDialog() {
+        UserNameAlertDialog(this, object : UserNameAlertDialog.Listener {
+
+            override fun onCopy() {
+                copyToClipboard(CurrentUser.userName)
+                showSnackBar(binding.root, R.string.copied)
+            }
+
+            override fun onUpdate() {
+                showUpdateUserNameAlertDialog()
+            }
+        }).show()
+    }
+
+    private fun showUpdateUserNameAlertDialog() {
+        UpdateUserNameAlertDialog(
+            this,
+            CurrentUser.userName,
+            object : UpdateUserNameAlertDialog.Listener {
+
+                override fun onUpdate(newUserName: String) {
+                    binding.clLoading.visible()
+                    viewModel.updateUserName(newUserName)
+                }
+            }).show()
     }
 }

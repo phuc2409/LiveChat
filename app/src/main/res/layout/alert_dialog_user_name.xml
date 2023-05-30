@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    tools:context=".view.alert_dialog.UserNameAlertDialog">
+
+    <TextView
+        style="@style/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/user_name" />
+
+    <TextView
+        android:id="@+id/tvCopy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:padding="15dp"
+        android:text="@string/copy" />
+
+    <TextView
+        android:id="@+id/tvUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?selectableItemBackground"
+        android:padding="15dp"
+        android:text="@string/update" />
+
+</LinearLayout>

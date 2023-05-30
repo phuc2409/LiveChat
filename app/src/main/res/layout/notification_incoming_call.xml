@@ -38,6 +38,7 @@
             android:gravity="center"
             android:padding="9dp"
             android:text="@string/accept"
+            android:textColor="@color/white"
             android:textSize="13sp" />
 
         <TextView
@@ -54,6 +55,7 @@
             android:gravity="center"
             android:padding="9dp"
             android:text="@string/decline"
+            android:textColor="@color/white"
             android:textSize="13sp" />
 
     </LinearLayout>

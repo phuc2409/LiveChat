@@ -69,4 +69,9 @@
     <string name="user_name">User name</string>
     <string name="privacy">Privacy</string>
     <string name="notifications">Notifications</string>
+    <string name="copy">Copy</string>
+    <string name="copied">Copied</string>
+    <string name="update">Update</string>
+    <string name="cancel">Cancel</string>
+    <string name="this_user_name_has_already_been_taken">This user name has already been taken</string>
 </resources>

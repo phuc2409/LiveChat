@@ -1,6 +1,8 @@
 package com.livechat.extension
 
 import android.app.DownloadManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
@@ -56,4 +58,10 @@ fun Context.isHavingInternet(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     return connectivityManager.activeNetworkInfo != null
             && connectivityManager.activeNetworkInfo?.isConnected == true
+}
+
+fun Context.copyToClipboard(text: String) {
+    val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clipData = ClipData.newPlainText(text, text)
+    clipboardManager.setPrimaryClip(clipData)
 }

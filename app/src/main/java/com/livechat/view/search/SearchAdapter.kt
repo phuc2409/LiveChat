@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.livechat.R
 import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.databinding.ItemListErrorBinding
@@ -45,7 +46,8 @@ class SearchAdapter(
                 }
 
                 holder.binding.tvFullName.text = item.fullName
-                holder.binding.tvUserName.text = item.userName
+                holder.binding.tvUserName.text =
+                    "${context.getString(R.string.user_name)}: ${item.userName}"
 
                 holder.itemView.setOnClickListener {
                     onClick(item, position)

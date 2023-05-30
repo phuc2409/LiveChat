@@ -101,13 +101,15 @@ class UsersRepo @Inject constructor(
         onSuccess: (users: ArrayList<UserModel>) -> Unit,
         onError: (e: Exception) -> Unit
     ) {
+        val lowerKeyword = keyword.lowercase()
+
         firestore.collection(Constants.Collections.USERS).get()
             .addOnSuccessListener {
                 val users = ArrayList<UserModel>()
                 it.documents.forEach { document ->
-                    if ((document.getString("fullName")?.contains(keyword) == true
-                                || document.getString("userName") == keyword
-                                || document.getString("email") == keyword)
+                    if ((document.getString("fullName")?.lowercase()?.contains(lowerKeyword) == true
+                                || document.getString("userName") == lowerKeyword
+                                || document.getString("email") == lowerKeyword)
                         && document.id != CurrentUser.id
                     ) {
                         document.toObject(UserModel::class.java)?.let { user ->
@@ -181,6 +183,36 @@ class UsersRepo @Inject constructor(
         firestore.collection(Constants.Collections.USERS)
             .document(CurrentUser.id)
             .update("avatarUrl", avatarUrl)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun userNameIsExists(
+        userName: String,
+        onSuccess: (isExists: Boolean) -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firestore.collection(Constants.Collections.USERS)
+            .whereEqualTo("userName", userName)
+            .get()
+            .addOnSuccessListener {
+                onSuccess(!it.isEmpty)
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun updateUserName(userName: String, onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {
+        firestore.collection(Constants.Collections.USERS)
+            .document(CurrentUser.id)
+            .update("userName", userName)
             .addOnSuccessListener {
                 onSuccess()
             }

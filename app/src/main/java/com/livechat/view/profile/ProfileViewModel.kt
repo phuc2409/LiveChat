@@ -5,12 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.livechat.base.BaseViewModel
 import com.livechat.common.CurrentUser
 import com.livechat.helper.SharedPreferencesHelper
-import com.livechat.model.MessageModel
 import com.livechat.repo.FileRepo
 import com.livechat.repo.UsersRepo
 import com.livechat.util.FileUtil
 import com.livechat.util.TimeUtil
-import com.livechat.view.chat.ChatState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
@@ -52,7 +50,7 @@ class ProfileViewModel @Inject constructor(
         fileRepo.uploadFile(
             avatarFilePath,
             newFilePath,
-            onSuccess = {avatarUrl ->
+            onSuccess = { avatarUrl ->
                 usersRepo.updateAvatarUrl(avatarUrl,
                     onSuccess = {
                         CurrentUser.avatarUrl = avatarUrl
@@ -68,5 +66,30 @@ class ProfileViewModel @Inject constructor(
                 _state.postValue(ProfileState.updateAvatarError(it))
             }
         )
+    }
+
+    fun updateUserName(userName: String) {
+        usersRepo.userNameIsExists(userName,
+            onSuccess = { isExists ->
+                if (isExists) {
+                    _state.postValue(ProfileState.userNameExists())
+                    return@userNameIsExists
+                }
+
+                usersRepo.updateUserName(userName,
+                    onSuccess = {
+                        CurrentUser.userName = userName
+                        val userModel = sharedPrefs.getCurrentUser()
+                        userModel.userName = userName
+                        sharedPrefs.setCurrentUser(userModel)
+                        _state.postValue(ProfileState.updateUserNameSuccess())
+                    },
+                    onError = {
+                        _state.postValue(ProfileState.updateUserNameError(it))
+                    })
+            },
+            onError = {
+                _state.postValue(ProfileState.updateUserNameError(it))
+            })
     }
 }
