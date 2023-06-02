@@ -229,6 +229,11 @@ open class AgoraVideoViewer : FrameLayout {
         if (reogranise) {
             this.reorganiseVideos()
         }
+
+        // Rời khỏi cuộc gọi khi chỉ còn mỗi mình
+        if (userVideoLookup.size == 1) {
+            leaveChannel()
+        }
     }
 
     internal fun setRandomSpeaker() {

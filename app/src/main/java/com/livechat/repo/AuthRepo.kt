@@ -68,4 +68,19 @@ class AuthRepo @Inject constructor(private val firebaseAuth: FirebaseAuth) {
                 onError(it)
             }
     }
+
+    fun updatePassword(
+        password: String,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firebaseAuth.currentUser?.updatePassword(password)
+            ?.addOnSuccessListener {
+                onSuccess()
+            }
+            ?.addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
 }
