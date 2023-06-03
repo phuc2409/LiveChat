@@ -72,11 +72,15 @@
     <string name="file">file</string>
     <string name="user_name">User name</string>
     <string name="update_user_name">Update user name</string>
+    <string name="update_password">Update password</string>
     <string name="privacy">Privacy</string>
     <string name="notifications">Notifications</string>
     <string name="copy">Copy</string>
-    <string name="copied">Copied</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="update">Update</string>
     <string name="cancel">Cancel</string>
     <string name="this_user_name_has_already_been_taken">This user name has already been taken</string>
+    <string name="delete">Delete</string>
+    <string name="delete_message">Delete message</string>
+    <string name="delete_confirm">Are you sure you want to delete this message?</string>
 </resources>

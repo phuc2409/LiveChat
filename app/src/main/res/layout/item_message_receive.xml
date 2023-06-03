@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:backgroundTint="@color/gray_light"
+            android:foreground="?selectableItemBackground"
             android:visibility="gone"
             app:cardElevation="0dp"
             tools:visibility="visible">

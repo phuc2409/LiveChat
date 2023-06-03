@@ -15,6 +15,7 @@ data class MessageModel(
     var attachments: ArrayList<AttachmentModel> = ArrayList(),
     var type: String = "",
     var createdAt: Timestamp? = null,
+    @JvmField
     var isDeleted: Boolean = false
 ) {
     data class AttachmentModel(

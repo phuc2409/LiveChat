@@ -58,6 +58,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:backgroundTint="@color/cl_main"
+        android:foreground="?selectableItemBackground"
         android:visibility="gone"
         app:cardElevation="0dp"
         tools:visibility="visible">

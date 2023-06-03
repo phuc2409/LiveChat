@@ -33,6 +33,8 @@ class ChatState(
 
         fun updateMessages(messages: ArrayList<MessageModel>) =
             ChatState(Status.UPDATE_MESSAGES, messages)
+
+        fun deleteMessageError(e: Exception) = ChatState(Status.DELETE_MESSAGE_ERROR, e)
     }
 
     enum class Status {
@@ -43,6 +45,7 @@ class ChatState(
         GET_USERS_ERROR,
         SEND_MESSAGE_SUCCESS,
         SEND_MESSAGE_ERROR,
-        UPDATE_MESSAGES
+        UPDATE_MESSAGES,
+        DELETE_MESSAGE_ERROR
     }
 }

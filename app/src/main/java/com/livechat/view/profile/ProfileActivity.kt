@@ -229,7 +229,7 @@ class ProfileActivity : BaseActivity() {
 
             override fun onCopy() {
                 copyToClipboard(CurrentUser.userName)
-                showSnackBar(binding.root, R.string.copied)
+                showSnackBar(binding.root, R.string.copied_to_clipboard)
             }
 
             override fun onUpdate() {

@@ -185,6 +185,16 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    fun deleteMessage(messageModel: MessageModel) {
+        chatsRepo.deleteMessage(messageModel,
+            onSuccess = {
+
+            },
+            onError = {
+                _state.postValue(ChatState.deleteMessageError(it))
+            })
+    }
+
     fun startMessagesListener(newChatModel: ChatModel? = null) {
         if (newChatModel != null) {
             chatModel = newChatModel

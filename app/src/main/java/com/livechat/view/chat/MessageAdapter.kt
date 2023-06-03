@@ -32,6 +32,12 @@ class MessageAdapter(
 
     interface Listener {
 
+        fun onSendMessageLongClick(messageModel: MessageModel, position: Int)
+
+        fun onReceiveMessageLongClick(messageModel: MessageModel, position: Int)
+
+        fun onSendMediaLongClick(messageModel: MessageModel, position: Int)
+
         fun onAttachmentClick(attachmentModel: MessageModel.AttachmentModel, position: Int)
     }
 
@@ -80,6 +86,11 @@ class MessageAdapter(
                     holder.binding.tvTime.visible()
                     holder.binding.cvMessage.visible()
                     holder.binding.rvAttachments.gone()
+
+                    holder.binding.cvMessage.setOnLongClickListener {
+                        listener.onSendMessageLongClick(item, position)
+                        true
+                    }
                 } else {
                     item.createdAt?.let {
                         holder.binding.tvTime.text =
@@ -100,10 +111,24 @@ class MessageAdapter(
                     }
                     val adapter = AttachmentAdapter(
                         context,
-                        item.attachments
-                    ) { attachmentModel, attachmentPosition ->
-                        listener.onAttachmentClick(attachmentModel, attachmentPosition)
-                    }
+                        item.attachments,
+                        object : AttachmentAdapter.Listener {
+
+                            override fun onClick(
+                                attachmentModel: MessageModel.AttachmentModel,
+                                attachmentPosition: Int
+                            ) {
+                                listener.onAttachmentClick(attachmentModel, attachmentPosition)
+                            }
+
+                            override fun onLongClick(
+                                attachmentModel: MessageModel.AttachmentModel,
+                                attachmentPosition: Int
+                            ) {
+                                listener.onSendMediaLongClick(item, attachmentPosition)
+                            }
+                        }
+                    )
                     holder.binding.rvAttachments.layoutManager = layoutManager
                     holder.binding.rvAttachments.adapter = adapter
 
@@ -146,6 +171,11 @@ class MessageAdapter(
                     holder.binding.tvTime.visible()
                     holder.binding.cvMessage.visible()
                     holder.binding.rvAttachments.gone()
+
+                    holder.binding.cvMessage.setOnLongClickListener {
+                        listener.onReceiveMessageLongClick(item, position)
+                        true
+                    }
                 } else {
                     if (avatarUrl.isNotBlank()) {
                         Glide.with(context)
@@ -169,10 +199,24 @@ class MessageAdapter(
                     }
                     val adapter = AttachmentAdapter(
                         context,
-                        item.attachments
-                    ) { attachmentModel, attachmentPosition ->
-                        listener.onAttachmentClick(attachmentModel, attachmentPosition)
-                    }
+                        item.attachments,
+                        object : AttachmentAdapter.Listener {
+
+                            override fun onClick(
+                                attachmentModel: MessageModel.AttachmentModel,
+                                attachmentPosition: Int
+                            ) {
+                                listener.onAttachmentClick(attachmentModel, attachmentPosition)
+                            }
+
+                            override fun onLongClick(
+                                attachmentModel: MessageModel.AttachmentModel,
+                                attachmentPosition: Int
+                            ) {
+
+                            }
+                        }
+                    )
                     holder.binding.rvAttachments.layoutManager = layoutManager
                     holder.binding.rvAttachments.adapter = adapter
 

@@ -16,6 +16,7 @@ import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityChatBinding
 import com.livechat.extension.checkPermissions
+import com.livechat.extension.copyToClipboard
 import com.livechat.extension.fromJson
 import com.livechat.extension.gone
 import com.livechat.extension.isHavingInternet
@@ -28,6 +29,8 @@ import com.livechat.model.MessageModel
 import com.livechat.model.MessageType
 import com.livechat.model.UserModel
 import com.livechat.util.PermissionsUtil
+import com.livechat.view.alert_dialog.ConfirmAlertDialog
+import com.livechat.view.alert_dialog.MessageAlertDialog
 import com.livechat.view.bottom_sheet.ChatBottomSheet
 import com.livechat.view.choose_media.ChooseMediaActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
@@ -54,6 +57,7 @@ class ChatActivity : BaseActivity() {
     private var chatModel: ChatModel? = null
 
     private var messages: ArrayList<MessageModel> = ArrayList()
+    private var messagesOldSize = 0
 
     private val requestStoragePermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -238,6 +242,39 @@ class ChatActivity : BaseActivity() {
 //                        avatarUrl = getOppositeUser()?.avatarUrl ?: "",
                         object : MessageAdapter.Listener {
 
+                            override fun onSendMessageLongClick(
+                                messageModel: MessageModel,
+                                position: Int
+                            ) {
+                                showMessageAlertDialog(
+                                    messageModel,
+                                    canCopy = true,
+                                    canDelete = true
+                                )
+                            }
+
+                            override fun onReceiveMessageLongClick(
+                                messageModel: MessageModel,
+                                position: Int
+                            ) {
+                                showMessageAlertDialog(
+                                    messageModel,
+                                    canCopy = true,
+                                    canDelete = false
+                                )
+                            }
+
+                            override fun onSendMediaLongClick(
+                                messageModel: MessageModel,
+                                position: Int
+                            ) {
+                                showMessageAlertDialog(
+                                    messageModel,
+                                    canCopy = false,
+                                    canDelete = true
+                                )
+                            }
+
                             override fun onAttachmentClick(
                                 attachmentModel: MessageModel.AttachmentModel,
                                 position: Int
@@ -258,7 +295,16 @@ class ChatActivity : BaseActivity() {
                     adapter?.avatarUrl = getOppositeUser()?.avatarUrl ?: ""
                     binding.rvChat.adapter = adapter
 //                    adapter?.notifyDataSetChanged()
+
+                    // Không cuộn xuống cuối recycler view nếu xoá tin nhắn
+//                    if (messages.size >= messagesOldSize) {
                     binding.rvChat.scrollToPosition(messages.size - 1)
+//                    }
+                    messagesOldSize = messages.size
+                }
+
+                ChatState.Status.DELETE_MESSAGE_ERROR -> {
+                    showSnackBar(binding.root, R.string.error)
                 }
             }
         }
@@ -296,6 +342,35 @@ class ChatActivity : BaseActivity() {
                 Glide.with(this).load(it).centerCrop().into(binding.imgAvatar)
             }
         }
+    }
+
+    private fun showMessageAlertDialog(
+        messageModel: MessageModel,
+        canCopy: Boolean,
+        canDelete: Boolean
+    ) {
+        MessageAlertDialog(this, canCopy, canDelete, object : MessageAlertDialog.Listener {
+
+            override fun onCopy() {
+                copyToClipboard(messageModel.message)
+                showSnackBar(binding.root, R.string.copied_to_clipboard)
+            }
+
+            override fun onDelete() {
+                ConfirmAlertDialog(
+                    this@ChatActivity,
+                    getString(R.string.delete_message),
+                    getString(R.string.delete_confirm),
+                    getString(R.string.delete),
+                    object : ConfirmAlertDialog.Listener {
+
+                        override fun onAction() {
+                            viewModel.deleteMessage(messageModel)
+                        }
+                    }
+                ).show()
+            }
+        }).show()
     }
 
     private fun getOppositeUser(): UserModel? {

@@ -24,8 +24,15 @@ import com.livechat.util.TimeUtil
 class AttachmentAdapter(
     private val context: Context,
     list: ArrayList<MessageModel.AttachmentModel>,
-    private val onClick: (attachmentModel: MessageModel.AttachmentModel, position: Int) -> Unit
+    private val listener: Listener
 ) : BaseAdapter<MessageModel.AttachmentModel>(list) {
+
+    interface Listener {
+
+        fun onClick(attachmentModel: MessageModel.AttachmentModel, attachmentPosition: Int)
+
+        fun onLongClick(attachmentModel: MessageModel.AttachmentModel, attachmentPosition: Int)
+    }
 
     private class ItemHolder(val binding: ItemAttachmentBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -59,7 +66,12 @@ class AttachmentAdapter(
                 }
 
                 holder.itemView.setOnClickListener {
-                    onClick(item, position)
+                    listener.onClick(item, position)
+                }
+
+                holder.itemView.setOnLongClickListener() {
+                    listener.onLongClick(item, position)
+                    true
                 }
             }
 

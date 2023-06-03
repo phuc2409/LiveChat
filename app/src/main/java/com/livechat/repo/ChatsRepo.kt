@@ -232,6 +232,26 @@ class ChatsRepo @Inject constructor(
             })
     }
 
+    fun deleteMessage(
+        messageModel: MessageModel,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        val hashMap = hashMapOf("isDeleted" to true) as Map<String, Any>
+
+        firestore.collection(Constants.Collections.MESSAGES)
+            .document(messageModel.id)
+            .update(hashMap)
+            .addOnSuccessListener {
+                messageModel.isDeleted = true
+                Log.i("deleteMessage", messageModel.toString())
+                onSuccess()
+            }.addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
     fun startMessagesListener(
         chatModel: ChatModel,
         onSuccess: (messages: ArrayList<MessageModel>) -> Unit
@@ -252,7 +272,10 @@ class ChatsRepo @Inject constructor(
 
                 for (i in value) {
                     val message = i.toObject(MessageModel::class.java)
-                    messages.add(message)
+                    message.id = i.id
+                    if (!message.isDeleted) {
+                        messages.add(message)
+                    }
                 }
                 Log.i(getSimpleName(), messages.toString())
                 onSuccess(messages)
