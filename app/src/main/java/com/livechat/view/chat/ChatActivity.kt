@@ -23,6 +23,7 @@ import com.livechat.extension.gone
 import com.livechat.extension.isHavingInternet
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.showToast
+import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
@@ -33,6 +34,7 @@ import com.livechat.util.PermissionsUtil
 import com.livechat.view.alert_dialog.ConfirmAlertDialog
 import com.livechat.view.alert_dialog.MessageAlertDialog
 import com.livechat.view.bottom_sheet.ChatBottomSheet
+import com.livechat.view.chat_info.ChatInfoActivity
 import com.livechat.view.choose_media.ChooseMediaActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
 import com.livechat.view.video_call.VideoCallActivity
@@ -59,6 +61,16 @@ class ChatActivity : BaseActivity() {
 
     private var messages: ArrayList<MessageModel> = ArrayList()
     private var messagesOldSize = 0
+
+    private val chatInfoLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.getBooleanExtra(ChatInfoActivity.KEY_IS_BLOCK, false)?.let {
+                    viewModel.blockUser(it)
+                }
+            }
+        }
 
     private val requestStoragePermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -143,6 +155,12 @@ class ChatActivity : BaseActivity() {
     override fun handleListener() {
         binding.imgBack.setOnClickListener {
             finish()
+        }
+
+        binding.llInfo.setOnClickListener {
+            val intent = Intent(this, ChatInfoActivity::class.java)
+            intent.putExtra(ChatInfoActivity.KEY_CHAT_MODEL, chatModel.toJson())
+            chatInfoLauncher.launch(intent)
         }
 
         binding.imgVideoCall.setOnClickListener {

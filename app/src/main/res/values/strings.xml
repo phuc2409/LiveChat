@@ -86,5 +86,9 @@
     <string name="send_some_messages">Send some messages to connect with</string>
     <string name="want_to_chat_with_you">want to chat with you</string>
     <string name="block">Block</string>
+    <string name="unblock">Unblock</string>
     <string name="you_can_not_reply">You can not reply this chat</string>
+    <string name="block_user">Block user</string>
+    <string name="unblock_user">Unblock user</string>
+    <string name="block_user_confirm">Are you sure you want to block this user?</string>
 </resources>

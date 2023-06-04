@@ -11,6 +11,7 @@ import com.livechat.common.CurrentUser
 import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
 import com.livechat.model.UserModel
+import com.livechat.model.UserPublicInfoModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,6 +40,29 @@ class UsersRepo @Inject constructor(
                 val user = it.toObject(UserModel::class.java)
                 if (user == null) {
                     onError(Exception("getUser == null"))
+                } else {
+                    user.id = it.id
+                    onSuccess(user)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun getUserPublicInfo(
+        id: String,
+        onSuccess: (userPublicInfoModel: UserPublicInfoModel) -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        firestore.collection(Constants.Collections.USERS)
+            .document(id)
+            .get()
+            .addOnSuccessListener {
+                val user = it.toObject(UserPublicInfoModel::class.java)
+                if (user == null) {
+                    onError(Exception("getUserPublicInfo == null"))
                 } else {
                     user.id = it.id
                     onSuccess(user)

@@ -166,6 +166,11 @@ class ChatsRepo @Inject constructor(
         onSuccess: () -> Unit,
         onError: (e: Exception) -> Unit
     ) {
+        if (chatModel.participants.any { it.isBlock }) {
+            onError(Exception("Block"))
+            return
+        }
+
         val hashMap = hashMapOf(
             "chatId" to chatModel.id,
             "sendId" to CurrentUser.id,

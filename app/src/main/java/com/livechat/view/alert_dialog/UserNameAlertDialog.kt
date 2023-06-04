@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import com.livechat.R
 import com.livechat.databinding.AlertDialogUserNameBinding
+import com.livechat.extension.gone
 
 /**
  * User: Quang Phúc
@@ -13,6 +14,7 @@ import com.livechat.databinding.AlertDialogUserNameBinding
  */
 class UserNameAlertDialog(
     context: Context,
+    private val canUpdate: Boolean,
     private val listener: Listener
 ) : AlertDialog(context, R.style.Theme_AlertDialog) {
 
@@ -29,7 +31,14 @@ class UserNameAlertDialog(
         super.onCreate(savedInstanceState)
         binding = AlertDialogUserNameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initView()
         handleListener()
+    }
+
+    private fun initView() {
+        if (!canUpdate) {
+            binding.tvUpdate.gone()
+        }
     }
 
     private fun handleListener() {

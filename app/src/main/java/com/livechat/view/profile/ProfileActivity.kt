@@ -225,7 +225,7 @@ class ProfileActivity : BaseActivity() {
     }
 
     private fun showUserNameAlertDialog() {
-        UserNameAlertDialog(this, object : UserNameAlertDialog.Listener {
+        UserNameAlertDialog(this, true, object : UserNameAlertDialog.Listener {
 
             override fun onCopy() {
                 copyToClipboard(CurrentUser.userName)

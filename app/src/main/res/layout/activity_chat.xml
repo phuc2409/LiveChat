@@ -23,27 +23,37 @@
             android:padding="10dp"
             android:src="@drawable/ic_back" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:padding="1dp"
-            android:src="@drawable/ic_person"
-            app:shapeAppearanceOverlay="@style/img_circle"
-            app:strokeColor="@color/gray"
-            app:strokeWidth="1dp" />
-
-        <TextView
-            android:id="@+id/tvChatName"
-            style="@style/tv_title"
+        <LinearLayout
+            android:id="@+id/llInfo"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Chat name" />
+            android:foreground="?selectableItemBackground"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="1dp"
+                android:src="@drawable/ic_person"
+                app:shapeAppearanceOverlay="@style/img_circle"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp" />
+
+            <TextView
+                android:id="@+id/tvChatName"
+                style="@style/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Chat name" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/imgVideoCall"
