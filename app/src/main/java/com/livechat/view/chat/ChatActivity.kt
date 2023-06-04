@@ -120,8 +120,7 @@ class ChatActivity : BaseActivity() {
             viewModel.getChatBySearchUser(userModels[0])
         }
         chatModel?.let {
-            viewModel.startMessagesListener(it)
-            viewModel.startUsersInChatListener()
+            viewModel.startUsersInChatListener(it)
         }
     }
 
@@ -216,6 +215,8 @@ class ChatActivity : BaseActivity() {
                 ChatState.Status.GET_USERS_SUCCESS -> {
                     userModels = it.data as ArrayList<UserModel>
                     setTitle()
+
+                    viewModel.startMessagesListener()
                 }
 
                 ChatState.Status.GET_USERS_ERROR -> {

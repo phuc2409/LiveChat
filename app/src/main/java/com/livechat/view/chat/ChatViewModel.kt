@@ -1,7 +1,5 @@
 package com.livechat.view.chat
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
@@ -53,7 +51,6 @@ class ChatViewModel @Inject constructor(
         chatsRepo.getChatByParticipantIds(participantIds,
             onSuccess = {
                 chatModel = it
-                startMessagesListener()
                 startUsersInChatListener()
                 _state.postValue(ChatState.getChatSuccess(chatModel))
             }, onError = {
@@ -72,7 +69,6 @@ class ChatViewModel @Inject constructor(
                 message = message,
                 onSuccess = {
                     chatModel = it
-                    startMessagesListener()
                     startUsersInChatListener()
                     sendMessage(message, media, type)
                 }, onError = {
@@ -195,11 +191,7 @@ class ChatViewModel @Inject constructor(
             })
     }
 
-    fun startMessagesListener(newChatModel: ChatModel? = null) {
-        if (newChatModel != null) {
-            chatModel = newChatModel
-        }
-
+    fun startMessagesListener() {
         if (chatModel == null) {
             return
         }
@@ -212,18 +204,20 @@ class ChatViewModel @Inject constructor(
             })
     }
 
-    fun startUsersInChatListener() {
+    fun startUsersInChatListener(newChatModel: ChatModel? = null) {
+        if (newChatModel != null) {
+            chatModel = newChatModel
+        }
+
         if (chatModel == null) {
             return
         }
 
         usersRepo.startUsersInChatListener(
             chatModel = chatModel!!,
-            onSuccess = {
-                users = it
-                Handler(Looper.getMainLooper()).postDelayed({
-                    _state.postValue(ChatState.getUsersSuccess(users))
-                }, 100)
+            onSuccess = { userModels ->
+                users = userModels
+                _state.postValue(ChatState.getUsersSuccess(users))
             })
     }
 
