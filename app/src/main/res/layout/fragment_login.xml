@@ -31,8 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:text="quangphuc2409@gmail.com" />
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/etPassword"
@@ -40,8 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:hint="@string/password"
-            android:inputType="textPassword"
-            android:text="abcd24901" />
+            android:inputType="textPassword" />
 
         <TextView
             android:id="@+id/tvForgotPassword"

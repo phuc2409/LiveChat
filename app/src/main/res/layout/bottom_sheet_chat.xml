@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground"
-        android:padding="10dp"
+        android:padding="15dp"
         android:text="@string/media"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,8 +36,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?selectableItemBackground"
-        android:padding="10dp"
+        android:padding="15dp"
         android:text="@string/camera"
-        app:layout_constraintTop_toBottomOf="@id/tvMedia" />
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tvMedia"
+        tools:visibility="visible" />
 
 </LinearLayout>
