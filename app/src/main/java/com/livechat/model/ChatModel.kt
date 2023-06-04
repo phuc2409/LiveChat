@@ -20,7 +20,9 @@ data class ChatModel(
     data class ParticipantModel(
         var id: String = "",
         var name: String = "",
-        var avatarUrl: String = ""
+        var avatarUrl: String = "",
+        var isShowAcceptLayout: Boolean = false,
+        var isBlock: Boolean = false
     ) {
         override fun equals(other: Any?): Boolean {
             if (other !is ParticipantModel) {

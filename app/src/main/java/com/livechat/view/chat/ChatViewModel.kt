@@ -191,6 +191,20 @@ class ChatViewModel @Inject constructor(
             })
     }
 
+    fun blockUser(isBlock: Boolean) {
+        if (chatModel == null) {
+            return
+        }
+
+        chatsRepo.blockUser(chatModel!!, isBlock,
+            onSuccess = {
+                _state.postValue(ChatState.blockUser(isBlock))
+            },
+            onError = {
+
+            })
+    }
+
     fun startMessagesListener() {
         if (chatModel == null) {
             return

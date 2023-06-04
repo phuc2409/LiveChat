@@ -35,6 +35,8 @@ class ChatState(
             ChatState(Status.UPDATE_MESSAGES, messages)
 
         fun deleteMessageError(e: Exception) = ChatState(Status.DELETE_MESSAGE_ERROR, e)
+
+        fun blockUser(isBlock: Boolean) = ChatState(Status.BLOCK_USER, isBlock)
     }
 
     enum class Status {
@@ -46,6 +48,7 @@ class ChatState(
         SEND_MESSAGE_SUCCESS,
         SEND_MESSAGE_ERROR,
         UPDATE_MESSAGES,
-        DELETE_MESSAGE_ERROR
+        DELETE_MESSAGE_ERROR,
+        BLOCK_USER
     }
 }

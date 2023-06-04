@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isGone
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -127,6 +128,12 @@ class ChatActivity : BaseActivity() {
     override fun initView() {
         setTitle()
 
+        if (chatModel == null) {
+            binding.tvConnect.text =
+                "${getString(R.string.send_some_messages)} ${userModels[0].fullName}"
+            binding.tvConnect.visible()
+        }
+
 //        adapter = MessageAdapter(this, messages) { messageModel, position ->
 //
 //        }
@@ -191,6 +198,14 @@ class ChatActivity : BaseActivity() {
                 viewModel.sendMessage(text)
             }
         }
+
+        binding.cvAccept.setOnClickListener {
+            viewModel.blockUser(false)
+        }
+
+        binding.cvBlock.setOnClickListener {
+            viewModel.blockUser(true)
+        }
     }
 
     override fun observeViewModel() {
@@ -203,8 +218,6 @@ class ChatActivity : BaseActivity() {
 
                 ChatState.Status.GET_CHAT_SUCCESS -> {
                     chatModel = it.data as ChatModel?
-
-                    chatModel?.id
                 }
 
                 ChatState.Status.GET_CHAT_ERROR -> {
@@ -215,6 +228,7 @@ class ChatActivity : BaseActivity() {
                 ChatState.Status.GET_USERS_SUCCESS -> {
                     userModels = it.data as ArrayList<UserModel>
                     setTitle()
+                    showSendMessageLayout()
 
                     viewModel.startMessagesListener()
                 }
@@ -233,14 +247,16 @@ class ChatActivity : BaseActivity() {
 
                 ChatState.Status.UPDATE_MESSAGES -> {
                     messages = it.data as ArrayList<MessageModel>
+                    if (binding.rvChat.isGone && messages.isNotEmpty()) {
+                        binding.tvConnect.gone()
+                        binding.rvChat.visible()
+                    }
                     if (messages.isNotEmpty() && messages.last().sendId == CurrentUser.id) {
                         binding.etChat.setText("")
                     }
                     adapter = MessageAdapter(
                         this,
                         messages,
-//                        fullName = getOppositeUser()?.fullName ?: "",
-//                        avatarUrl = getOppositeUser()?.avatarUrl ?: "",
                         object : MessageAdapter.Listener {
 
                             override fun onSendMessageLongClick(
@@ -291,7 +307,6 @@ class ChatActivity : BaseActivity() {
                                 startActivity(intent)
                             }
                         })
-                    //todo Hiện tên người đối diện
                     adapter?.fullName = getOppositeUser()?.fullName ?: ""
                     adapter?.avatarUrl = getOppositeUser()?.avatarUrl ?: ""
                     binding.rvChat.adapter = adapter
@@ -306,6 +321,20 @@ class ChatActivity : BaseActivity() {
 
                 ChatState.Status.DELETE_MESSAGE_ERROR -> {
                     showSnackBar(binding.root, R.string.error)
+                }
+
+                ChatState.Status.BLOCK_USER -> {
+                    val isBlock = it.data as Boolean
+
+                    binding.clWantToChat.gone()
+                    if (isBlock) {
+                        binding.llSendMessage.gone()
+                        binding.tvCanNotReply.visible()
+                    } else {
+                        binding.tvCanNotReply.gone()
+                        binding.llSendMessage.visible()
+                        binding.imgVideoCall.visible()
+                    }
                 }
             }
         }
@@ -345,6 +374,33 @@ class ChatActivity : BaseActivity() {
         }
     }
 
+    /**
+     * Xử lý layout gửi tin nhắn khi vừa mở chat
+     */
+    private fun showSendMessageLayout() {
+        var showVideoCall = true
+        if (getCurrentParticipant()?.isShowAcceptLayout == true) {
+            binding.llSendMessage.gone()
+            binding.tvWantToChat.text =
+                "${getOppositeUser()?.fullName} ${getString(R.string.want_to_chat_with_you)}"
+            binding.clWantToChat.visible()
+            binding.tvWantToChat.visible()
+        }
+        if (chatModel?.participants?.any { it.isShowAcceptLayout } == true) {
+            showVideoCall = false
+        }
+        if (chatModel?.participants?.any { it.isBlock } == true) {
+            binding.llSendMessage.gone()
+            binding.tvCanNotReply.visible()
+            showVideoCall = false
+        }
+        if (showVideoCall) {
+            binding.imgVideoCall.visible()
+        } else {
+            binding.imgVideoCall.gone()
+        }
+    }
+
     private fun showMessageAlertDialog(
         messageModel: MessageModel,
         canCopy: Boolean,
@@ -381,6 +437,19 @@ class ChatActivity : BaseActivity() {
 
         for (i in userModels) {
             if (i.id != CurrentUser.id) {
+                return i
+            }
+        }
+        return null
+    }
+
+    private fun getCurrentParticipant(): ChatModel.ParticipantModel? {
+        if (CurrentUser.id.isBlank() || chatModel == null) {
+            return null
+        }
+
+        for (i in chatModel!!.participants) {
+            if (i.id == CurrentUser.id) {
                 return i
             }
         }

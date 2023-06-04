@@ -52,7 +52,9 @@
             android:contentDescription="@string/image"
             android:foreground="?selectableItemBackgroundBorderless"
             android:padding="10dp"
-            android:src="@drawable/ic_video_call" />
+            android:src="@drawable/ic_video_call"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/imgCall"
@@ -61,67 +63,189 @@
             android:contentDescription="@string/image"
             android:foreground="?selectableItemBackgroundBorderless"
             android:padding="10dp"
-            android:src="@drawable/ic_call" />
+            android:src="@drawable/ic_call"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvConnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingHorizontal="10dp"
+        android:textSize="@dimen/text_size_title"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/clBottomBar"
+        app:layout_constraintTop_toBottomOf="@+id/llActionBar"
+        tools:text="@string/send_some_messages"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/clBottomBar"
         app:layout_constraintTop_toBottomOf="@+id/llActionBar"
-        tools:listitem="@layout/item_message_send" />
+        tools:listitem="@layout/item_message_send"
+        tools:visibility="visible" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clBottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/imgMore"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/image"
-            android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="5dp"
-            android:src="@drawable/ic_add"
-            app:tint="@color/cl_main" />
-
-        <EditText
-            android:id="@+id/etChat"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/llSendMessage"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/type_a_message"
-            android:maxLines="5" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/imgSend"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/image"
-            android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="5dp"
-            android:src="@drawable/ic_send"
+            <ImageView
+                android:id="@+id/imgMore"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/image"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:padding="5dp"
+                android:src="@drawable/ic_add"
+                app:tint="@color/cl_main" />
+
+            <EditText
+                android:id="@+id/etChat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/type_a_message"
+                android:maxLines="5" />
+
+            <ImageView
+                android:id="@+id/imgSend"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/image"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:padding="5dp"
+                android:src="@drawable/ic_send"
+                android:visibility="gone"
+                app:tint="@color/cl_main"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imgSendDisable"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/image"
+                android:foreground="?selectableItemBackgroundBorderless"
+                android:padding="5dp"
+                android:src="@drawable/ic_send"
+                app:tint="@color/gray" />
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clWantToChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="20dp"
             android:visibility="gone"
-            app:tint="@color/cl_main"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvWantToChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:paddingHorizontal="10dp"
+                app:layout_constraintBottom_toTopOf="@id/llAccept"
+                tools:text="@string/want_to_chat_with_you" />
+
+            <LinearLayout
+                android:id="@+id/llAccept"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvAccept"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:foreground="?selectableItemBackground"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/cl_main"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/accept"
+                        android:textColor="@color/white" />
+
+                </androidx.cardview.widget.CardView>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvBlock"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:foreground="?selectableItemBackground"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/red"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/block"
+                        android:textColor="@color/white" />
+
+                </androidx.cardview.widget.CardView>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tvCanNotReply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="20dp"
+            android:text="@string/you_can_not_reply"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/imgSendDisable"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="@string/image"
-            android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="5dp"
-            android:src="@drawable/ic_send"
-            app:tint="@color/gray" />
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

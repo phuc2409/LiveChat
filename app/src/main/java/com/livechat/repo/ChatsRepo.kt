@@ -81,11 +81,13 @@ class ChatsRepo @Inject constructor(
             ChatModel.ParticipantModel(
                 id = userModel.id,
                 name = userModel.fullName,
-                avatarUrl = userModel.avatarUrl
+                avatarUrl = userModel.avatarUrl,
+                isShowAcceptLayout = true
             ), ChatModel.ParticipantModel(
                 id = uid,
                 name = sendName,
-                avatarUrl = firebaseAuth.currentUser?.photoUrl.toString()
+                avatarUrl = CurrentUser.avatarUrl,
+                isShowAcceptLayout = false
             )
         )
         participants.sortBy {
@@ -245,6 +247,32 @@ class ChatsRepo @Inject constructor(
             .addOnSuccessListener {
                 messageModel.isDeleted = true
                 Log.i("deleteMessage", messageModel.toString())
+                onSuccess()
+            }.addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun blockUser(
+        chatModel: ChatModel,
+        isBlock: Boolean,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        for (i in chatModel.participants) {
+            if (i.id == CurrentUser.id) {
+                i.isShowAcceptLayout = false
+            } else {
+                i.isBlock = isBlock
+            }
+        }
+
+        val hashMap = hashMapOf("participants" to chatModel.participants) as Map<String, Any>
+
+        firestore.collection(Constants.Collections.CHATS).document(chatModel.id).update(hashMap)
+            .addOnSuccessListener {
+                Log.i("blockUser", chatModel.toString())
                 onSuccess()
             }.addOnFailureListener {
                 it.printStackTrace()
