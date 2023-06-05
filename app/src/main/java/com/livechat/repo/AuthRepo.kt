@@ -24,10 +24,11 @@ class AuthRepo @Inject constructor(private val firebaseAuth: FirebaseAuth) {
                     onError(Exception("Wrong email or password"))
                     return@addOnSuccessListener
                 }
-                if (it.user?.isEmailVerified == null || it.user?.isEmailVerified == false) {
-                    onError(Exception("You have to verify your email first"))
-                    return@addOnSuccessListener
-                }
+                // todo Chỉ bỏ xác thực email khi dev
+//                if (it.user?.isEmailVerified == null || it.user?.isEmailVerified == false) {
+//                    onError(Exception("You have to verify your email first"))
+//                    return@addOnSuccessListener
+//                }
 
                 val id = it.user!!.uid
                 onSuccess(id)
