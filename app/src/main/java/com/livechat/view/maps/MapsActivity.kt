@@ -2,7 +2,6 @@ package com.livechat.view.maps
 
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -12,6 +11,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.livechat.R
@@ -19,14 +20,17 @@ import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.databinding.ActivityMapsBinding
 import com.livechat.extension.checkPermissions
+import com.livechat.extension.getSimpleName
+import com.livechat.extension.showSnackBar
+import com.livechat.extension.visible
 import com.livechat.util.PermissionsUtil
+import com.livechat.view.maps.search_location.SearchLocationFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-
 
 /**
  * User: Quang Phúc
@@ -36,16 +40,18 @@ import java.util.Locale
 @AndroidEntryPoint
 class MapsActivity : BaseActivity(), OnMapReadyCallback {
 
-    companion object {
-        private val DEFAULT_ZOOM = 15f
-    }
-
     private lateinit var binding: ActivityMapsBinding
+
+    private var searchLocationFragment: SearchLocationFragment? = null
 
     private lateinit var googleMap: GoogleMap
 
     private lateinit var placesClient: PlacesClient
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private var selectedLatLng: LatLng? = null
+    private var selectedAddress = ""
+    private var lastKnownLocationMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +72,24 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
     }
 
     override fun handleListener() {
+        binding.imgBack.setOnClickListener {
+            finish()
+        }
 
+        binding.imgSearch.setOnClickListener {
+            searchLocationFragment = SearchLocationFragment.newInstance()
+            searchLocationFragment?.let {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentSearchLocation, it)
+                    .addToBackStack(it.getSimpleName())
+                    .commit()
+            }
+            binding.fragmentSearchLocation.visible()
+        }
+
+        binding.btnLocation.setOnClickListener {
+            showSnackBar(binding.root, selectedAddress)
+        }
     }
 
     override fun observeViewModel() {
@@ -77,9 +100,9 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
         try {
             googleMap.uiSettings.apply {
                 isCompassEnabled = true
-                isIndoorLevelPickerEnabled = true
-                isMapToolbarEnabled = true
-                isZoomControlsEnabled = true
+//                isIndoorLevelPickerEnabled = true
+//                isMapToolbarEnabled = true
+//                isZoomControlsEnabled = true
             }
 
             if (checkPermissions(PermissionsUtil.getLocationPermissions())) {
@@ -89,14 +112,11 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
             } else {
                 googleMap.isMyLocationEnabled = false
                 googleMap.uiSettings.isMyLocationButtonEnabled = false
-                lastKnownLocation = null
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-
-    private var lastKnownLocation: Location? = null
 
     private fun getDeviceLocation() {
         /*
@@ -108,60 +128,66 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
                 val locationResult = fusedLocationProviderClient.lastLocation
                 locationResult.addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        // Set the map's camera position to the current location of the device.
-                        lastKnownLocation = task.result
-                        if (lastKnownLocation != null) {
-                            googleMap.moveCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                    LatLng(
-                                        lastKnownLocation!!.latitude,
-                                        lastKnownLocation!!.longitude
-                                    ),
-                                    DEFAULT_ZOOM
-                                )
-                            )
-                            showAddress(lastKnownLocation!!)
+                        task.result?.let {
+                            updateLocation(LatLng(it.latitude, it.longitude))
                         }
                     } else {
                         Log.d("getDeviceLocation", "Current location is null. Using defaults.")
                         Log.e("getDeviceLocation", "Exception: %s", task.exception)
-
-                        val sydney = LatLng(-34.0, 151.0)
-                        googleMap.moveCamera(
-                            CameraUpdateFactory
-                                .newLatLngZoom(
-                                    sydney,
-                                    DEFAULT_ZOOM
-                                )
-                        )
                         googleMap.uiSettings.isMyLocationButtonEnabled = false
                     }
                 }
             }
-        } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message, e)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private fun showAddress(location: Location) {
-        getAddresses(location, onSuccess = { addresses ->
+    private fun updateLocation(latLng: LatLng) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.MAPS_DEFAULT_ZOOM))
+        showAddress(latLng)
+    }
+
+    private fun showAddress(latLng: LatLng) {
+        getAddresses(latLng, onSuccess = { addresses ->
             if (addresses.isNullOrEmpty()) {
                 return@getAddresses
             }
 
             try {
                 val address = addresses[0]
-                binding.tvCurrentLocation.text = address.getAddressLine(0)
+                val markerOptions =
+                    MarkerOptions().position(latLng).title(address.getAddressLine(0))
+
+                selectedLatLng = latLng
+                selectedAddress = address.getAddressLine(0)
+
+                lastKnownLocationMarker?.remove()
+                lastKnownLocationMarker = googleMap.addMarker(markerOptions)
+                lastKnownLocationMarker?.showInfoWindow()
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         })
     }
 
-    private fun getAddresses(location: Location, onSuccess: (addresses: List<Address>?) -> Unit) {
+    fun showAddress(latLng: LatLng, address: String) {
+        selectedLatLng = latLng
+        selectedAddress = address
+
+        val markerOptions = MarkerOptions().position(latLng).title(address)
+
+        lastKnownLocationMarker?.remove()
+        lastKnownLocationMarker = googleMap.addMarker(markerOptions)
+        lastKnownLocationMarker?.showInfoWindow()
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+    }
+
+    private fun getAddresses(latLng: LatLng, onSuccess: (addresses: List<Address>?) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val geo = Geocoder(this@MapsActivity, Locale.getDefault())
-            val addresses = geo.getFromLocation(location.latitude, location.longitude, 1)
+            val addresses = geo.getFromLocation(latLng.latitude, latLng.longitude, 1)
             withContext(Dispatchers.Main) {
                 onSuccess(addresses)
             }
@@ -179,17 +205,11 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
      */
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
-
-        // Add a marker in Sydney and move the camera
-//        val sydney = LatLng(-34.0, 151.0)
-//        this.googleMap.addMarker(
-//            MarkerOptions()
-//                .position(sydney)
-//                .title("Marker in Sydney")
-//        )
-//        this.googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
-
         updateLocationUI()
         getDeviceLocation()
+    }
+
+    fun pressBack() {
+        onBackPressed()
     }
 }
