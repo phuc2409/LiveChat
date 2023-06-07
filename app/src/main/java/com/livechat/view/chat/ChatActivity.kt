@@ -36,6 +36,7 @@ import com.livechat.view.alert_dialog.MessageAlertDialog
 import com.livechat.view.bottom_sheet.ChatBottomSheet
 import com.livechat.view.chat_info.ChatInfoActivity
 import com.livechat.view.choose_media.ChooseMediaActivity
+import com.livechat.view.maps.MapsActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
 import com.livechat.view.video_call.VideoCallActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -98,6 +99,12 @@ class ChatActivity : BaseActivity() {
         }
     }
 
+    private val requestLocationLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        chooseLocation()
+    }
+
     private val chooseMediaLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -107,6 +114,14 @@ class ChatActivity : BaseActivity() {
                     val items: ArrayList<FileModel> = Gson().fromJson(it, type)
                     viewModel.sendMessage("[${getString(R.string.media)}]", items)
                 }
+            }
+        }
+
+    private val chooseLocationLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+
             }
         }
 
@@ -184,6 +199,14 @@ class ChatActivity : BaseActivity() {
 
                 override fun onSelectCamera() {
 
+                }
+
+                override fun onSelectLocation() {
+                    if (checkPermissions(PermissionsUtil.getLocationPermissions())) {
+                        chooseLocation()
+                    } else {
+                        requestLocationLauncher.launch(PermissionsUtil.getLocationPermissions())
+                    }
                 }
             }).show()
         }
@@ -380,6 +403,11 @@ class ChatActivity : BaseActivity() {
 
     private fun chooseMedia() {
         val intent = Intent(this, ChooseMediaActivity::class.java)
+        chooseMediaLauncher.launch(intent)
+    }
+
+    private fun chooseLocation() {
+        val intent = Intent(this, MapsActivity::class.java)
         chooseMediaLauncher.launch(intent)
     }
 

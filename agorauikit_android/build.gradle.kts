@@ -65,7 +65,7 @@ afterEvaluate {
 
 dependencies {
     implementation("com.google.android.material:material:1.9.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.8.20")
     implementation("androidx.core:core-ktx:1.10.1")
     api("io.agora.rtc:full-sdk:4.1.1")
     api("io.agora.rtm:rtm-sdk:1.5.3")

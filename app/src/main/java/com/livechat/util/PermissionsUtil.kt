@@ -25,6 +25,11 @@ object PermissionsUtil {
         Manifest.permission.RECORD_AUDIO
     )
 
+    private val locationPermissions = arrayOf(
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+    )
+
     fun getStoragePermissions(): Array<String> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            storagePermissionsAndroid13
@@ -36,5 +41,9 @@ object PermissionsUtil {
 
     fun getVideoCallPermissions(): Array<String> {
         return videoCallPermissions
+    }
+
+    fun getLocationPermissions(): Array<String> {
+        return locationPermissions
     }
 }

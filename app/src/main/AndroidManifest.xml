@@ -6,6 +6,8 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -65,6 +67,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".view.maps.MapsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.media_viewer.MediaViewerActivity"
             android:exported="false" />
 
@@ -97,6 +103,10 @@
             android:exported="false"
             android:launchMode="singleInstance"
             android:taskAffinity=".VideoCallActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAjzHEwYail35ThKPhzPwQAO3DYXV64AZM" />
 
         <receiver android:name=".receiver.IncomingCallReceiver" />
 

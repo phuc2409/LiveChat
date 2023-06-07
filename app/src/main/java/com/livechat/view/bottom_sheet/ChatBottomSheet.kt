@@ -20,6 +20,8 @@ class ChatBottomSheet(
         fun onSelectMedia()
 
         fun onSelectCamera()
+
+        fun onSelectLocation()
     }
 
     private val binding = BottomSheetChatBinding.inflate(layoutInflater)
@@ -43,6 +45,11 @@ class ChatBottomSheet(
         binding.tvCamera.setOnClickListener {
             dismiss()
             listener.onSelectCamera()
+        }
+
+        binding.tvLocation.setOnClickListener {
+            dismiss()
+            listener.onSelectLocation()
         }
     }
 }
