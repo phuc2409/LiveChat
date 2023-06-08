@@ -1,5 +1,7 @@
 package com.livechat.view.maps
 
+import android.app.Activity
+import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
@@ -24,6 +26,7 @@ import com.livechat.extension.getSimpleName
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.util.PermissionsUtil
+import com.livechat.view.chat_info.ChatInfoActivity
 import com.livechat.view.maps.search_location.SearchLocationFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -88,7 +91,16 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
         }
 
         binding.btnLocation.setOnClickListener {
-            showSnackBar(binding.root, selectedAddress)
+            if (selectedLatLng != null && selectedAddress.isNotBlank()) {
+                val intent = Intent()
+                intent.putExtra(Constants.KEY_LAT, selectedLatLng?.latitude)
+                intent.putExtra(Constants.KEY_LNG, selectedLatLng?.longitude)
+                intent.putExtra(Constants.KEY_ADDRESS, selectedAddress)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            } else {
+                showSnackBar(binding.root, R.string.choose_location)
+            }
         }
     }
 

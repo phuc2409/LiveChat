@@ -121,7 +121,13 @@ class ChatActivity : BaseActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
+                val lat = data?.getDoubleExtra(Constants.KEY_LAT, 0.0)
+                val lng = data?.getDoubleExtra(Constants.KEY_LNG, 0.0)
+                val address = data?.getStringExtra(Constants.KEY_ADDRESS)
 
+                if (!address.isNullOrBlank()) {
+                    showSnackBar(binding.root, address)
+                }
             }
         }
 
@@ -408,7 +414,7 @@ class ChatActivity : BaseActivity() {
 
     private fun chooseLocation() {
         val intent = Intent(this, MapsActivity::class.java)
-        chooseMediaLauncher.launch(intent)
+        chooseLocationLauncher.launch(intent)
     }
 
     private fun setTitle() {
