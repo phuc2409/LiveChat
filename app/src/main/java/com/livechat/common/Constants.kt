@@ -36,6 +36,7 @@ object Constants {
     const val KEY_AVATAR_URL = "AVATAR_URL"
     const val KEY_LAT = "LAT"
     const val KEY_LNG = "LNG"
+    const val KEY_NAME = "NAME"
     const val KEY_ADDRESS = "ADDRESS"
 
     const val KEY_ACCEPT_VIDEO_CALL = "ACCEPT_VIDEO_CALL"

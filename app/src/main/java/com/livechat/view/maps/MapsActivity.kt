@@ -26,7 +26,6 @@ import com.livechat.extension.getSimpleName
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.util.PermissionsUtil
-import com.livechat.view.chat_info.ChatInfoActivity
 import com.livechat.view.maps.search_location.SearchLocationFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -53,6 +52,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private var selectedLatLng: LatLng? = null
+    private var selectedName = ""
     private var selectedAddress = ""
     private var lastKnownLocationMarker: Marker? = null
 
@@ -95,6 +95,7 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
                 val intent = Intent()
                 intent.putExtra(Constants.KEY_LAT, selectedLatLng?.latitude)
                 intent.putExtra(Constants.KEY_LNG, selectedLatLng?.longitude)
+                intent.putExtra(Constants.KEY_NAME, selectedName)
                 intent.putExtra(Constants.KEY_ADDRESS, selectedAddress)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -120,7 +121,6 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
             if (checkPermissions(PermissionsUtil.getLocationPermissions())) {
                 googleMap.isMyLocationEnabled = true
                 googleMap.uiSettings.isMyLocationButtonEnabled = true
-
             } else {
                 googleMap.isMyLocationEnabled = false
                 googleMap.uiSettings.isMyLocationButtonEnabled = false
@@ -184,12 +184,14 @@ class MapsActivity : BaseActivity(), OnMapReadyCallback {
         })
     }
 
-    fun showAddress(latLng: LatLng, address: String) {
+    fun showAddress(latLng: LatLng, name:String, address: String) {
         selectedLatLng = latLng
+        selectedName = name
         selectedAddress = address
 
         val markerOptions = MarkerOptions().position(latLng).title(address)
 
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.MAPS_DEFAULT_ZOOM))
         lastKnownLocationMarker?.remove()
         lastKnownLocationMarker = googleMap.addMarker(markerOptions)
         lastKnownLocationMarker?.showInfoWindow()

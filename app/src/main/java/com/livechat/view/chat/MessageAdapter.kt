@@ -11,10 +11,13 @@ import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ItemListErrorBinding
+import com.livechat.databinding.ItemLocationReceiveBinding
+import com.livechat.databinding.ItemLocationSendBinding
 import com.livechat.databinding.ItemMessageReceiveBinding
 import com.livechat.databinding.ItemMessageSendBinding
 import com.livechat.extension.gone
 import com.livechat.extension.visible
+import com.livechat.model.LocationModel
 import com.livechat.model.MessageModel
 import com.livechat.model.MessageType
 import com.livechat.util.TimeUtil
@@ -39,6 +42,8 @@ class MessageAdapter(
         fun onSendMediaLongClick(messageModel: MessageModel, position: Int)
 
         fun onAttachmentClick(attachmentModel: MessageModel.AttachmentModel, position: Int)
+
+        fun onMapClick(locationModel: LocationModel, position: Int)
     }
 
     var fullName: String = ""
@@ -50,11 +55,19 @@ class MessageAdapter(
     private class ReceiveHolder(val binding: ItemMessageReceiveBinding) :
         RecyclerView.ViewHolder(binding.root)
 
+    private class LocationSendHolder(val binding: ItemLocationSendBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    private class LocationReceiveHolder(val binding: ItemLocationReceiveBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val li = LayoutInflater.from(context)
         return when (viewType) {
             0 -> SendHolder(ItemMessageSendBinding.inflate(li, parent, false))
             1 -> ReceiveHolder(ItemMessageReceiveBinding.inflate(li, parent, false))
+            2 -> LocationSendHolder(ItemLocationSendBinding.inflate(li, parent, false))
+            3 -> LocationReceiveHolder(ItemLocationReceiveBinding.inflate(li, parent, false))
             else -> ErrorHolder(ItemListErrorBinding.inflate(li, parent, false))
         }
     }
@@ -228,6 +241,50 @@ class MessageAdapter(
                 }
             }
 
+            is LocationSendHolder -> {
+                item.createdAt?.let {
+                    holder.binding.tvTime.text =
+                        TimeUtil.formatTimestampToFullString(it.seconds)
+                }
+                item.location?.let { locationModel ->
+                    if (locationModel.name.isBlank()) {
+                        holder.binding.tvName.setText(R.string.current_location)
+                    } else {
+                        holder.binding.tvName.text = locationModel.name
+                    }
+                    holder.binding.tvAddress.text = locationModel.address
+
+                    holder.binding.clMap.setOnClickListener {
+                        listener.onMapClick(locationModel, position)
+                    }
+                }
+            }
+
+            is LocationReceiveHolder -> {
+                if (avatarUrl.isNotBlank()) {
+                    Glide.with(context)
+                        .load(avatarUrl)
+                        .centerCrop()
+                        .into(holder.binding.imgAvatar)
+                }
+                item.createdAt?.let {
+                    holder.binding.tvTime.text =
+                        TimeUtil.formatTimestampToFullString(it.seconds)
+                }
+                item.location?.let { locationModel ->
+                    if (locationModel.name.isBlank()) {
+                        holder.binding.tvName.setText(R.string.current_location)
+                    } else {
+                        holder.binding.tvName.text = locationModel.name
+                    }
+                    holder.binding.tvAddress.text = locationModel.address
+
+                    holder.binding.clMap.setOnClickListener {
+                        listener.onMapClick(locationModel, position)
+                    }
+                }
+            }
+
             is ErrorHolder -> {
 
             }
@@ -238,12 +295,20 @@ class MessageAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (CurrentUser.id.isBlank()) {
-            return 2
+            return 4
         }
         return if (list[position].sendId == CurrentUser.id) {
-            0
+            if (list[position].type == MessageType.LOCATION) {
+                2
+            } else {
+                0
+            }
         } else {
-            1
+            if (list[position].type == MessageType.LOCATION) {
+                3
+            } else {
+                1
+            }
         }
     }
 }

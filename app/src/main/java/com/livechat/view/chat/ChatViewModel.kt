@@ -7,6 +7,7 @@ import com.livechat.base.BaseViewModel
 import com.livechat.common.CurrentUser
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
+import com.livechat.model.LocationModel
 import com.livechat.model.MessageModel
 import com.livechat.model.MessageType
 import com.livechat.model.UserModel
@@ -61,6 +62,7 @@ class ChatViewModel @Inject constructor(
     fun sendMessage(
         message: String,
         media: ArrayList<FileModel> = ArrayList(),
+        location: LocationModel? = null,
         type: String = MessageType.TEXT
     ) {
         if (chatModel == null) {
@@ -70,13 +72,34 @@ class ChatViewModel @Inject constructor(
                 onSuccess = {
                     chatModel = it
                     startUsersInChatListener()
-                    sendMessage(message, media, type)
+                    sendMessage(message, media, location, type)
                 }, onError = {
 
                 }
             )
         } else {
-            if (media.isEmpty()) {
+            if (location != null) {
+                chatsRepo.sendMessage(
+                    chatModel = chatModel!!,
+                    message = message,
+                    attachments = ArrayList(),
+                    location = location,
+                    type = type,
+                    onSuccess = {
+                        chatsRepo.updateChat(
+                            chatModel = chatModel!!,
+                            message = message,
+                            onSuccess = {
+
+                            }, onError = {
+
+                            })
+                        sendNotification(message, type)
+                        _state.postValue(ChatState.sendMessageSuccess())
+                    }, onError = {
+                        _state.postValue(ChatState.sendMessageError(it))
+                    })
+            } else if (media.isEmpty()) {
                 chatsRepo.sendMessage(
                     chatModel = chatModel!!,
                     message = message,

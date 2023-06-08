@@ -11,6 +11,7 @@ import com.livechat.common.Constants
 import com.livechat.common.CurrentUser
 import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
+import com.livechat.model.LocationModel
 import com.livechat.model.MessageModel
 import com.livechat.model.UserModel
 import com.livechat.model.api.FcmRequestModel
@@ -162,6 +163,7 @@ class ChatsRepo @Inject constructor(
         chatModel: ChatModel,
         message: String,
         attachments: ArrayList<MessageModel.AttachmentModel>,
+        location: LocationModel? = null,
         type: String,
         onSuccess: () -> Unit,
         onError: (e: Exception) -> Unit
@@ -176,6 +178,7 @@ class ChatsRepo @Inject constructor(
             "sendId" to CurrentUser.id,
             "message" to message,
             "attachments" to attachments,
+            "location" to location,
             "type" to type,
             "createdAt" to FieldValue.serverTimestamp(),
             "isDeleted" to false,

@@ -71,6 +71,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".view.maps.ViewLocationActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.media_viewer.MediaViewerActivity"
             android:exported="false" />
 

@@ -7,5 +7,8 @@ package com.livechat.model
  */
 object MessageType {
     const val TEXT = "TEXT"
+    const val MEDIA = "MEDIA"
+    const val LOCATION = "LOCATION"
     const val INCOMING_VIDEO_CALL = "INCOMING_VIDEO_CALL"
+    const val DECLINE_VIDEO_CALL = "DECLINE_VIDEO_CALL"
 }

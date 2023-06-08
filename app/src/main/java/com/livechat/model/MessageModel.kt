@@ -13,6 +13,7 @@ data class MessageModel(
     var sendId: String = "",
     var message: String = "",
     var attachments: ArrayList<AttachmentModel> = ArrayList(),
+    var location: LocationModel? = null,
     var type: String = "",
     var createdAt: Timestamp? = null,
     @JvmField

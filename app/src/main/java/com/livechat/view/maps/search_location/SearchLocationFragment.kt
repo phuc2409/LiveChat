@@ -135,10 +135,9 @@ class SearchLocationFragment : BaseFragment(R.layout.fragment_search_location) {
     private fun showResult(result: ArrayList<TextSearchResponseModel.Result>) {
         adapter = SearchLocationAdapter(requireContext(), result) { resultModel, position ->
             getMapsActivity()?.showAddress(
-                LatLng(
-                    resultModel.geometry.location.lat,
-                    resultModel.geometry.location.lng
-                ), resultModel.formattedAddress
+                LatLng(resultModel.geometry.location.lat, resultModel.geometry.location.lng),
+                resultModel.name,
+                resultModel.formattedAddress
             )
             getMapsActivity()?.pressBack()
         }

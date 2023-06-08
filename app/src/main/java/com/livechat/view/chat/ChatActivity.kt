@@ -27,6 +27,7 @@ import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.ChatModel
 import com.livechat.model.FileModel
+import com.livechat.model.LocationModel
 import com.livechat.model.MessageModel
 import com.livechat.model.MessageType
 import com.livechat.model.UserModel
@@ -37,6 +38,7 @@ import com.livechat.view.bottom_sheet.ChatBottomSheet
 import com.livechat.view.chat_info.ChatInfoActivity
 import com.livechat.view.choose_media.ChooseMediaActivity
 import com.livechat.view.maps.MapsActivity
+import com.livechat.view.maps.ViewLocationActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
 import com.livechat.view.video_call.VideoCallActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -112,7 +114,11 @@ class ChatActivity : BaseActivity() {
                 data?.getStringExtra(ChooseMediaActivity.KEY_ITEMS)?.let {
                     val type = object : TypeToken<ArrayList<FileModel>>() {}.type
                     val items: ArrayList<FileModel> = Gson().fromJson(it, type)
-                    viewModel.sendMessage("[${getString(R.string.media)}]", items)
+                    viewModel.sendMessage(
+                        "[${getString(R.string.media)}]",
+                        items,
+                        type = MessageType.MEDIA
+                    )
                 }
             }
         }
@@ -123,10 +129,19 @@ class ChatActivity : BaseActivity() {
                 val data: Intent? = result.data
                 val lat = data?.getDoubleExtra(Constants.KEY_LAT, 0.0)
                 val lng = data?.getDoubleExtra(Constants.KEY_LNG, 0.0)
-                val address = data?.getStringExtra(Constants.KEY_ADDRESS)
+                val name = data?.getStringExtra(Constants.KEY_NAME) ?: ""
+                val address = data?.getStringExtra(Constants.KEY_ADDRESS) ?: ""
 
-                if (!address.isNullOrBlank()) {
-                    showSnackBar(binding.root, address)
+                if (lat != null && lng != null && address.isNotBlank()) {
+                    val location = LocationModel(lat, lng, name, address)
+                    val message = name.ifBlank {
+                        address
+                    }
+                    viewModel.sendMessage(
+                        message = "[${message}]",
+                        location = location,
+                        type = MessageType.LOCATION
+                    )
                 }
             }
         }
@@ -351,6 +366,16 @@ class ChatActivity : BaseActivity() {
                                     attachmentModel.name
                                 )
                                 intent.putExtra(MediaViewerActivity.KEY_TYPE, attachmentModel.type)
+                                startActivity(intent)
+                            }
+
+                            override fun onMapClick(locationModel: LocationModel, position: Int) {
+                                val intent =
+                                    Intent(this@ChatActivity, ViewLocationActivity::class.java)
+                                intent.putExtra(Constants.KEY_LAT, locationModel.lat)
+                                intent.putExtra(Constants.KEY_LNG, locationModel.lng)
+                                intent.putExtra(Constants.KEY_ADDRESS, locationModel.address)
+                                intent.putExtra(Constants.KEY_NAME, locationModel.name)
                                 startActivity(intent)
                             }
                         })
