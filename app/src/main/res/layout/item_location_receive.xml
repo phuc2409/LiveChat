@@ -14,13 +14,11 @@
         android:layout_marginStart="10dp"
         android:padding="1dp"
         android:src="@drawable/ic_person"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/img_circle"
         app:strokeColor="@color/gray"
-        app:strokeWidth="1dp"
-        tools:visibility="visible" />
+        app:strokeWidth="1dp" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -38,9 +36,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/gray"
             android:textSize="12sp"
-            android:visibility="gone"
-            tools:text="Time"
-            tools:visibility="visible" />
+            tools:text="Time" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clMap"
