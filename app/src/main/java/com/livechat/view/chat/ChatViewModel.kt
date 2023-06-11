@@ -65,6 +65,7 @@ class ChatViewModel @Inject constructor(
         location: LocationModel? = null,
         type: String = MessageType.TEXT
     ) {
+        // Hai người chưa chat với nhau
         if (chatModel == null) {
             chatsRepo.createChat(
                 userModel = users[0],
@@ -78,6 +79,7 @@ class ChatViewModel @Inject constructor(
                 }
             )
         } else {
+            // Gửi vị trí
             if (location != null) {
                 chatsRepo.sendMessage(
                     chatModel = chatModel!!,
@@ -99,27 +101,35 @@ class ChatViewModel @Inject constructor(
                     }, onError = {
                         _state.postValue(ChatState.sendMessageError(it))
                     })
-            } else if (media.isEmpty()) {
+            }
+            // Không có media đính kèm
+            else if (media.isEmpty()) {
                 chatsRepo.sendMessage(
                     chatModel = chatModel!!,
                     message = message,
                     attachments = ArrayList(),
                     type = type,
                     onSuccess = {
-                        chatsRepo.updateChat(
-                            chatModel = chatModel!!,
-                            message = message,
-                            onSuccess = {
+                        if (type == MessageType.STOP_INCOMING_CALL_SERVICE) {
+                            sendNotification(message, type)
+                        } else {
+                            chatsRepo.updateChat(
+                                chatModel = chatModel!!,
+                                message = message,
+                                onSuccess = {
 
-                            }, onError = {
+                                }, onError = {
 
-                            })
-                        sendNotification(message, type)
-                        _state.postValue(ChatState.sendMessageSuccess())
+                                })
+                            sendNotification(message, type)
+                            _state.postValue(ChatState.sendMessageSuccess())
+                        }
                     }, onError = {
                         _state.postValue(ChatState.sendMessageError(it))
                     })
-            } else {
+            }
+            // Có media đính kèm
+            else {
                 var count = 0
                 val attachments = ArrayList<MessageModel.AttachmentModel>()
 

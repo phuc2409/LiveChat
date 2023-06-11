@@ -26,6 +26,7 @@ import com.livechat.extension.showToast
 import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.ChatModel
+import com.livechat.model.EventBusModel
 import com.livechat.model.FileModel
 import com.livechat.model.LocationModel
 import com.livechat.model.MessageModel
@@ -42,6 +43,8 @@ import com.livechat.view.maps.ViewLocationActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
 import com.livechat.view.video_call.VideoCallActivity
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 /**
  * User: Quang Phúc
@@ -145,6 +148,16 @@ class ChatActivity : BaseActivity() {
                 }
             }
         }
+
+    @Subscribe
+    fun onEvent(event: EventBusModel) {
+        if (event.key == Constants.KEY_STOP_INCOMING_CALL_SERVICE) {
+            viewModel.sendMessage(
+                "",
+                type = MessageType.STOP_INCOMING_CALL_SERVICE
+            )
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -531,5 +544,17 @@ class ChatActivity : BaseActivity() {
             }
         }
         return null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 }

@@ -65,6 +65,12 @@ class MessagingService : FirebaseMessagingService() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
             }
+            else {
+                startService(intent)
+            }
+        } else if (type == MessageType.STOP_INCOMING_CALL_SERVICE) {
+            val intent = Intent(this, IncomingCallService::class.java)
+            stopService(intent)
         } else {
             showNotification(id, title, messageText)
         }

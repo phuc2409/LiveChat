@@ -294,7 +294,7 @@ class MessageAdapter(
     override fun getItemCount(): Int = list.size
 
     override fun getItemViewType(position: Int): Int {
-        if (CurrentUser.id.isBlank()) {
+        if (CurrentUser.id.isBlank() || list[position].type == MessageType.STOP_INCOMING_CALL_SERVICE) {
             return 4
         }
         return if (list[position].sendId == CurrentUser.id) {

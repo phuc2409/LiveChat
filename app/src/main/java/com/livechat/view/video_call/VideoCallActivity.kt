@@ -6,6 +6,7 @@ import com.livechat.base.BaseActivity
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ActivityVideoCallBinding
 import com.livechat.extension.checkPermissions
+import com.livechat.model.EventBusModel
 import com.livechat.util.PermissionsUtil
 import dagger.hilt.android.AndroidEntryPoint
 import io.agora.agorauikit_android.AgoraButton
@@ -13,6 +14,7 @@ import io.agora.agorauikit_android.AgoraConnectionData
 import io.agora.agorauikit_android.AgoraSettings
 import io.agora.agorauikit_android.AgoraVideoViewer
 import io.agora.rtc2.Constants
+import org.greenrobot.eventbus.EventBus
 
 /**
  * User: Quang Phúc
@@ -103,5 +105,12 @@ class VideoCallActivity : BaseActivity() {
             role = Constants.CLIENT_ROLE_BROADCASTER,
             uid = CurrentUser.id.hashCode()
         )
+    }
+
+    override fun onDestroy() {
+        EventBus.getDefault().post(
+            EventBusModel(com.livechat.common.Constants.KEY_STOP_INCOMING_CALL_SERVICE)
+        )
+        super.onDestroy()
     }
 }
