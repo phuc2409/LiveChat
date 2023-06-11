@@ -426,6 +426,11 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun sendVideoCallMessage() {
+        if (VideoCallActivity.hasInstance) {
+            showSnackBar(binding.root, R.string.another_call_is_in_progress)
+            return
+        }
+
         if (isHavingInternet()) {
             viewModel.sendMessage(
                 "[${getString(R.string.call)}]",

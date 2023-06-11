@@ -25,6 +25,10 @@ import org.greenrobot.eventbus.EventBus
 @OptIn(ExperimentalUnsignedTypes::class)
 class VideoCallActivity : BaseActivity() {
 
+    companion object {
+        var hasInstance = false
+    }
+
     private lateinit var binding: ActivityVideoCallBinding
 
     private var agView: AgoraVideoViewer? = null
@@ -35,6 +39,7 @@ class VideoCallActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        hasInstance = true
         binding = ActivityVideoCallBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupView()
@@ -111,6 +116,7 @@ class VideoCallActivity : BaseActivity() {
         EventBus.getDefault().post(
             EventBusModel(com.livechat.common.Constants.KEY_STOP_INCOMING_CALL_SERVICE)
         )
+        hasInstance = false
         super.onDestroy()
     }
 }
