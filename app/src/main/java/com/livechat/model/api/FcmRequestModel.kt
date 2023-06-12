@@ -23,6 +23,8 @@ class FcmRequestModel(
         @SerializedName("message")
         val message: String,
         @SerializedName("type")
-        val type: String
+        val type: String,
+        @SerializedName("createdAt")
+        val createdAt: Long
     )
 }

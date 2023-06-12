@@ -55,17 +55,22 @@ class MessagingService : FirebaseMessagingService() {
         val avatarUrl = message.data["avatarUrl"] ?: ""
         val messageText = message.data["message"] ?: ""
         val type = message.data["type"] ?: ""
+        val createdAt = message.data["createdAt"]?.toLong() ?: 0L
+        val current = System.currentTimeMillis()
+        val delay = current - createdAt
 
         if (type == MessageType.INCOMING_VIDEO_CALL) {
-            //todo Check thời gian cuộc gọi đến so với thời gian hiện tại
+            if (delay > Constants.INCOMING_VIDEO_CALL_DELAY) {
+                return
+            }
+
             val intent = Intent(this, IncomingCallService::class.java)
             intent.putExtra(Constants.KEY_CHAT_ID, id)
             intent.putExtra(Constants.KEY_TITLE, title)
             intent.putExtra(Constants.KEY_AVATAR_URL, avatarUrl)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 startForegroundService(intent)
-            }
-            else {
+            } else {
                 startService(intent)
             }
         } else if (type == MessageType.STOP_INCOMING_CALL_SERVICE) {

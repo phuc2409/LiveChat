@@ -211,7 +211,8 @@ class ChatsRepo @Inject constructor(
                 title = title,
                 avatarUrl = avatarUrl,
                 message = message,
-                type = type
+                type = type,
+                createdAt = System.currentTimeMillis()
             )
         )
 
