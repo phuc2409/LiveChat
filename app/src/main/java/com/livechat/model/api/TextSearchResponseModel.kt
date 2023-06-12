@@ -6,7 +6,7 @@ data class TextSearchResponseModel(
     @SerializedName("html_attributions")
     val htmlAttributions: List<Any>,
     @SerializedName("next_page_token")
-    var nextPageToken: String,
+    var nextPageToken: String?,
     @SerializedName("results")
     val results: ArrayList<Result>,
     @SerializedName("status")

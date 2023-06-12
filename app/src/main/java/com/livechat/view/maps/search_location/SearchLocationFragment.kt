@@ -154,7 +154,7 @@ class SearchLocationFragment : BaseFragment(R.layout.fragment_search_location) {
                 }
 
                 override fun onBindItem(position: Int) {
-                    if (position == results.size - 5 || position == results.size - 1) {
+                    if (position == results.size - 1) {
                         viewModel.searchNextPage()
                     }
                 }

@@ -39,6 +39,10 @@ class SearchLocationViewModel @Inject constructor(private val googleMapsRepo: Go
     }
 
     fun searchNextPage() {
+        if (textSearchResponseModel?.nextPageToken == null) {
+            return
+        }
+
         googleMapsRepo.getTextSearch(
             keyword = keyword,
             pageToken = textSearchResponseModel?.nextPageToken ?: "",
