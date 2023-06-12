@@ -1,15 +1,14 @@
 package com.livechat.model.api
 
-
 import com.google.gson.annotations.SerializedName
 
 data class TextSearchResponseModel(
     @SerializedName("html_attributions")
     val htmlAttributions: List<Any>,
     @SerializedName("next_page_token")
-    val nextPageToken: String,
+    var nextPageToken: String,
     @SerializedName("results")
-    val results: List<Result>,
+    val results: ArrayList<Result>,
     @SerializedName("status")
     val status: String
 ) {

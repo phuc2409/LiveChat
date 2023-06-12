@@ -19,12 +19,16 @@ class SearchLocationState(
         fun searchSuccess(results: ArrayList<TextSearchResponseModel.Result>) =
             SearchLocationState(Status.SEARCH_SUCCESS, results)
 
+        fun searchNextPageSuccess(results: ArrayList<TextSearchResponseModel.Result>) =
+            SearchLocationState(Status.SEARCH_NEXT_PAGE_SUCCESS, results)
+
         fun searchError(t: Throwable) = SearchLocationState(Status.SEARCH_ERROR, t)
     }
 
     enum class Status {
         LOADING,
         SEARCH_SUCCESS,
+        SEARCH_NEXT_PAGE_SUCCESS,
         SEARCH_ERROR
     }
 }

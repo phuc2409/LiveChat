@@ -19,8 +19,15 @@ import com.livechat.model.api.TextSearchResponseModel
 class SearchLocationAdapter(
     private val context: Context,
     list: ArrayList<TextSearchResponseModel.Result>,
-    private val onClick: (result: TextSearchResponseModel.Result, position: Int) -> Unit
+    private val listener: Listener,
 ) : BaseAdapter<TextSearchResponseModel.Result>(list) {
+
+    interface Listener {
+
+        fun onClick(result: TextSearchResponseModel.Result, position: Int)
+
+        fun onBindItem(position: Int)
+    }
 
     private class ItemHolder(val binding: ItemSearchLocationBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -47,7 +54,7 @@ class SearchLocationAdapter(
                 holder.binding.tvAddress.text = item.formattedAddress
 
                 holder.itemView.setOnClickListener {
-                    onClick(item, position)
+                    listener.onClick(item, position)
                 }
             }
 
@@ -55,6 +62,8 @@ class SearchLocationAdapter(
 
             }
         }
+
+        listener.onBindItem(position)
     }
 
     override fun getItemCount(): Int = list.size

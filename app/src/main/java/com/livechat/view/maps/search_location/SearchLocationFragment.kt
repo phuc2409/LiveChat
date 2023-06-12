@@ -113,6 +113,12 @@ class SearchLocationFragment : BaseFragment(R.layout.fragment_search_location) {
                     }
                 }
 
+                SearchLocationState.Status.SEARCH_NEXT_PAGE_SUCCESS -> {
+                    val oldSize = results.size
+                    results = it.data as ArrayList<TextSearchResponseModel.Result>
+                    adapter?.notifyItemRangeInserted(oldSize, results.size)
+                }
+
                 SearchLocationState.Status.SEARCH_ERROR -> {
                     showNoResult()
                 }
@@ -133,14 +139,26 @@ class SearchLocationFragment : BaseFragment(R.layout.fragment_search_location) {
     }
 
     private fun showResult(result: ArrayList<TextSearchResponseModel.Result>) {
-        adapter = SearchLocationAdapter(requireContext(), result) { resultModel, position ->
-            getMapsActivity()?.showAddress(
-                LatLng(resultModel.geometry.location.lat, resultModel.geometry.location.lng),
-                resultModel.name,
-                resultModel.formattedAddress
-            )
-            getMapsActivity()?.pressBack()
-        }
+        adapter = SearchLocationAdapter(
+            requireContext(),
+            result,
+            object : SearchLocationAdapter.Listener {
+
+                override fun onClick(result: TextSearchResponseModel.Result, position: Int) {
+                    getMapsActivity()?.showAddress(
+                        LatLng(result.geometry.location.lat, result.geometry.location.lng),
+                        result.name,
+                        result.formattedAddress
+                    )
+                    getMapsActivity()?.pressBack()
+                }
+
+                override fun onBindItem(position: Int) {
+                    if (position == results.size - 5 || position == results.size - 1) {
+                        viewModel.searchNextPage()
+                    }
+                }
+            })
         binding.rvSearch.adapter = adapter
 
         binding.progressBar.gone()
