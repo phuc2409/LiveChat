@@ -9,6 +9,7 @@ import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentSignupBinding
 import com.livechat.extension.gone
+import com.livechat.extension.showKeyboard
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.util.ValidateUtil
@@ -47,7 +48,7 @@ class SignupFragment : BaseFragment(R.layout.fragment_signup) {
     }
 
     override fun initView() {
-
+        binding.etFullName.showKeyboard()
     }
 
     override fun handleListener() {

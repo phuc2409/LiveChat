@@ -9,6 +9,7 @@ import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.databinding.ActivitySearchBinding
 import com.livechat.extension.gone
+import com.livechat.extension.showKeyboard
 import com.livechat.extension.showToast
 import com.livechat.extension.toJson
 import com.livechat.extension.visible
@@ -47,7 +48,7 @@ class SearchActivity : BaseActivity() {
     }
 
     override fun initView() {
-
+        binding.etSearch.showKeyboard()
     }
 
     override fun handleListener() {

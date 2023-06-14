@@ -9,6 +9,7 @@ import com.livechat.R
 import com.livechat.base.BaseFragment
 import com.livechat.databinding.FragmentForgotPasswordBinding
 import com.livechat.extension.gone
+import com.livechat.extension.showKeyboard
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.visible
 import com.livechat.util.ValidateUtil
@@ -51,7 +52,7 @@ class ForgotPasswordFragment : BaseFragment(R.layout.fragment_signup) {
     }
 
     override fun initView() {
-
+        binding.etEmail.showKeyboard()
     }
 
     override fun handleListener() {
