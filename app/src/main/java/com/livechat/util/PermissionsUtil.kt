@@ -25,6 +25,15 @@ object PermissionsUtil {
         Manifest.permission.RECORD_AUDIO
     )
 
+    private val cameraPermissions = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    private val cameraPermissionsAndroid10 = arrayOf(
+        Manifest.permission.CAMERA
+    )
+
     private val locationPermissions = arrayOf(
         Manifest.permission.ACCESS_COARSE_LOCATION,
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -41,6 +50,14 @@ object PermissionsUtil {
 
     fun getVideoCallPermissions(): Array<String> {
         return videoCallPermissions
+    }
+
+    fun getCameraPermissions(): Array<String> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            cameraPermissionsAndroid10
+        } else {
+            cameraPermissions
+        }
     }
 
     fun getLocationPermissions(): Array<String> {

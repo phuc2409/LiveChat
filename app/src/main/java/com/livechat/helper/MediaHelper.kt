@@ -1,6 +1,7 @@
 package com.livechat.helper
 
 import android.content.ContentResolver
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import com.livechat.model.FileModel
@@ -86,6 +87,43 @@ class MediaHelper @Inject constructor(private val contentResolver: ContentResolv
             e.printStackTrace()
         }
         return files
+    }
+
+    fun getImageFromUri(uri: Uri): FileModel? {
+        var file: FileModel? = null
+        try {
+            contentResolver.query(uri, imageProjection, null, null, imageSortOrder)
+                ?.use { cursor ->
+                    // Cache column indices.
+                    val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                    val dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                    val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)
+                    val dateTakenColumn =
+                        cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
+                    val dateModifiedColumn =
+                        cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED)
+
+                    while (cursor.moveToNext()) {
+                        // Get values of columns for a given image.
+                        val id = cursor.getLong(idColumn)
+                        val data = cursor.getString(dataColumn)
+                        val size = cursor.getLong(sizeColumn)
+                        val dateTaken = cursor.getInt(dateTakenColumn)
+                        val dateModified = cursor.getInt(dateModifiedColumn)
+                        file = FileModel(
+                            uriId = id,
+                            path = data,
+                            size = size,
+                            dateTaken = dateTaken,
+                            dateModified = dateModified,
+                            type = FileModel.Type.IMAGE
+                        )
+                    }
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return file
     }
 
     fun getAllVideos(): ArrayList<FileModel> {

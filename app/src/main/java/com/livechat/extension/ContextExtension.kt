@@ -5,9 +5,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Environment
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -64,4 +66,14 @@ fun Context.copyToClipboard(text: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clipData = ClipData.newPlainText(text, text)
     clipboardManager.setPrimaryClip(clipData)
+}
+
+fun Context.getBitmapUri(bitmap: Bitmap): Uri {
+    val path = MediaStore.Images.Media.insertImage(
+        contentResolver,
+        bitmap,
+        System.currentTimeMillis().toString(),
+        null
+    )
+    return Uri.parse(path)
 }

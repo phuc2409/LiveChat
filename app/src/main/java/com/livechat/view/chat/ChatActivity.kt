@@ -2,7 +2,9 @@ package com.livechat.view.chat
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,12 +21,14 @@ import com.livechat.databinding.ActivityChatBinding
 import com.livechat.extension.checkPermissions
 import com.livechat.extension.copyToClipboard
 import com.livechat.extension.fromJson
+import com.livechat.extension.getBitmapUri
 import com.livechat.extension.gone
 import com.livechat.extension.isHavingInternet
 import com.livechat.extension.showSnackBar
 import com.livechat.extension.showToast
 import com.livechat.extension.toJson
 import com.livechat.extension.visible
+import com.livechat.helper.MediaHelper
 import com.livechat.model.ChatModel
 import com.livechat.model.EventBusModel
 import com.livechat.model.FileModel
@@ -45,6 +49,8 @@ import com.livechat.view.video_call.VideoCallActivity
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import javax.inject.Inject
+
 
 /**
  * User: Quang Phúc
@@ -53,6 +59,9 @@ import org.greenrobot.eventbus.Subscribe
  */
 @AndroidEntryPoint
 class ChatActivity : BaseActivity() {
+
+    @Inject
+    lateinit var mediaHelper: MediaHelper
 
     private lateinit var binding: ActivityChatBinding
     private lateinit var viewModel: ChatViewModel
@@ -104,7 +113,13 @@ class ChatActivity : BaseActivity() {
         }
     }
 
-    private val requestLocationLauncher = registerForActivityResult(
+    private val requestCameraPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) {
+        openCamera()
+    }
+
+    private val requestLocationPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
         chooseLocation()
@@ -120,6 +135,24 @@ class ChatActivity : BaseActivity() {
                     viewModel.sendMessage(
                         "[${getString(R.string.media)}]",
                         items,
+                        type = MessageType.MEDIA
+                    )
+                }
+            }
+        }
+
+    private val openCameraLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val photo = data?.extras?.get("data") as Bitmap
+                val tempUri = getBitmapUri(photo)
+                val file = mediaHelper.getImageFromUri(tempUri)
+
+                file?.let {
+                    viewModel.sendMessage(
+                        "[${getString(R.string.media)}]",
+                        arrayListOf(it),
                         type = MessageType.MEDIA
                     )
                 }
@@ -232,14 +265,18 @@ class ChatActivity : BaseActivity() {
                 }
 
                 override fun onSelectCamera() {
-
+                    if (checkPermissions(PermissionsUtil.getCameraPermissions())) {
+                        openCamera()
+                    } else {
+                        requestCameraPermissionsLauncher.launch(PermissionsUtil.getCameraPermissions())
+                    }
                 }
 
                 override fun onSelectLocation() {
                     if (checkPermissions(PermissionsUtil.getLocationPermissions())) {
                         chooseLocation()
                     } else {
-                        requestLocationLauncher.launch(PermissionsUtil.getLocationPermissions())
+                        requestLocationPermissionsLauncher.launch(PermissionsUtil.getLocationPermissions())
                     }
                 }
             }).show()
@@ -453,6 +490,11 @@ class ChatActivity : BaseActivity() {
     private fun chooseMedia() {
         val intent = Intent(this, ChooseMediaActivity::class.java)
         chooseMediaLauncher.launch(intent)
+    }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        openCameraLauncher.launch(intent)
     }
 
     private fun chooseLocation() {
