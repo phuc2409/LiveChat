@@ -1,6 +1,12 @@
 package com.livechat.repo
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
+import com.algolia.search.client.ClientSearch
+import com.algolia.search.model.APIKey
+import com.algolia.search.model.ApplicationID
+import com.algolia.search.model.IndexName
+import com.algolia.search.model.search.Query
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
@@ -12,6 +18,9 @@ import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
 import com.livechat.model.UserModel
 import com.livechat.model.UserPublicInfoModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -149,6 +158,37 @@ class UsersRepo @Inject constructor(
                 it.printStackTrace()
                 onError(it)
             }
+    }
+
+    fun findUsersAlgolia(
+        keyword: String,
+        onSuccess: (users: ArrayList<UserModel>) -> Unit
+    ) {
+        val appID = ApplicationID(Constants.ALGOLIA_APPLICATION_ID)
+        val apiKey = APIKey(Constants.ALGOLIA_API_KEY)
+        val client = ClientSearch(appID, apiKey)
+        val index = client.initIndex(IndexName(Constants.Collections.USERS))
+        val query = Query(keyword).apply {
+//            hitsPerPage = 10
+        }
+        val users = ArrayList<UserModel>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val responseSearch = index.search(query, null)
+            if (responseSearch.hitsOrNull == null) {
+                onSuccess(users)
+                return@launch
+            }
+
+            val hits = responseSearch.hitsOrNull!!
+            for (i in hits) {
+                val userModel = UserModel(i)
+                if (userModel.id != CurrentUser.id) {
+                    users.add(userModel)
+                }
+            }
+            onSuccess(users)
+        }
     }
 
     fun updateToken(token: String, onSuccess: () -> Unit, onError: (e: Exception) -> Unit) {

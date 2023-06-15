@@ -76,6 +76,9 @@ dependencies {
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
+    // Algolia Search
+    implementation 'com.algolia:algoliasearch-client-kotlin:2.1.4'
+
     implementation 'com.github.bumptech.glide:glide:4.15.1'
 
     // zoom image
@@ -108,8 +111,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage-ktx'
 
     // retrofit
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    implementation 'io.ktor:ktor-client-okhttp:2.3.1'
 
     // Event Bus
     implementation 'org.greenrobot:eventbus:3.3.1'

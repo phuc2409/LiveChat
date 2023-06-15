@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.livechat.base.BaseActivity
 import com.livechat.common.Constants
 import com.livechat.databinding.ActivitySearchBinding
+import com.livechat.extension.deleteEmTag
 import com.livechat.extension.gone
 import com.livechat.extension.showKeyboard
 import com.livechat.extension.showToast
@@ -68,7 +69,7 @@ class SearchActivity : BaseActivity() {
 
             override fun afterTextChanged(s: Editable?) {
                 val keyword = s.toString()
-                if (keyword.isBlank()) {
+                if (keyword.length < 2) {
                     return
                 }
 
@@ -127,6 +128,9 @@ class SearchActivity : BaseActivity() {
 
     private fun showResult(users: ArrayList<UserModel>) {
         adapter = SearchAdapter(this, users) { userModel, position ->
+            userModel.fullName = userModel.fullName.deleteEmTag()
+            userModel.userName = userModel.userName.deleteEmTag()
+            userModel.email = userModel.email.deleteEmTag()
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(Constants.USER_MODEL, userModel.toJson())
             startActivity(intent)

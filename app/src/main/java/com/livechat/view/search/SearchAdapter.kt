@@ -10,6 +10,7 @@ import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.databinding.ItemListErrorBinding
 import com.livechat.databinding.ItemSearchBinding
+import com.livechat.extension.highlightEmTag
 import com.livechat.model.UserModel
 
 /**
@@ -45,9 +46,9 @@ class SearchAdapter(
                         .into(holder.binding.imgAvatar)
                 }
 
-                holder.binding.tvFullName.text = item.fullName
+                holder.binding.tvFullName.text = item.fullName.highlightEmTag()
                 holder.binding.tvUserName.text =
-                    "${context.getString(R.string.user_name)}: ${item.userName}"
+                    "${context.getString(R.string.user_name)}: ${item.userName}".highlightEmTag()
 
                 holder.itemView.setOnClickListener {
                     onClick(item, position)
