@@ -11,6 +11,7 @@ import com.livechat.databinding.ActivitySearchBinding
 import com.livechat.extension.deleteEmTag
 import com.livechat.extension.gone
 import com.livechat.extension.showKeyboard
+import com.livechat.extension.showSnackBar
 import com.livechat.extension.showToast
 import com.livechat.extension.toJson
 import com.livechat.extension.visible
@@ -107,7 +108,7 @@ class SearchActivity : BaseActivity() {
 
                     showNoResult()
                     e.message?.let { message ->
-                        showToast(message)
+                        showSnackBar(binding.root, message)
                     }
                 }
             }

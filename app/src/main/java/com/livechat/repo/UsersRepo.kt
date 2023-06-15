@@ -162,7 +162,8 @@ class UsersRepo @Inject constructor(
 
     fun findUsersAlgolia(
         keyword: String,
-        onSuccess: (users: ArrayList<UserModel>) -> Unit
+        onSuccess: (users: ArrayList<UserModel>) -> Unit,
+        onError: (e: Exception) -> Unit
     ) {
         val appID = ApplicationID(Constants.ALGOLIA_APPLICATION_ID)
         val apiKey = APIKey(Constants.ALGOLIA_API_KEY)
@@ -174,20 +175,26 @@ class UsersRepo @Inject constructor(
         val users = ArrayList<UserModel>()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val responseSearch = index.search(query, null)
-            if (responseSearch.hitsOrNull == null) {
-                onSuccess(users)
-                return@launch
-            }
-
-            val hits = responseSearch.hitsOrNull!!
-            for (i in hits) {
-                val userModel = UserModel(i)
-                if (userModel.id != CurrentUser.id) {
-                    users.add(userModel)
+            try {
+                val responseSearch = index.search(query, null)
+                if (responseSearch.hitsOrNull == null) {
+                    onSuccess(users)
+                    return@launch
                 }
+
+                val hits = responseSearch.hitsOrNull!!
+                for (i in hits) {
+                    val userModel = UserModel(i)
+                    if (userModel.id != CurrentUser.id) {
+                        users.add(userModel)
+                    }
+                }
+                onSuccess(users)
             }
-            onSuccess(users)
+            catch (e: Exception) {
+                e.printStackTrace()
+                onError(e)
+            }
         }
     }
 

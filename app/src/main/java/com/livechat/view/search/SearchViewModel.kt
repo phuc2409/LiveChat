@@ -32,6 +32,9 @@ class SearchViewModel @Inject constructor(private val usersRepo: UsersRepo) : Ba
                 onSuccess = {
                     users = it
                     _state.postValue(SearchState.searchSuccess(users))
+                },
+                onError = {
+                    _state.postValue(SearchState.searchError(it))
                 }
             )
         }
