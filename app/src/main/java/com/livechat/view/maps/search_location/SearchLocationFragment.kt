@@ -80,7 +80,7 @@ class SearchLocationFragment : BaseFragment(R.layout.fragment_search_location) {
 
             override fun afterTextChanged(s: Editable?) {
                 val keyword = s.toString()
-                if (keyword.isBlank()) {
+                if (keyword.length < 2) {
                     return
                 }
 
@@ -155,7 +155,7 @@ class SearchLocationFragment : BaseFragment(R.layout.fragment_search_location) {
 
                 override fun onBindItem(position: Int) {
                     if (position == results.size - 1) {
-                        viewModel.searchNextPage()
+//                        viewModel.searchNextPage()
                     }
                 }
             })

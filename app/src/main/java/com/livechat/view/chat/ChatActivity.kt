@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
@@ -328,6 +329,10 @@ class ChatActivity : BaseActivity() {
 
                 }
 
+                ChatState.Status.LOADING_MEDIA -> {
+                    binding.progressBarSendMedia.visible()
+                }
+
                 ChatState.Status.GET_CHAT_SUCCESS -> {
                     chatModel = it.data as ChatModel?
                 }
@@ -350,11 +355,15 @@ class ChatActivity : BaseActivity() {
                 }
 
                 ChatState.Status.SEND_MESSAGE_SUCCESS -> {
-
+                    if (binding.progressBarSendMedia.isVisible) {
+                        binding.progressBarSendMedia.gone()
+                    }
                 }
 
                 ChatState.Status.SEND_MESSAGE_ERROR -> {
-
+                    if (binding.progressBarSendMedia.isVisible) {
+                        binding.progressBarSendMedia.gone()
+                    }
                 }
 
                 ChatState.Status.UPDATE_MESSAGES -> {

@@ -38,7 +38,7 @@
     <string name="location">Location</string>
     <string name="send_location">Send Location</string>
     <string name="done">Done</string>
-    <string name="maximum_total_file_size">Maximum total file size is 20MB.</string>
+    <string name="maximum_total_file_size">Maximum total file size is 50MB.</string>
     <string name="start_download">Start download</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>

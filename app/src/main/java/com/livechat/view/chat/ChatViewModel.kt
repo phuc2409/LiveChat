@@ -130,6 +130,8 @@ class ChatViewModel @Inject constructor(
             }
             // Có media đính kèm
             else {
+                _state.postValue(ChatState.loadingMedia())
+
                 var count = 0
                 val attachments = ArrayList<MessageModel.AttachmentModel>()
 
@@ -179,6 +181,9 @@ class ChatViewModel @Inject constructor(
                         },
                         onError = {
                             count++
+                            if (count == media.size) {
+                                _state.postValue(ChatState.sendMessageError(it))
+                            }
                         }
                     )
                 }

@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/image"
             android:foreground="?selectableItemBackgroundBorderless"
-            android:padding="10dp"
+            android:padding="15dp"
             android:src="@drawable/ic_back" />
 
         <LinearLayout
@@ -257,5 +257,16 @@
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarSendMedia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/clBottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

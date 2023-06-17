@@ -257,6 +257,11 @@ class MessageAdapter(
                     holder.binding.clMap.setOnClickListener {
                         listener.onMapClick(locationModel, position)
                     }
+
+                    holder.binding.clMap.setOnLongClickListener {
+                        listener.onSendMediaLongClick(item, position)
+                        true
+                    }
                 }
             }
 

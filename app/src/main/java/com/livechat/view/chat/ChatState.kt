@@ -18,6 +18,8 @@ class ChatState(
 
         fun loading() = ChatState(Status.LOADING)
 
+        fun loadingMedia() = ChatState(Status.LOADING_MEDIA)
+
         fun getChatSuccess(chatModel: ChatModel?) = ChatState(Status.GET_CHAT_SUCCESS, chatModel)
 
         fun getChatError(e: Exception) = ChatState(Status.GET_CHAT_ERROR, e)
@@ -41,6 +43,7 @@ class ChatState(
 
     enum class Status {
         LOADING,
+        LOADING_MEDIA,
         GET_CHAT_SUCCESS,
         GET_CHAT_ERROR,
         GET_USERS_SUCCESS,
