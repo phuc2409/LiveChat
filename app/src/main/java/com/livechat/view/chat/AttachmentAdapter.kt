@@ -52,7 +52,7 @@ class AttachmentAdapter(
             is ItemHolder -> {
                 Glide.with(context)
                     .load(item.url)
-                    .placeholder(R.drawable.ic_android)
+                    .placeholder(R.drawable.ic_image)
                     .centerCrop()
                     .into(holder.binding.imgThumbnail)
 

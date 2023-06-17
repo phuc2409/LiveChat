@@ -54,7 +54,7 @@ class ImageFragment : BaseFragment(R.layout.fragment_image) {
             return
         }
 
-        Glide.with(requireContext()).load(path).placeholder(R.drawable.ic_android).into(binding.img)
+        Glide.with(requireContext()).load(path).placeholder(R.drawable.ic_image).into(binding.img)
     }
 
     override fun handleListener() {

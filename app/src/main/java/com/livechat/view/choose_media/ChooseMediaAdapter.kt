@@ -44,7 +44,7 @@ class ChooseMediaAdapter(
             is ItemHolder -> {
                 Glide.with(context)
                     .load(item.path)
-                    .placeholder(R.drawable.ic_android)
+                    .placeholder(R.drawable.ic_image)
                     .centerCrop()
                     .into(holder.binding.imgThumbnail)
                 if (item.type == FileModel.Type.VIDEO) {
