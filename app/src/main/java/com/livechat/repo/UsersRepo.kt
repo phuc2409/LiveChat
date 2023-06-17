@@ -18,6 +18,7 @@ import com.livechat.extension.getSimpleName
 import com.livechat.model.ChatModel
 import com.livechat.model.UserModel
 import com.livechat.model.UserPublicInfoModel
+import com.livechat.util.NameUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,12 +90,7 @@ class UsersRepo @Inject constructor(
         onSuccess: () -> Unit,
         onError: (e: Exception) -> Unit
     ) {
-        val emailHashCode = email.hashCode()
-        val userName = if (emailHashCode < 0) {
-            "0${-emailHashCode}"
-        } else {
-            emailHashCode.toString()
-        }
+        val userName = NameUtil.generateUserNameFromEmail(email)
 
         val model = hashMapOf(
             "email" to email,
