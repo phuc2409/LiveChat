@@ -191,6 +191,20 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    fun updateHasRead() {
+        if (chatModel == null) {
+            return
+        }
+
+        chatsRepo.updateHasRead(chatModel!!,
+            onSuccess = {
+
+            },
+            onError = {
+
+            })
+    }
+
     private fun sendNotification(message: String, type: String) {
         if (firebaseAuth.currentUser == null || chatModel == null) {
             return

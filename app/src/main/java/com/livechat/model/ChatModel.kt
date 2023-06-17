@@ -21,6 +21,7 @@ data class ChatModel(
         var id: String = "",
         var name: String = "",
         var avatarUrl: String = "",
+        var hasRead: Boolean = true,
         var isShowAcceptLayout: Boolean = false,
         var isBlock: Boolean = false
     ) {

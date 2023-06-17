@@ -1,6 +1,7 @@
 package com.livechat.view.all_chats
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,8 @@ import com.livechat.base.ErrorHolder
 import com.livechat.common.CurrentUser
 import com.livechat.databinding.ItemAllChatsBinding
 import com.livechat.databinding.ItemListErrorBinding
+import com.livechat.extension.gone
+import com.livechat.extension.visible
 import com.livechat.model.ChatModel
 import com.livechat.util.TimeUtil
 
@@ -48,6 +51,18 @@ class AllChatsAdapter(
                                 .load(i.avatarUrl)
                                 .centerCrop()
                                 .into(holder.binding.imgAvatar)
+                        }
+                        break
+                    }
+                }
+                for (i in item.participants) {
+                    if (i.id == CurrentUser.id) {
+                        if (i.hasRead) {
+                            holder.binding.tvName.typeface = Typeface.DEFAULT
+                            holder.binding.imgUnread.gone()
+                        } else {
+                            holder.binding.tvName.typeface = Typeface.DEFAULT_BOLD
+                            holder.binding.imgUnread.visible()
                         }
                         break
                     }

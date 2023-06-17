@@ -44,6 +44,8 @@ class MessageAdapter(
         fun onAttachmentClick(attachmentModel: MessageModel.AttachmentModel, position: Int)
 
         fun onMapClick(locationModel: LocationModel, position: Int)
+
+        fun onBindItem(position: Int)
     }
 
     var fullName: String = ""
@@ -294,6 +296,8 @@ class MessageAdapter(
 
             }
         }
+
+        listener.onBindItem(position)
     }
 
     override fun getItemCount(): Int = list.size

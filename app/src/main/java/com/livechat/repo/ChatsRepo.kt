@@ -134,7 +134,8 @@ class ChatsRepo @Inject constructor(
             if (i.id == CurrentUser.id) {
                 i.name = CurrentUser.fullName
                 i.avatarUrl = CurrentUser.avatarUrl
-                break
+            } else {
+                i.hasRead = false
             }
         }
 
@@ -152,6 +153,30 @@ class ChatsRepo @Inject constructor(
                 chatModel.sendName = CurrentUser.fullName
                 chatModel.latestMessage = message
                 Log.i(getSimpleName(), chatModel.toString())
+                onSuccess()
+            }.addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun updateHasRead(
+        chatModel: ChatModel,
+        onSuccess: () -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        for (i in chatModel.participants) {
+            if (i.id == CurrentUser.id) {
+                i.hasRead = true
+                break
+            }
+        }
+
+        val hashMap = hashMapOf("participants" to chatModel.participants) as Map<String, Any>
+
+        firestore.collection(Constants.Collections.CHATS).document(chatModel.id).update(hashMap)
+            .addOnSuccessListener {
+                Log.i("updateHasRead", chatModel.toString())
                 onSuccess()
             }.addOnFailureListener {
                 it.printStackTrace()

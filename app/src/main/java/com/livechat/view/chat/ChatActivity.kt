@@ -437,6 +437,12 @@ class ChatActivity : BaseActivity() {
                                 intent.putExtra(Constants.KEY_NAME, locationModel.name)
                                 startActivity(intent)
                             }
+
+                            override fun onBindItem(position: Int) {
+                                if (position == messages.size - 1) {
+                                    viewModel.updateHasRead()
+                                }
+                            }
                         })
                     adapter?.fullName = getOppositeUser()?.fullName ?: ""
                     adapter?.avatarUrl = getOppositeUser()?.avatarUrl ?: ""
