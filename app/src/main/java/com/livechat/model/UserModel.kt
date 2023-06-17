@@ -32,13 +32,17 @@ data class UserModel(
 //        fullName = hit["fullName"].toStringWithoutQuotationMark()
         fullName = hit["_highlightResult"]?.jsonObject?.get("fullName")?.jsonObject?.get("value").toStringWithoutQuotationMark()
         avatarUrl = hit["avatarUrl"].toStringWithoutQuotationMark()
-        birthday = Timestamp(Date(hit["birthday"].toStringWithoutQuotationMark().toLong()))
+        hit["birthday"]?.let {
+            birthday = Timestamp(Date(it.toStringWithoutQuotationMark().toLong()))
+        }
         val tokensJson = hit.json["tokens"]?.jsonArray
         tokensJson?.let {
             for (i in 0 until  it.size) {
                 tokens.add(it[i].toStringWithoutQuotationMark())
             }
         }
-        createdAt = Timestamp(Date(hit["createdAt"].toStringWithoutQuotationMark().toLong()))
+        hit["createdAt"]?.let {
+            createdAt = Timestamp(Date(it.toStringWithoutQuotationMark().toLong()))
+        }
     }
 }

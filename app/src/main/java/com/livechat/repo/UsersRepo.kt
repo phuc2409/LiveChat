@@ -311,7 +311,7 @@ class UsersRepo @Inject constructor(
                     user.id = i.id
                     if (user.createdAt == null) {
                         // createdAt được khởi tạo sau khi update user nên thành lắng nghe hai lần
-                        return@addSnapshotListener
+//                        return@addSnapshotListener
                     }
                     users.add(user)
                 }

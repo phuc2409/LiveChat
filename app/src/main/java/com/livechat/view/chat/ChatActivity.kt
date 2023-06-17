@@ -538,6 +538,9 @@ class ChatActivity : BaseActivity() {
             binding.clWantToChat.visible()
             binding.tvWantToChat.visible()
         }
+        if (chatModel == null) {
+            showVideoCall = false
+        }
         if (chatModel?.participants?.any { it.isShowAcceptLayout } == true) {
             showVideoCall = false
         }
