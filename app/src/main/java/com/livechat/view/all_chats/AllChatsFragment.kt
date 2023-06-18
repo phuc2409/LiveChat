@@ -17,6 +17,7 @@ import com.livechat.extension.toJson
 import com.livechat.extension.visible
 import com.livechat.model.ChatModel
 import com.livechat.view.chat.ChatActivity
+import com.livechat.view.create_group_chat.CreateGroupChatActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -62,7 +63,10 @@ class AllChatsFragment : BaseFragment(R.layout.fragment_all_chats) {
     }
 
     override fun handleListener() {
-
+        binding.btnCreate.setOnClickListener {
+            val intent = Intent(context, CreateGroupChatActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun observeViewModel() {

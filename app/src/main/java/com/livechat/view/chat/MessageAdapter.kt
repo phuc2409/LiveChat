@@ -17,9 +17,11 @@ import com.livechat.databinding.ItemMessageReceiveBinding
 import com.livechat.databinding.ItemMessageSendBinding
 import com.livechat.extension.gone
 import com.livechat.extension.visible
+import com.livechat.model.ChatModel
 import com.livechat.model.LocationModel
 import com.livechat.model.MessageModel
 import com.livechat.model.MessageType
+import com.livechat.model.UserModel
 import com.livechat.util.TimeUtil
 
 /**
@@ -29,6 +31,7 @@ import com.livechat.util.TimeUtil
  */
 class MessageAdapter(
     private val context: Context,
+    private val userModels: ArrayList<UserModel>,
     list: ArrayList<MessageModel>,
     private val listener: Listener
 ) : BaseAdapter<MessageModel>(list) {
@@ -47,9 +50,6 @@ class MessageAdapter(
 
         fun onBindItem(position: Int)
     }
-
-    var fullName: String = ""
-    var avatarUrl: String = ""
 
     private class SendHolder(val binding: ItemMessageSendBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -161,7 +161,7 @@ class MessageAdapter(
                             TimeUtil.formatTimestampToFullString(it.seconds)
                     }
                     holder.binding.tvCallStatus.text =
-                        "${context.getString(R.string.called_from)} $fullName"
+                        "${context.getString(R.string.called_from)} ${getUser(item.sendId)?.fullName}"
 
                     holder.binding.llCall.visible()
                     holder.binding.imgAvatar.gone()
@@ -169,9 +169,9 @@ class MessageAdapter(
                     holder.binding.cvMessage.gone()
                     holder.binding.rvAttachments.gone()
                 } else if (item.attachments.isEmpty()) {
-                    if (avatarUrl.isNotBlank()) {
+                    if (getUser(item.sendId)?.avatarUrl?.isNotBlank() == true) {
                         Glide.with(context)
-                            .load(avatarUrl)
+                            .load(getUser(item.sendId)?.avatarUrl!!)
                             .centerCrop()
                             .into(holder.binding.imgAvatar)
                     }
@@ -192,9 +192,9 @@ class MessageAdapter(
                         true
                     }
                 } else {
-                    if (avatarUrl.isNotBlank()) {
+                    if (getUser(item.sendId)?.avatarUrl?.isNotBlank() == true) {
                         Glide.with(context)
-                            .load(avatarUrl)
+                            .load(getUser(item.sendId)?.avatarUrl)
                             .centerCrop()
                             .into(holder.binding.imgAvatar)
                     }
@@ -268,9 +268,9 @@ class MessageAdapter(
             }
 
             is LocationReceiveHolder -> {
-                if (avatarUrl.isNotBlank()) {
+                if (getUser(item.sendId)?.avatarUrl?.isNotBlank() == true) {
                     Glide.with(context)
-                        .load(avatarUrl)
+                        .load(getUser(item.sendId)?.avatarUrl)
                         .centerCrop()
                         .into(holder.binding.imgAvatar)
                 }
@@ -319,5 +319,14 @@ class MessageAdapter(
                 1
             }
         }
+    }
+
+    private fun getUser(id: String): UserModel? {
+        for (i in userModels) {
+            if (i.id == id) {
+                return i
+            }
+        }
+        return null
     }
 }

@@ -377,6 +377,7 @@ class ChatActivity : BaseActivity() {
                     }
                     adapter = MessageAdapter(
                         this,
+                        userModels,
                         messages,
                         object : MessageAdapter.Listener {
 
@@ -444,8 +445,6 @@ class ChatActivity : BaseActivity() {
                                 }
                             }
                         })
-                    adapter?.fullName = getOppositeUser()?.fullName ?: ""
-                    adapter?.avatarUrl = getOppositeUser()?.avatarUrl ?: ""
                     binding.rvChat.adapter = adapter
 //                    adapter?.notifyDataSetChanged()
 
@@ -518,6 +517,11 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun setTitle() {
+        if (chatModel?.isGroupChat == true) {
+            binding.tvChatName.text = chatModel?.chatName
+            binding.imgAvatar.setImageResource(R.drawable.ic_groups)
+            return
+        }
         binding.tvChatName.text = getOppositeUser()?.fullName
         getOppositeUser()?.avatarUrl?.let {
             if (it.isNotBlank()) {

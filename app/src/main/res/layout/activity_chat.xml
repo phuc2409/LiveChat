@@ -42,16 +42,36 @@
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp" />
 
-            <TextView
-                android:id="@+id/tvChatName"
-                style="@style/tv_title"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Chat name" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvChatName"
+                    style="@style/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="Chat name" />
+
+                <TextView
+                    android:id="@+id/tvParticipants"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/gray"
+                    android:textSize="@dimen/text_size_description"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="10 participants"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

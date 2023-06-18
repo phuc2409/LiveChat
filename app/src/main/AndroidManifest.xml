@@ -48,6 +48,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".view.create_group_chat.CreateGroupChatActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".view.incoming_call.IncomingCallActivity"
             android:alwaysRetainTaskState="true"
             android:exported="false"

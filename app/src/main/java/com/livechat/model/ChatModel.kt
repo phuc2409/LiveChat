@@ -11,11 +11,14 @@ data class ChatModel(
     var id: String = "",
     var participantIds: ArrayList<String> = ArrayList(),
     var participants: ArrayList<ParticipantModel> = ArrayList(),
+    var chatName: String = "",
     var sendId: String = "",
     var sendName: String = "",
     var latestMessage: String = "",
+    @JvmField
     var isGroupChat: Boolean = false,
-    var updatedAt: Timestamp? = null
+    var updatedAt: Timestamp? = null,
+    var isSelected: Boolean = false
 ) {
     data class ParticipantModel(
         var id: String = "",

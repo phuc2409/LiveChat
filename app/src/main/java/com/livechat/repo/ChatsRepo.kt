@@ -1,7 +1,6 @@
 package com.livechat.repo
 
 import android.util.Log
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -30,7 +29,6 @@ import javax.inject.Singleton
 @Singleton
 class ChatsRepo @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth,
     private val usersRepo: UsersRepo
 ) {
 
@@ -69,23 +67,19 @@ class ChatsRepo @Inject constructor(
         onSuccess: (chatModel: ChatModel) -> Unit,
         onError: (e: Exception) -> Unit
     ) {
-        val uid = firebaseAuth.currentUser?.uid
-        if (uid == null) {
-            onError(Exception("Current user uid is null"))
-            return
-        }
-        val participantIds = arrayListOf(userModel.id, uid)
+        val participantIds = arrayListOf(userModel.id, CurrentUser.id)
         participantIds.sort()
 
-        val sendName = firebaseAuth.currentUser?.email ?: ""
+        val sendName = CurrentUser.fullName
         val participants = arrayListOf(
             ChatModel.ParticipantModel(
                 id = userModel.id,
                 name = userModel.fullName,
                 avatarUrl = userModel.avatarUrl,
+                hasRead = false,
                 isShowAcceptLayout = true
             ), ChatModel.ParticipantModel(
-                id = uid,
+                id = CurrentUser.id,
                 name = sendName,
                 avatarUrl = CurrentUser.avatarUrl,
                 isShowAcceptLayout = false
@@ -98,7 +92,7 @@ class ChatsRepo @Inject constructor(
         val chatModel = ChatModel(
             participantIds = participantIds,
             participants = participants,
-            sendId = uid,
+            sendId = CurrentUser.id,
             sendName = sendName,
             latestMessage = message,
         )
@@ -106,7 +100,8 @@ class ChatsRepo @Inject constructor(
         val hashMap = hashMapOf(
             "participantIds" to participantIds,
             "participants" to participants,
-            "sendId" to uid,
+            "chatName" to "",
+            "sendId" to CurrentUser.id,
             "sendName" to sendName,
             "latestMessage" to message,
             "isGroupChat" to false,
@@ -117,6 +112,64 @@ class ChatsRepo @Inject constructor(
             .addOnSuccessListener {
                 chatModel.id = it.id
                 Log.i(getSimpleName(), chatModel.toString())
+                onSuccess(chatModel)
+            }.addOnFailureListener {
+                it.printStackTrace()
+                onError(it)
+            }
+    }
+
+    fun createGroupChat(
+        participantModels: ArrayList<ChatModel.ParticipantModel>,
+        groupChatName: String,
+        message: String,
+        onSuccess: (chatModel: ChatModel) -> Unit,
+        onError: (e: Exception) -> Unit
+    ) {
+        val participantIds = arrayListOf(CurrentUser.id)
+        for (i in participantModels) {
+            participantIds.add(i.id)
+        }
+        participantIds.sort()
+
+        val sendName = CurrentUser.fullName
+        val participants = arrayListOf(
+            ChatModel.ParticipantModel(
+                id = CurrentUser.id,
+                name = sendName,
+                avatarUrl = CurrentUser.avatarUrl
+            )
+        )
+        participants.addAll(participantModels)
+        participants.sortBy {
+            it.id
+        }
+
+        val chatModel = ChatModel(
+            participantIds = participantIds,
+            participants = participants,
+            chatName = groupChatName,
+            sendId = CurrentUser.id,
+            sendName = sendName,
+            latestMessage = message,
+            isGroupChat = true
+        )
+
+        val hashMap = hashMapOf(
+            "participantIds" to participantIds,
+            "participants" to participants,
+            "chatName" to groupChatName,
+            "sendId" to CurrentUser.id,
+            "sendName" to sendName,
+            "latestMessage" to message,
+            "isGroupChat" to true,
+            "updatedAt" to FieldValue.serverTimestamp()
+        )
+
+        firestore.collection(Constants.Collections.CHATS).add(hashMap)
+            .addOnSuccessListener {
+                chatModel.id = it.id
+                Log.i("createGroupChat", chatModel.toString())
                 onSuccess(chatModel)
             }.addOnFailureListener {
                 it.printStackTrace()
@@ -201,6 +254,8 @@ class ChatsRepo @Inject constructor(
         val hashMap = hashMapOf(
             "chatId" to chatModel.id,
             "sendId" to CurrentUser.id,
+            "sendName" to CurrentUser.fullName,
+            "sendAvatar" to CurrentUser.avatarUrl,
             "message" to message,
             "attachments" to attachments,
             "location" to location,
@@ -386,6 +441,7 @@ class ChatsRepo @Inject constructor(
     ) {
         firestore.collection(Constants.Collections.CHATS)
             .whereArrayContains("participantIds", CurrentUser.id)
+            .whereEqualTo("isGroupChat", false)
             .get()
             .addOnSuccessListener { documents ->
                 val chatModels = ArrayList<ChatModel>()

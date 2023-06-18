@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.livechat.R
 import com.livechat.base.BaseAdapter
 import com.livechat.base.ErrorHolder
 import com.livechat.common.CurrentUser
@@ -43,16 +44,21 @@ class AllChatsAdapter(
         when (holder) {
 
             is ItemHolder -> {
-                for (i in item.participants) {
-                    if (i.id != CurrentUser.id) {
-                        holder.binding.tvName.text = i.name
-                        if (i.avatarUrl.isNotBlank()) {
-                            Glide.with(context)
-                                .load(i.avatarUrl)
-                                .centerCrop()
-                                .into(holder.binding.imgAvatar)
+                if (item.isGroupChat) {
+                    holder.binding.tvName.text = item.chatName
+                    holder.binding.imgAvatar.setImageResource(R.drawable.ic_groups)
+                } else {
+                    for (i in item.participants) {
+                        if (i.id != CurrentUser.id) {
+                            holder.binding.tvName.text = i.name
+                            if (i.avatarUrl.isNotBlank()) {
+                                Glide.with(context)
+                                    .load(i.avatarUrl)
+                                    .centerCrop()
+                                    .into(holder.binding.imgAvatar)
+                            }
+                            break
                         }
-                        break
                     }
                 }
                 for (i in item.participants) {

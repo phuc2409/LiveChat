@@ -96,4 +96,9 @@
     <string name="choose_location">Choose your location first</string>
     <string name="current_location">Current location</string>
     <string name="another_call_is_in_progress">Another call is in progress</string>
+    <string name="create_group_chat">Create group chat</string>
+    <string name="group_name">Group name</string>
+    <string name="people">People</string>
+    <string name="group_name_can_not_blank">Group name can not blank</string>
+    <string name="create_new_group_chat">create new group chat</string>
 </resources>
