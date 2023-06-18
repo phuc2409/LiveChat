@@ -43,6 +43,7 @@ import com.livechat.view.alert_dialog.MessageAlertDialog
 import com.livechat.view.bottom_sheet.ChatBottomSheet
 import com.livechat.view.chat_info.ChatInfoActivity
 import com.livechat.view.choose_media.ChooseMediaActivity
+import com.livechat.view.group_chat_info.GroupChatInfoActivity
 import com.livechat.view.maps.MapsActivity
 import com.livechat.view.maps.ViewLocationActivity
 import com.livechat.view.media_viewer.MediaViewerActivity
@@ -241,9 +242,19 @@ class ChatActivity : BaseActivity() {
         }
 
         binding.llInfo.setOnClickListener {
-            val intent = Intent(this, ChatInfoActivity::class.java)
-            intent.putExtra(ChatInfoActivity.KEY_CHAT_MODEL, chatModel.toJson())
-            chatInfoLauncher.launch(intent)
+            if (chatModel == null) {
+                return@setOnClickListener
+            }
+
+            if (chatModel!!.isGroupChat) {
+                val intent = Intent(this, GroupChatInfoActivity::class.java)
+                intent.putExtra(GroupChatInfoActivity.KEY_CHAT_MODEL, chatModel.toJson())
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, ChatInfoActivity::class.java)
+                intent.putExtra(ChatInfoActivity.KEY_CHAT_MODEL, chatModel.toJson())
+                chatInfoLauncher.launch(intent)
+            }
         }
 
         binding.imgVideoCall.setOnClickListener {
@@ -520,6 +531,15 @@ class ChatActivity : BaseActivity() {
         if (chatModel?.isGroupChat == true) {
             binding.tvChatName.text = chatModel?.chatName
             binding.imgAvatar.setImageResource(R.drawable.ic_groups)
+            val size = chatModel?.participants?.size ?: 0
+            if (size == 1) {
+                binding.tvParticipants.text = "$size ${getString(R.string.participant)}"
+                binding.tvParticipants.visible()
+            } else if (size > 1) {
+                binding.tvParticipants.text = "$size ${getString(R.string.participants)}"
+                binding.tvParticipants.visible()
+            }
+
             return
         }
         binding.tvChatName.text = getOppositeUser()?.fullName

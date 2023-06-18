@@ -101,4 +101,6 @@
     <string name="people">People</string>
     <string name="group_name_can_not_blank">Group name can not blank</string>
     <string name="create_new_group_chat">create new group chat</string>
+    <string name="participant">participant</string>
+    <string name="participants">participants</string>
 </resources>
