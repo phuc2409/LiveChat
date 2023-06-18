@@ -16,7 +16,8 @@ object Constants {
     const val FCM_SERVER_KEY =
         "key=AAAAlay7Ju8:APA91bFlgI_CJaHZpEE2J8Eg7lwBJcLAwgFJovU-RjrFXR_cB_V3h5djJ14UqSBSKNBxTMMdHQOvfRdtZPwXL9vlhrb1fMum1Pa24lUUIgYq1Zkz3RRFGdUwEAM3hWhdeQucqIiCCODv"
     const val AGORA_APP_ID = "2bbf7eaa3ade48d9bd70074e5a9c477d"
-    const val MAPS_API_KEY = "AIzaSyA5BuKAxAMbwUIE7KYw6lgzgzyeJRnf-a8"
+//    const val MAPS_API_KEY = "AIzaSyA5BuKAxAMbwUIE7KYw6lgzgzyeJRnf-a8"
+    const val MAPS_API_KEY = "AIzaSyCmsGI610itYQeiqQ4fE0fUrD7ZXTKMhKU" // Double Talk
     const val ALGOLIA_APPLICATION_ID = "NBBHPSCPW3"
     const val ALGOLIA_API_KEY = "e58c04e581bfcdccc597157daee9a6f7"
 
